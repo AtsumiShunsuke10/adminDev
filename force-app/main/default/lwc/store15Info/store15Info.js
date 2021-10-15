@@ -37,7 +37,7 @@ import STORE_BUSINESS_PERMIT_AND_ADD_IS_SAME from '@salesforce/schema/Store15__c
 import STACKER from '@salesforce/schema/Store15__c.Stacker__c';
 import WRITTEN_OATH from '@salesforce/schema/Store15__c.WrittenOath__c';
 import METERINSPECTION_OR_RECEIPT from '@salesforce/schema/Store15__c.MeterinspectionOrReceipt__c';
-import CONDITIONS_AND_SIGNATURE from '@salesforce/schema/Store15__c.ConditionsAndSignature__c';
+// import CONDITIONS_AND_SIGNATURE from '@salesforce/schema/Store15__c.ConditionsAndSignature__c';
 import OL_CORRESPONDING_APPLICANT from '@salesforce/schema/Store15__c.OLCorrespondingApplicant__c';
 import OL_CORRESPONDING_BRANCHNAME_AND_LOCATION from '@salesforce/schema/Store15__c.OLCorrespondingBranchnameAndLocation__c';
 import STORE_BUSINESS_PERMIT_INFO_IS_CORRECT from '@salesforce/schema/Store15__c.Store_Business_Permit_Info_Is_Correct__c';
@@ -80,15 +80,15 @@ export default class Store15Info extends LightningElement {
     // セクションのアクティブ化
     activeSections = [ 'basicInfo', 'screeningInfo' ];
     // 審査が完了してるかを管理する配列
-    isNotEndScreening = [];
+    // isNotEndScreening = [];
 
     connectedCallback() {
         this.showTenStores(0)
         .then(() => {
             this.setListStoreRecordId();
             this.handleTabActive(1);
-            // this.setListScreeningResult();
-            // this.setScreeningProgress();
+            this.setListScreeningResult();
+            this.setScreeningProgress();
             // this.setTabLabel();
         });
     }
@@ -317,11 +317,13 @@ export default class Store15Info extends LightningElement {
             fields[STACKER.fieldApiName] = childNodes.item(8).value;
             fields[WRITTEN_OATH.fieldApiName] = childNodes.item(9).value;
             fields[METERINSPECTION_OR_RECEIPT.fieldApiName] = childNodes.item(10).value;
-            fields[CONDITIONS_AND_SIGNATURE.fieldApiName] = childNodes.item(11).value;
-            fields[OL_CORRESPONDING_APPLICANT.fieldApiName] = childNodes.item(12).value;
-            fields[OL_CORRESPONDING_BRANCHNAME_AND_LOCATION.fieldApiName] = childNodes.item(13).value;
-            fields[STORE_BUSINESS_PERMIT_INFO_IS_CORRECT.fieldApiName] = childNodes.item(14).value;
-            fields[BUSINESS_CONTENTS_NO_OMISSION.fieldApiName] = childNodes.item(15).value;
+            // fields[CONDITIONS_AND_SIGNATURE.fieldApiName] = childNodes.item(11).value;
+            fields[OL_CORRESPONDING_APPLICANT.fieldApiName] = childNodes.item(11).value;
+            fields[OL_CORRESPONDING_BRANCHNAME_AND_LOCATION.fieldApiName] = childNodes.item(12).value;
+            fields[STORE_BUSINESS_PERMIT_INFO_IS_CORRECT.fieldApiName] = childNodes.item(13).value;
+            fields[BUSINESS_CONTENTS_NO_OMISSION.fieldApiName] = childNodes.item(14).value;
+
+            console.log(fields);
 
             const recordInput = { fields };
 

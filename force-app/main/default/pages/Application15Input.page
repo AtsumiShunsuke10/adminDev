@@ -515,6 +515,10 @@
                             </div>
 
                             <div class="row infoDiv required autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Company_Scale__c'].Label}" for="companyScale"/>
+                                <apex:inputField styleClass="form-control" value="{!apply15.Company_Scale__c}" id="companyScale" />
+                            </div>
+                            <div class="row infoDiv required autofill">
                                 <apex:outputLabel value="対象者区分（法人番号なしの団体は個人事業主を選択してください。）" for="applicantDivision" />
                                 <apex:inputField styleClass="form-control" value="{!apply15.Applicant_Division__c}" id="applicantDivision" onchange="dodivisionChange(this)"/>
                             </div>
@@ -1464,7 +1468,7 @@
             $("select[id$='oldBirthDay']").val('');
         }
         
-        /**
+          /**
         * 郵便番号APIで住所検索
         */
         function zipSearch(postcodeFieldId, addressFieldId) {

@@ -690,12 +690,12 @@ global with sharing class ApplicationStage15Controller{
             //infoMap.put('lastName',sobj.get('LastName__c'));//
             //infoMap.put('lastNameKana',sobj.get('LastNameKana__c'));//
             infoMap.put('accountHolder',sobj.get('Account_Holder__c'));
-            infoMap.put('applicantAddress',sobj.get('Applicant_Address__c'));//
+            //infoMap.put('applicantAddress',sobj.get('Applicant_Address__c'));//
             infoMap.put('applicantBusinessName',sobj.get('Applicant_Business_Name__c'));
             infoMap.put('applicantDivision',sobj.get('Applicant_Division__c'));
             infoMap.put('applicantName',sobj.get('Applicant_Name__c'));
             infoMap.put('applicantPhone',sobj.get('Applicant_Phone__c'));
-            infoMap.put('applicantZip',sobj.get('Applicant_Postal_Code__c'));//
+            //infoMap.put('applicantZip',sobj.get('Applicant_Postal_Code__c'));//
             infoMap.put('applicantTitle',sobj.get('Applicant_Title__c'));
             if(sobj.get('Birthdate__c')!=null){
                 Date birth = Date.valueOf(sobj.get('Birthdate__c'));

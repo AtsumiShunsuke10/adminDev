@@ -104,17 +104,17 @@
         color: #f8a201;              /* 選択された星以降をすべて黄色にする */
     }
     .btn-group{
-        margin-top:2%;
-        display: flex;
+    	margin-top:2%;
+    	display: flex;
         justify-content: center;
     }
 </style>
 <body>
     <section id = "section">
     <div class="inner">
-    <form action="https://d5h000003kbkoeay--dev.my.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8" method="POST">
+    <form target="" action="https://d5h000003kbkoeay--dev.my.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8" method="POST">
         <input type="hidden" id="orgid" name="orgid" value="00D0l0000002nFr" />
-        <input type="hidden" name="retURL" value="https://dev-trans-cosmos-digital.cs58.force.com/s/goikencomplete" />
+        <input type="hidden" name="retURL" value="force.com/s/goikencomplete" />
         
             <div class = 'title'>サイト改善のご提案</div>
                 <div class="subjectbox">
@@ -227,10 +227,10 @@
                 document.getElementById("button2").style.visibility = 'visible';
                 document.getElementById("submit").style.visibility = 'visible';
                 document.getElementById("subject").setAttribute("readOnly", true);
-                document.getElementById("00N0l0000095wEm").setAttribute("readOnly", true);
-                document.getElementById("00N0l0000095wG9").setAttribute("readOnly", true);
-                document.getElementById("00N0l0000095wHW").setAttribute("readOnly", true);
-                document.getElementById("00N0l0000095wHg").setAttribute("readOnly", true);
+            	document.getElementById("00N0l0000095wEm").setAttribute("readOnly", true);
+            	document.getElementById("00N0l0000095wG9").setAttribute("readOnly", true);
+            	document.getElementById("00N0l0000095wHW").setAttribute("readOnly", true);
+            	document.getElementById("00N0l0000095wHg").setAttribute("readOnly", true);
                 document.getElementById("1").disabled = true;
                 document.getElementById("2").disabled = true;
                 document.getElementById("3").disabled = true;
@@ -272,6 +272,9 @@
             document.getElementById("third").disabled = false;
             document.getElementById("forth").disabled = false;
             document.getElementById("fifth").disabled = false;
+        }
+        function func3(){
+            document.getElementById("subject").disabled=true;
         }
     </script>
 </body>

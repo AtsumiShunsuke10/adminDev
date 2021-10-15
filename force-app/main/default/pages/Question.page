@@ -1,20 +1,23 @@
 <apex:page controller="QuestionController" sidebar="false" showHeader="false" standardStylesheets="false" docType="html-5.0">
-
+    
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />   
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
     <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/jquery.min.js')}" />
     <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/bootstrap.min.js')}" />
-    
+    <link href="{!URLFOR($Resource.SiteResources, 'css/common.css')}" rel="stylesheet" />
+    <link href="{!URLFOR($Resource.SiteResources, 'css/bootstrap.min.css')}" rel="stylesheet" />
+    <link href="{!URLFOR($Resource.SiteResources, 'css/CommunityTopWithoutLogin.css')}" rel="stylesheet" />
     <style>
         #QuestionAndAnswer {
-            background: rgba(86,116,149,.05);
+        background: rgba(86,116,149,.05);
         }
         .area_pd{       
-            padding: 100px 0 130px;      
+        padding: 100px 0 130px;      
         }
         article, aside, details, figcaption, figure, footer, header, hgroup,
         menu, nav, section {
-            display : block;
+        display : block;
         }
         html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
         pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small,
@@ -22,175 +25,194 @@
         legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside,
         canvas, details, figcaption, figure, footer, header, hgroup, menu, nav,
         section, summary, time, mark, audio, video {
-            margin : 0;
-            padding : 0;
-            border : 0;
-            outline : 0;
-            background : transparent;
+        margin : 0;
+        padding : 0;
+        border : 0;
+        outline : 0;
+        background : transparent;
         }
         html{
-            font-size : 10px;
+        font-size : 10px;
         }
         section {
-            display : block;
-            margin: 0;        
-            border: 0;
-            outline: 0;
+        display : block;
+        margin: 0;        
+        border: 0;
+        outline: 0;
         }
         div {
-            display: block;
+        display: block;
         }
         #Outline .box .ttl, #Outline .box_date dl dt span, #caution_area h2, #flow .onlin_push_area .ttl, #flow .onlin_push_area .ttl_sub, #illegal_area .ttl, #news h2, #steps .doc_list .tag_ttl, .ls-02, .ttl_style_box, .ttl_style_main {
-            letter-spacing: .2em!important;
+        letter-spacing: .2em!important;
         }
         #QuestionAndAnswer dl {
-            box-shadow: 0 0 10px rgb(0 0 0 / 40%);
-            background: #FFF;
-            margin: 0 auto 30px auto;
-            box-sizing: border-box;
-            max-width: 960px;
-            padding: 20px;
+        box-shadow: 0 0 10px rgb(0 0 0 / 40%);
+        background: #FFF;
+        margin: 0 auto 30px auto;
+        box-sizing: border-box;
+        max-width: 960px;
+        padding: 20px;
         }
         #QuestionAndAnswer dl dt {
-            font-size: 1.7rem;
-            font-weight: 700;
-            padding-left: 8px;
-            padding-right: 50px;
-            line-height: 1.6;
-            position: relative;
-            cursor: pointer;
+        font-size: 1.7rem;
+        font-weight: 700;
+        padding-left: 8px;
+        padding-right: 50px;
+        line-height: 1.6;
+        position: relative;
+        cursor: pointer;
         }
         #QuestionAndAnswer dl dd {
-            display: none;
-            padding: 30px;
-            background: #f0f3f5;
-            line-height: 1.6;
+        display: none;
+        padding: 30px;
+        background: #f0f3f5;
+        line-height: 1.6;
         }
         body {
-            font-family: 'Noto Sans JP', sans-serif;
-            letter-spacing: 0.05em;
-            color: #333;
-            font-size: 1.6rem;
-            font-weight: 500;
-            line-height: 1.7;
-            font-feature-settings: "palt";        
+        font-family: 'Noto Sans JP', sans-serif;
+        letter-spacing: 0.05em;
+        color: #333;
+        font-size: 1.6rem;
+        font-weight: 500;
+        line-height: 1.7;
+        font-feature-settings: "palt";        
         }
         h2 {
-            display: block;
-            font-size: 1.5em;
-            margin-block-start: 0.83em;
-            margin-block-end: 0.83em;
-            margin-inline-start: 0px;
-            margin-inline-end: 0px;
-            font-weight: bold;
+        display: block;
+        font-size: 1.5em;
+        margin-block-start: 0.83em;
+        margin-block-end: 0.83em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        font-weight: bold;
         }
         #QuestionAndAnswer #qstnlst {
-            margin: 0 auto 10px;
-            box-sizing: border-box;
-            max-width: 960px;
-            margin-bottom: 50px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            border-bottom: 2px solid #6781a0;
+        margin: 0 auto 10px;
+        box-sizing: border-box;
+        max-width: 960px;
+        margin-bottom: 50px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        border-bottom: 2px solid #6781a0;
         }
         #QuestionAndAnswer #qstnlst li {
-            width: 19.3%;
-            text-align: center;
-            border: 2px solid #6781a0;
-            border-bottom: none;
-            position: relative;
-            background-color: #6781a0;
-            box-sizing: border-box;
+        width: 19.3%;
+        text-align: center;
+        border: 2px solid #6781a0;
+        border-bottom: none;
+        position: relative;
+        background-color: #6781a0;
+        box-sizing: border-box;
         }
         ul {
-            display: block;
-            list-style-type: disc;    
+        display: block;
+        list-style-type: disc;    
         }
         dl {
-            display: block;
-            margin-block-start: 1em;
-            margin-block-end: 1em;
-            margin-inline-start: 0px;
-            margin-inline-end: 0px;
+        display: block;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
         }
         li {
-            list-style: none;
-            display: list-item;
+        list-style: none;
+        display: list-item;
         }
         .inner {
-            max-width: 960px;
-            width: 96%;
-            margin: 0 auto;
-            box-sizing: border-box;
+        max-width: 960px;
+        width: 96%;
+        margin: 0 auto;
+        box-sizing: border-box;
         }
         .center {
-            text-align: center;
+        text-align: center;
         }
         .txt_color_main {
-            color: #6781a0;
+        color: #6781a0;
         }
         .ttl_style_main {
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 40px;
-            line-height: 1.4;
-            font-size: 3.4rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 40px;
+        line-height: 1.4;
+        font-size: 3.4rem;
         }
         #QuestionAndAnswer #qstnlst li.on {
-            background-color: #fff;
+        background-color: #fff;
         }
         #QuestionAndAnswer #qstnlst li.on a, #QuestionAndAnswer #qstnlst li:hover a {
-            color: #6781a0;
-            background-color: #fff;
+        color: #6781a0;
+        background-color: #fff;
         }
         #QuestionAndAnswer #qstnlst li a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            height: 100%;
-            padding: 10px 0;
-            box-sizing: border-box;
-            color: #fff;
-            text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        height: 100%;
+        padding: 10px 0;
+        box-sizing: border-box;
+        color: #fff;
+        text-decoration: none;
         }
         #QuestionAndAnswer #qstn1.on, #QuestionAndAnswer #qstn2.on, #QuestionAndAnswer #qstn3.on, #QuestionAndAnswer #qstn4.on, #QuestionAndAnswer #qstn5.on {
-            display: block;
+        display: block;
         }
         #QuestionAndAnswer #qstn1, #QuestionAndAnswer #qstn2, #QuestionAndAnswer #qstn3, #QuestionAndAnswer #qstn4, #QuestionAndAnswer #qstn5 {
-            display: none;
+        display: none;
         }
         a {
-            text-decoration: underline;
-            color: #6781a0;
-            text-decoration: none;
-            line-height: 1.6em;
-            word-break: break-all;
-            margin: 0;
-            padding: 0;
-            font-size: 100%;
+        text-decoration: underline;
+        color: #6781a0;
+        text-decoration: none;
+        line-height: 1.6em;
+        word-break: break-all;
+        margin: 0;
+        padding: 0;
+        font-size: 100%;
         }
-    /* p {
-            display: block;
-            margin-block-start: 1em;
-            margin-block-end: 1em;
-            margin-inline-start: 0px;
-            margin-inline-end: 0px;
-            line-height: 1.7;
+        /* p {
+        display: block;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        line-height: 1.7;
         } 
-       .mb30{
-            margin-bottom: 30px!important;
+        .mb30{
+        margin-bottom: 30px!important;
         } */
     </style>
     <head>
     </head>
     <body>
-    <section id="QuestionAndAnswer" class="area_pd">
-        <div class="inner">
-            <p class="center txt_color_main">令和3年8月20日時点</p>
-            <h2 class="ttl_style_main">よくある質問</h2>
-                           
+
+        <section id="QuestionAndAnswer" class="area_pd">
+            <div class="inner">
+                <p class="center txt_color_main">はじめてオンライン申請をされる方は「利用者登録」ボタンから、利用者登録をお願いします。</p>
+                <p class="center txt_color_main">既に利用者登録済みの方は「ログイン」ボタンから申請にお進みください。</p>
+            </div>
+            <div class="container-fluid content">
+                <div class="row" align="center">
+                    <div class="col-sm">
+                        <a class="btn btn-primary btn-lg btn-block" style="font-size:1.75em;background-color: #483c90;"
+                           role="button" target="_parent" href="{!$Site.CurrentSiteUrl}s/login/SelfRegister"><b>利用者登録</b>
+                        </a>
+                    </div>
+                    <div class="col-sm">
+                        <a class="btn btn-danger btn-lg btn-block" style="font-size:1.75em;background-color: #e53444;"
+                           role="button" target="_parent" href="{!$Site.CurrentSiteUrl}s/login"><b>ログイン</b>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="inner">
+                <p class="center txt_color_main">令和3年8月20日時点</p>
+                <h2 class="ttl_style_main">よくある質問</h2>
+                
                 <apex:form id="form">
                     <ul id="qstnlst"> 
                         <li class="on">
@@ -208,100 +230,100 @@
                         <li>
                             <a data-qstn="#qstn5"  class="tab">支給額の算定</a>
                         </li>
-                </ul> 
-        <div class="qstn_content">            
-            <div id="qstn1" class="qstn_acc_area on">
-                <apex:repeat value="{!QuestionList1}" var="lst1" id="Detail1">
-                <dl>
-                    <dt>
-                        <p class="ttl">
-                            <apex:outputField value="{!lst1.Title__c}"></apex:outputField>
-                        </p>
-                    </dt>
-                    <dd style="display: block;">
-                        <p class="mb30">
-                            <apex:outputField value="{!lst1.Text__c}"></apex:outputField>
-                        </p>
-                    </dd>
-                </dl>
-                </apex:repeat>
-        </div>
-        <div id="qstn2" class="qstn_acc_area">
-            <apex:repeat value="{!QuestionList2}" var="lst2" id="Detail2">
-                <dl>
-                <dt>
-                    <p class="ttl">
-                        <apex:outputField value="{!lst2.Title__c}"></apex:outputField>
-                    </p>
-                </dt>
-                <dd style="display: block;">
-                <p class="mb30">
-                    <apex:outputField value="{!lst2.Text__c}"></apex:outputField>
-                </p>
-                </dd>
-                </dl>
-            </apex:repeat>
-        </div>
-        <div id="qstn3" class="qstn_acc_area">
-            <apex:repeat value="{!QuestionList3}" var="lst3" id="Detail3">
-                <dl>
-                <dt>
-                    <p class="ttl">
-                        <apex:outputField value="{!lst3.Title__c}"></apex:outputField>
-                    </p>
-                </dt>
-                <dd style="display: block;">
-                    <p class="mb30">
-                    <apex:outputField value="{!lst3.Text__c}"></apex:outputField>
-                </p>
-                </dd>
-                </dl>
-            </apex:repeat>
-    </div>
-        <div id="qstn4" class="qstn_acc_area">
-            <apex:repeat value="{!QuestionList4}" var="lst4" id="Detail4">
-                <dl>
-                <dt>
-                    <p class="ttl">
-                        <apex:outputField value="{!lst4.Title__c}"></apex:outputField>
-                    </p>
-                </dt>
-                <dd style="display: block;">
-                    <p class="mb30">
-                    <apex:outputField value="{!lst4.Text__c}"></apex:outputField>
-                </p>
-                </dd>
-                </dl>
-            </apex:repeat>
-    </div>
-        <div id="qstn5" class="qstn_acc_area">
-            <apex:repeat value="{!QuestionList5}" var="lst5" id="Detail5">
-                <dl>
-                <dt>
-                    <p class="ttl">
-                        <apex:outputField value="{!lst5.Title__c}"></apex:outputField>
-                    </p>
-                </dt>
-                <dd style="display: block;">
-                    <p class="mb30">
-                    <apex:outputField value="{!lst5.Text__c}"></apex:outputField>
-                </p>
-                </dd>
-                </dl>
-            </apex:repeat>
-        </div>
-    </div>
-        
-    <script>
-        $("#qstnlst li a").on("click",function(){
-            var data= $(this).attr("data-qstn");
-            $("#qstnlst li,#qstn1,#qstn2,#qstn3,#qstn4,#qstn5").removeClass("on");
-            $(data).addClass("on");
-            $(this).parent().addClass("on");
-        }); 
-    </script>
-    </apex:form>           
-    </div>
-    </section> 
-</body>
+                    </ul> 
+                    <div class="qstn_content">            
+                        <div id="qstn1" class="qstn_acc_area on">
+                            <apex:repeat value="{!QuestionList1}" var="lst1" id="Detail1">
+                                <dl>
+                                    <dt>
+                                        <p class="ttl">
+                                            <apex:outputField value="{!lst1.Title__c}"></apex:outputField>
+                                        </p>
+                                    </dt>
+                                    <dd style="display: block;">
+                                        <p class="mb30">
+                                            <apex:outputField value="{!lst1.Text__c}"></apex:outputField>
+                                        </p>
+                                    </dd>
+                                </dl>
+                            </apex:repeat>
+                        </div>
+                        <div id="qstn2" class="qstn_acc_area">
+                            <apex:repeat value="{!QuestionList2}" var="lst2" id="Detail2">
+                                <dl>
+                                    <dt>
+                                        <p class="ttl">
+                                            <apex:outputField value="{!lst2.Title__c}"></apex:outputField>
+                                        </p>
+                                    </dt>
+                                    <dd style="display: block;">
+                                        <p class="mb30">
+                                            <apex:outputField value="{!lst2.Text__c}"></apex:outputField>
+                                        </p>
+                                    </dd>
+                                </dl>
+                            </apex:repeat>
+                        </div>
+                        <div id="qstn3" class="qstn_acc_area">
+                            <apex:repeat value="{!QuestionList3}" var="lst3" id="Detail3">
+                                <dl>
+                                    <dt>
+                                        <p class="ttl">
+                                            <apex:outputField value="{!lst3.Title__c}"></apex:outputField>
+                                        </p>
+                                    </dt>
+                                    <dd style="display: block;">
+                                        <p class="mb30">
+                                            <apex:outputField value="{!lst3.Text__c}"></apex:outputField>
+                                        </p>
+                                    </dd>
+                                </dl>
+                            </apex:repeat>
+                        </div>
+                        <div id="qstn4" class="qstn_acc_area">
+                            <apex:repeat value="{!QuestionList4}" var="lst4" id="Detail4">
+                                <dl>
+                                    <dt>
+                                        <p class="ttl">
+                                            <apex:outputField value="{!lst4.Title__c}"></apex:outputField>
+                                        </p>
+                                    </dt>
+                                    <dd style="display: block;">
+                                        <p class="mb30">
+                                            <apex:outputField value="{!lst4.Text__c}"></apex:outputField>
+                                        </p>
+                                    </dd>
+                                </dl>
+                            </apex:repeat>
+                        </div>
+                        <div id="qstn5" class="qstn_acc_area">
+                            <apex:repeat value="{!QuestionList5}" var="lst5" id="Detail5">
+                                <dl>
+                                    <dt>
+                                        <p class="ttl">
+                                            <apex:outputField value="{!lst5.Title__c}"></apex:outputField>
+                                        </p>
+                                    </dt>
+                                    <dd style="display: block;">
+                                        <p class="mb30">
+                                            <apex:outputField value="{!lst5.Text__c}"></apex:outputField>
+                                        </p>
+                                    </dd>
+                                </dl>
+                            </apex:repeat>
+                        </div>
+                    </div>
+                    
+                    <script>
+                    $("#qstnlst li a").on("click",function(){
+                        var data= $(this).attr("data-qstn");
+                        $("#qstnlst li,#qstn1,#qstn2,#qstn3,#qstn4,#qstn5").removeClass("on");
+                        $(data).addClass("on");
+                        $(this).parent().addClass("on");
+                    }); 
+                    </script>
+                </apex:form>           
+            </div>
+        </section> 
+    </body>
 </apex:page>
