@@ -396,7 +396,7 @@
                                 </div>
                                 <div class="form-inline w-100">
                                     <apex:inputField styleClass="form-control mr-3" style="max-width: 12.75rem" value="{!apply4.Applicant_Postal_Code__c}" id="applicantZip"/>
-                                    <button type="button" id="srchAppAddrBtn" class="btn btn-danger text-white" style="font-size: 1rem" onclick="getAddressByPostCode('applicantZip', 'applicantAddress')">
+                                    <button type="button" id="srchAppAddrBtn" class="btn btn-danger text-white" style="font-size: 1rem" onclick="zipSearch('applicantZip', 'applicantAddress')">
                                         <apex:outputText value="住所を検索" />
                                     </button>
                                 </div>
@@ -647,7 +647,7 @@
                                             <div class="w-100 ml-0 slds-scope row">
                                                 <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!stores.Application_Store_Postal_Code__c}" id="storePostCode"/></div>
                                                 <div>
-                                                    <button type="button" id="srchOffAddrBtn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('storePostCode', 'storeAddress')">
+                                                    <button type="button" id="srchOffAddrBtn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipSearch('storePostCode', 'storeAddress')">
                                                         <apex:outputText value="住所を検索" />
                                                     </button>
                                                 </div>
@@ -1153,35 +1153,112 @@
         })(jQuery);
 
         /**
-        * 郵便番号で住所マスタから住所を取得する
+        * 郵便番号APIで住所検索
         */
-        function getAddressByPostCode(postcodeFieldId, addressFieldId) {
-            
-            let postcode = $('input[id$="' + postcodeFieldId + '"]').val();
-            if (postcode) {
-                // 半角数字7桁(ハイフン無し)の場合、住所を検索する
-                if (postcode.match(/[0-9]{7}/)) {
-                    Visualforce.remoting.Manager.invokeAction(
-                        '{!$RemoteAction.Application4ListController.getAddress}',
-                        $('input[id$="' + postcodeFieldId + '"]').val(), 
-                        function(result, event){
-                            if (event.status) {
-                                if (!result) {
-                                    alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
-                                }
-                                $('textarea[id$="' + addressFieldId + '"]').val(result);
-                            } else {
-                                // 何もしない
-                            }
-                        }, 
-                        {escape: true}
-                    );
-                // 半角数字7桁(ハイフン無し)以外の場合
-                } else {
-                    alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
+        function zipSearch(postcodeFieldId, addressFieldId) {
+            var url = 'https://map.yahooapis.jp/search/zip/V1/zipCodeSearch?';
+            let zip_code = $('input[id$="' + postcodeFieldId + '"]').val();
+            console.log(zip_code);
+            var param = {
+                appid: '{!$Label.YOLP_APPLICATION_ID}',
+                output: 'json',
+                query: zip_code,
+                results: 100 
+            };
+            $.ajax({
+                url: url,
+                data: param,
+                dataType: 'jsonp',
+                success: function (results) {
+                    dispResultAddress(results, addressFieldId);
+                    console.log(results);
+                },
+                error: function () {
                 }
-            }
+            });
+        }
 
+        function dispResultAddress(ydf, addressFieldId) {
+            $('textarea[id$="' + addressFieldId + '"]').val('');
+            let floors = ['０', '１', '２', '３', '４', '５', '６', '７', '８', '９'];
+            var isMatched = true;
+            if (ydf.ResultInfo.Count == 1 && ydf.Feature[0].Property.Address.startsWith('東京都')) {
+                var rAdrs = ydf.Feature[0].Property.Address
+                if (rAdrs.includes("（") && rAdrs.includes("丁目") && !(rAdrs.includes("～")) && !(rAdrs.includes("、"))) {
+                    rAdrs = rAdrs.replace("（", "");
+                    rAdrs = rAdrs.replace("）", "");
+                }
+                else if (rAdrs.includes("（") && rAdrs.includes("階")) {
+                    if (rAdrs.includes("不明")) {
+                        var deleteChar = rAdrs.indexOf('（');
+                        rAdrs = rAdrs.substring(0, deleteChar);
+                        console.log(deleteChar);
+                    }
+                    for (i = 0; i < floors.length; i++) {
+                        if (rAdrs.includes(floors[i] + '階')) {
+                            isMatched = false;
+                            break;
+                        }
+                        if (isMatched) {
+                            rAdrs = rAdrs.replace("（", "");
+                            rAdrs = rAdrs.replace("）", "");
+                        }
+                    }
+                }
+                else if (rAdrs.includes('（')) {
+                    var deleteChar = rAdrs.indexOf('（');
+                    rAdrs = rAdrs.substring(0, deleteChar);
+                    console.log(deleteChar);
+                }
+                $('textarea[id$="' + addressFieldId + '"]').val(rAdrs);
+            } else if (ydf.ResultInfo.Count > 1 && ydf.Feature[0].Property.Address.startsWith('東京都')) {
+                var rAdrs = '';
+                var isMatched = true;
+                for (i = 0; ydf.Feature[0].Property.Address.length; i++) {
+                    var iAdrs = ydf.Feature[0].Property.Address.slice(0, i + 1);
+                    for (x = 1; x < ydf.ResultInfo.Count; x++) {
+                        var xAdrs = ydf.Feature[x].Property.Address
+                        if (xAdrs.indexOf(iAdrs)) {
+                            isMatched = false;
+                            break;
+                        }
+                    }
+                    if (isMatched) {
+                        rAdrs = iAdrs;
+                    } else {
+                        break;
+                    }
+                }
+                if (rAdrs.includes("（") && rAdrs.includes("丁目") && !(rAdrs.includes("～")) && !(rAdrs.includes("、"))) {
+                    rAdrs = rAdrs.replace("（", "");
+                    rAdrs = rAdrs.replace("）", "");
+                }
+                else if (rAdrs.includes("（") && rAdrs.includes("階")) {
+                    if (rAdrs.includes("不明")) {
+                        var deleteChar = rAdrs.indexOf('（');
+                        rAdrs = rAdrs.substring(0, deleteChar);
+                        console.log(deleteChar);
+                    }
+                    for (i = 0; i < floors.length; i++) {
+                        if (rAdrs.includes(floors[i] + '階')) {
+                            isMatched = false;
+                            break;
+                        }
+                        if (isMatched) {
+                            rAdrs = rAdrs.replace("（", "");
+                            rAdrs = rAdrs.replace("）", "");
+                        }
+                    }
+                }
+                else if (rAdrs.includes('（')) {
+                    var deleteChar = rAdrs.indexOf('（');
+                    rAdrs = rAdrs.substring(0, deleteChar);
+                    console.log(deleteChar);
+                }
+                $('textarea[id$="' + addressFieldId + '"]').val(rAdrs);
+            } else {
+                alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
+            }
         }
 
         function doCheckDate(y, m, d) {
