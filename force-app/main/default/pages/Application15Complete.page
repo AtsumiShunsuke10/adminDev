@@ -1,0 +1,91 @@
+<apex:page docType="html-5.0" Controller="ApplicationStage15Controller" showHeader="false" sidebar="false" cache="false" standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false">
+    <html>
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+        <link href="{!URLFOR($Resource.SiteResources, 'css/common.css')}" rel="stylesheet" />
+        <link href="{!URLFOR($Resource.SiteResources, 'css/bootstrap.min.css')}" rel="stylesheet" />
+
+        <style>
+            p {
+                font-family: "Ek Mukta";
+            }
+            span {
+                font-family: "Ek Mukta";
+            }
+            label {
+                font-family: "Ek Mukta";
+                color: #5A5A5A;
+            }
+            h3 {
+                font-family: "Ek Mukta";
+            }
+            h5 {
+                font-family: "Ek Mukta";
+            }
+            @media screen and (min-width: 769px) {
+                .topSpace {
+                    top: 15px;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container col-md-7">
+            <div class="card topSpace">
+                <div class="card-body text-center">
+                    <section class="pt-3 pb-4 mb-3">
+                        <h5 class="card-title">○○県新型コロナウイルス感染症拡大防止協力金（第15弾）の申請を承りました。</h5>
+                        <h5 class="card-title">申請結果につきましては、あらためて事務局よりご連絡させていただきます。</h5>
+                        <p class="card-text">
+                            <apex:outputText value="{0}：{1}">
+                                <apex:param value="{!$ObjectType.Application15__c.Fields['Name'].Label}" />
+                                <apex:param value="{!apply15.Name}" />
+                            </apex:outputText>
+                        </p>
+                    </section>
+                    <section class="pb-4">
+                        <p class="card-text mb-2">「zhao.erbo@trans-cosmos-digtec.co.jp」からメールが届きます。</p>
+                        <span class="card-text">万一、メールが届いていない場合は「迷惑メール」に分類されていないかお確かめの上、○○県協力金（第15弾）コールセンターにお問合わせください。</span>
+                        <br/>
+                        <span class="card-text">申請・審査状況については、ログイン後の画面から確認できます。</span>
+                    </section>
+                    <section class="pb-4">
+                        <p class="card-text mb-2">○○県協力金（第15弾）コールセンター</p>
+                        <p class="card-text">電話888-8888-8888</p>
+                    </section>
+                    <a target="_parent" href="{!$Site.CurrentSiteUrl}s/Application15List/" class="btn btn-danger" tyle="min-width: 150px">一覧へ戻る</a>
+                </div>
+            </div>
+        </div>
+
+        <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/jquery.min.js')}" />
+
+        <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/bootstrap.min.js')}" />
+
+        <script>
+            history.pushState(null, null, null);
+            window.addEventListener("popstate", function () {
+                history.pushState(null, null, null);
+            });
+            $(function () {
+                backToTop();
+
+            });
+            function backToTop() {
+                if (window.parent.window.scrollTo(0, 0) === undefined) {
+                    window.scrollTo(0, 0);
+                } else {
+                    window.parent.window.scrollTo(0, 0);
+                }
+                // document.body.scrollTop = document.documentElement.scrollTop = 0;
+                // scrollTo(0,0);
+            }
+        </script>
+    </body>
+
+    </html>
+</apex:page>

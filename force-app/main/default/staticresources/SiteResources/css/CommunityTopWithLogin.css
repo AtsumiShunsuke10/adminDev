@@ -1,0 +1,111 @@
+body {
+    max-width: 1300px;
+}
+
+.contactus {
+    text-align: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+
+.contentDai3danOverDiv {
+    background-color: #DCE6F2 !important;
+    padding: 50px 20px 50px 20px;
+    margin: 10px 0 10px 0;
+    display: inline-block;
+    vertical-align: middle;
+    height: 250px;
+    width: 100%;
+    text-align: center;
+}
+
+.contentDai3danOverTitle {
+    text-align: center;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.contentDai3danOverText {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.25em;
+}
+
+.contentDai3danOverLink {
+    font-size: 1.5em;
+    padding: 5px 10%;
+    color: white;
+    background-color: #153858;
+}
+
+.contentDai3danOverLink:link {
+    background-color: #153858;
+    color: white;
+    text-decoration: none;
+}
+
+.contentDai3danOverLink:visited {
+    color: white;
+    text-decoration: none;
+}
+
+@media screen and (max-width: 768px) {
+    
+    /* */
+    .content0Div {
+        width: 100%;
+        margin: 5px 0px 5px 0px;
+    }
+    .content0, .content1, .content4 {
+        margin: 3px 0 3px 0;
+    }
+    /* */
+
+    .contentDai3danOverText, .contentDai3danOverLink {
+        font-size: 1.1em;
+    }
+
+    .contentDai3danOverDiv {
+        width: 100%;
+    }
+
+    .contentDai2danOverTitle {
+        font-size: 1.3em;
+    }
+
+    
+}
+
+/* */
+.content0Div {
+    margin: 10px 2px 10px 2px;
+    display: inline-block;
+    vertical-align: top;
+    width: 24%;
+}
+.divDai0dan {
+    height: auto;
+}
+.content0 {
+    height: auto;
+    margin: 30px 0 30px 0;
+    text-align: center;
+}
+.content1Link {
+    color: black;
+}
+.red{font-weight: bold; color:red;font-size:1em;}
+
+.content1Img, .content4Img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+}
+
+.content2Img, .content3Img {
+    max-width: 100%;
+    margin: 15px 0 15px 0;
+}
+/* */

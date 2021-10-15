@@ -1,0 +1,18 @@
+<template>
+    <div class="slds-popover faq-tooltip" role="tooltip" id="tooltip">
+        <div class="slds-popover__body">
+            <div class="slds-text-color_weak">
+                質問
+            </div>
+            <div>
+                <lightning-formatted-rich-text value={question}></lightning-formatted-rich-text>
+            </div>
+            <div class="slds-text-color_weak slds-m-top_x-small">
+                回答
+            </div>
+            <div class="overflow">
+                <lightning-formatted-rich-text value={answer}></lightning-formatted-rich-text>
+            </div>
+        </div>
+    </div>
+</template>

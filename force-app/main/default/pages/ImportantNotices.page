@@ -1,0 +1,163 @@
+<apex:page controller="ImportantNoticesController"
+             sidebar="false"
+            showHeader="false"
+            standardStylesheets="false"
+            contentType="text/html"
+            applyBodyTag="false"
+            applyHtmlTag="false"
+            docType="html-5.0"
+            >
+      <html>
+          <head>
+              <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+              <meta http-equiv="x-ua-compatible" content="ie=edge" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+              <meta name="format-detection" content="telephone=no"/>
+              <apex:slds />
+              <!-- <link href="{!URLFOR($Resource.assets, 'css/top.scss')}" rel="stylesheet" />
+              <link href="{!URLFOR($Resource.assets, 'css/top.css')}" rel="stylesheet" /> -->
+              <style type="text/css">
+               /*common.scss*/
+               body {
+                    font-family: 'Noto Sans JP', sans-serif;
+                    letter-spacing: 0.05em;
+                    color: #333;
+                    font-size: 1.6rem;
+                    font-weight: 500;
+                    /* img{
+                        //max-width: 100%;
+                    } */
+                }
+                .inner {
+                    max-width: 960px;
+                    width: 96%;
+                    margin: 0 auto;
+                    box-sizing: border-box;
+                }
+              
+              /*_top_common.scss*/
+               body {
+                    line-height: 1.7;
+                }
+                body {
+                    font-size: 1.6rem;
+                }
+
+                body {
+                    font-feature-settings: "palt";
+                }
+                #caution_area {
+                    padding-top: 70px;
+                }
+
+                #caution_area h2 {
+                  letter-spacing: .2em;
+                }
+                #caution_area h2 {
+                  font-size: 2.2rem;
+                }
+
+                #caution_area dl dt .ttl {
+                  font-size: 1.8rem;
+                }
+                /*top.scss*/
+               
+                #caution_area h2 {
+                    color: #6781a0;
+                    text-align: center;
+                    padding-bottom: 15px;
+                }
+
+                #caution_area h2 span {
+                    position: relative;
+                    padding-left: 45px;
+                }
+                #caution_area h2 span:before {
+                  content: "";
+                  position: absolute;
+                  left: 0;
+                  /* background: url(../img/icon_caution.png) no-repeat; */
+                  top: 50%;
+                  transform: translate3d(0,-50%,0);
+                  width: 28px;
+                  height: 25px;
+                }
+                #caution_area dl {
+                    padding: 0;
+                    padding-bottom: 20px;
+                    margin-bottom: 10px;
+                    border-bottom: 1px solid #ddd;
+                }
+                #caution_area dl dt {
+                    background: #FFF;
+                    padding: 1em 0;
+                }
+
+                #caution_area dl dd {
+                    background: rgba(0,120,155,.1);
+                    padding: 30px;
+                    display: block;
+                }
+
+                #caution_area dl dt .ttl {
+                    color: #6781a0;
+                    text-decoration: none;
+                    letter-spacing: 2px;
+                }
+
+                /* #caution_area dl dd p {
+                  color: #333; 
+                  font-size: 1.6rem;
+                  font-weight: 500;
+                } */
+
+                #caution_area dl dd p .border {
+                    text-decoration: underline;
+                }
+
+                #caution_area dl dd p .attention {
+                    color: #6781a0;
+                    display: inline;
+                    width: auto;
+                    font-size: 100%;
+                }
+
+                #caution_area .box {
+                    height: 500px;
+                    overflow-y: auto;
+                }
+                #caution_area .box_wrap {
+                    border: 2px solid #6781a0;
+                    padding: 15px 30px 1px 30px;
+                    box-sizing: border-box;
+                }
+                .mb50 {
+                    margin-bottom: 50px!important;
+                }
+
+               
+              </style>
+            </head> 
+          <body>
+              <apex:form >
+                  <div id="caution_area" class="mb50">
+                      <div class="inner">
+                        <div class="box_wrap">
+                          <h2><span>重要なお知らせ</span></h2>
+                          <div class="box"> 
+                            <apex:repeat value="{!NoticeList}" var="Notice" id="theRepeat">
+                              <dl>
+                                <dt><span class="ttl"><apex:outputField value="{!Notice.Title__c}"></apex:outputField></span></dt>
+                                <dd>
+                                  <apex:outputField value="{!Notice.Content__c}"></apex:outputField>
+                                </dd>
+                              </dl>
+                            </apex:repeat>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+              </apex:form>
+          </body> 
+      </html>
+  </apex:page>

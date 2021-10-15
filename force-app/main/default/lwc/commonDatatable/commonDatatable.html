@@ -1,0 +1,22 @@
+<template>
+    <template if:true={records}>
+        <div>
+            <c-my-datatable key-field={keyfield} data={records} columns={columns} hide-checkbox-column
+                sorted-direction={sortedDirection} sorted-by={sortedBy} onsort={handleSort}>
+            </c-my-datatable>
+        </div>
+    </template>
+    <template if:false={records}>
+        <div class="slds-text-color_weak slds-text-align_center slds-p-bottom--large slds-p-top--large">
+            対象レコードは0件です
+        </div>
+    </template>
+    <div class="slds-float_right slds-align_absolute-center">
+        <span class="slds-text-color_weak">更新日 今日(<lightning-formatted-date-time value={now} hour="2-digit"
+                minute="2-digit"></lightning-formatted-date-time>)</span>
+        <a onclick={handleRefresh}>
+            <lightning-icon class="slds-p-left_x-small" icon-name="utility:refresh" size="xx-small" title="refresh">
+            </lightning-icon>
+        </a>
+    </div>
+</template>

@@ -1,0 +1,217 @@
+<apex:page sidebar="false" standardStylesheets="false" showHeader="false">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+    <link href="{!URLFOR($Resource.SiteResources, 'css/common.css')}" rel="stylesheet" />
+    <link href="{!URLFOR($Resource.SiteResources, 'css/bootstrap.min.css')}" rel="stylesheet" />
+    <link href="{!URLFOR($Resource.SiteResources, 'css/CommunityTopWithoutLogin.css')}" rel="stylesheet" />
+
+    <body  id="CommunityTopWithoutLogin">
+        <div class="container-fluid content">
+            <div id="headerarea" class="row">
+                <div class="col">
+                    <h2 align="center">○○県新型コロナウイルス感染症拡大防止協力金申請</h2>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid header__bg">
+            <div id="descriptionarea" class="row">
+                <div class="col" style="font-size:1.1em;">
+                    <p>はじめてオンライン申請をされる方は「利用者登録」ボタンから、利用者登録をお願いします。</p>
+                    <p>既に利用者登録済みの方は「ログイン」ボタンから申請にお進みください。</p>
+                    <p>制度の詳細については以下リンクにてご覧ください。</p>
+                </div>
+            </div>
+        </div>
+        <div class="content0">
+            <div class="divDai0dan">
+                <div class="content0Div">
+                    <a class="content1Link" href="#Dai1dan" target="_self">
+                        <img class="content1Img" src="{!$Resource.navi1}" />
+                    </a>
+                    <apex:outputPanel layout="none" rendered="{!IF(today() >date(2021,07,12) , true , false)}">
+                        <p><span class="red">※ 新規申請の受付は終了しました。</span></p>
+                    </apex:outputPanel>
+                </div>
+                <div class="content0Div">
+                    <a class="content1Link" href="#Dai2dan" target="_self">
+                        <img class="content1Img" src="{!$Resource.navi1}" />
+                    </a>
+                    <apex:outputPanel layout="none" rendered="{!IF(today() >date(2021,08,12) , true , false)}">
+                        <p><span class="red">※ 新規申請の受付は終了しました。</span></p>
+                    </apex:outputPanel>
+                </div>
+                <div class="content0Div">
+                    <a class="content1Link" href="#Dai3dan" target="_self">
+                        <img class="content1Img" src="{!$Resource.navi1}" />
+                    </a>
+                    <apex:outputPanel layout="none" rendered="{!IF(today() >date(2021,09,30) , true , false)}">
+                        <p><span class="red">※ 新規申請の受付は終了しました。</span></p>
+                    </apex:outputPanel>
+                </div>
+                <div class="content0Div">
+                    <a class="content1Link" href="{!$Site.CurrentSiteUrl}s/login/SelfRegister" target="_parent">
+                        <img class="content1Img" src="{!$Resource.navi2}" />
+                    </a>
+                </div>
+                <div class="content0Div">
+                    <a class="content1Link" href="{!$Site.CurrentSiteUrl}s/login" target="_parent">
+                        <img class="content1Img" src="{!$Resource.navi3}" />
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="content1" id="Dai3dan">
+            <div class="divDai3dan">
+              <p class="contentDai3danTitle">○○県新型コロナウイルス感染症拡大防止協力金（第３弾）</p>
+              <div class="content1Div">
+                <a class="content1Link" href="{!$Resource.ShinseiManual3}" target="_blank">
+                  <img class="content1Img" src="{!$Resource.content11}"></img>
+                  <p class="content1Title">○○県新型コロナウイルス<br/>感染症拡大防止協力金<br/>申請マニュアル（第３弾）</p>
+                </a>
+              </div>
+              <div class="content1Div">
+                <a class="content1Link" href="https://www.trans-cosmos-digtec.co.jp/" target="_blank">
+                  <img class="content1Img" src="{!$Resource.content12}"></img>
+                  <p class="content1Title">○○県新型コロナウイルス<br/>感染症拡大防止協力金<br/>の概要（第３弾）</p>
+                </a>
+              </div>
+            </div>
+        </div>
+        
+        <div class="content21">
+            <div class="row m-0">
+                <h3 class="about_head col-12 col-md-6 offset-md-3"><strong>○○県新型コロナウイルス<br />感染症拡大防止協力金の申請について</strong>
+                </h3>
+            </div>
+            <div class="about_contents m-2 m-md-4">
+                <h5>協力金の概要</h5>
+                <p>○○県は、新型コロナウイルス感染症の拡大を防止するため、対象地域内（○○市）にある酒類を提供する飲食店及びカラオケ店に対して時短営業の協力をお願いしました。<br /><br />
+                    これに応じて、対象となる店舗を運営し、時短営業にご協力いただいた事業者の皆様に対して、「新型コロナウイルス感染症拡大防止協力金（第３弾）」を交付いたします。<br /><br />
+                    <u>事業者の皆様に対する要請内容について</u><br />
+                    対象期間：<b>令和３年９月１日（水曜）から令和３年９月３０日（木曜）まで</b><br />
+                    対象地域：<b>○○市、○○市</b><br />
+                    対象施設：<b>酒類を提供する飲食店及びカラオケ店</b><br />
+                    　　　　　※通常の営業時間が５時から２２時までの店舗は対象外です。<br />
+                    　　　　　
+                    <span style="color:Red;"><u>例えば</u></span>
+                    、１１時に開店し、
+                    <span style="color:Red;"><u>２２時に閉店するレストランは対象外</u></span>
+                    <br />
+                    要請内容：５時から２２時までの時間短縮営業<br />
+                </p>
+                <h5>対象店舗</h5>
+                <p>
+                    <span style="color:Red;"> <b>通常２２時から翌朝５時までの夜間時間帯に営業</b></span>し、
+                    <b>
+                        <span style="color:Red;">酒類を提供</span>
+                    </b>している以下の店舗<br />
+                    ・飲食店<br />
+                    （テイクアウト専門店、イートインスペースのあるスーパーやコンビニエンスストア、キッチンカー等は対象外）<br />
+                    ・カラオケ店<br />
+                </p>
+                <h5>交付要件</h5>
+                <li>○○県内の対象地域（○○市）に対象店舗を有すること。</li>
+                <li>対象店舗にかかる食品衛生法（昭和２２年法律第２３３号）に基づく営業許可証（飲食店にかかる許可に限る。）に記載されている営業者であること。</li>
+                <li>令和３年９月１日（時短営業要請日）より前に、必要な許認可等を取得し、対象店舗において営業の実態があること。また、当該許可の有効期限が９月３０日（時短営業要請期間の最終日）以降であること。</li>
+                <li>対象店舗において、通常２２時から翌朝５時までの夜間時間帯に営業を行っていた事業者が、令和３年９月１日から９月３０日の期間、５時から２２時までの間に営業時間を短縮（休業を含む。）すること。（注）
+                </li>
+                <li>対象店舗において、「時短営業の案内」を掲示していること。</li>
+                <li>暴力団員による不当な行為の防止等に関する法律（平成３年法律第７７号）第２条に規定する暴力団員等に該当しないこと。</li>
+                <li>破産法（平成１６年法律第７５号）第１８条または第１９条に基づく破産手続開始の申立てがなされていないこと。</li>
+                <li>○○県が措置する指名停止期間中の者でないこと。</li>
+                <p>（注）時短営業の開始が遅れた場合、時短営業を開始した日から９月３０日まで連続して時短営業することが必要です。</p>
+                <h5>
+                    <span style="color:Red;">注意事項</span>
+                </h5>
+                <p>本協力金の交付後、交付要件を満たさない事実、虚偽、不正等が発覚した場合は、申請者に対し交付済の協力金の
+                    <span style="color:Red;"><u><b>全額返還</b></u></span>
+                    を求めます。あわせて、<b>
+                        <span style="color:Red;"><u><b>交付した協力金と同額の違約金の支払いを請求</b></u></span>
+                    </b>する場合があります。</p>
+                <h5>交付額</h5>
+                <p><b>１店舗あたり最大２２万円</b><br />
+                    <span style="color:Red;">・<b>時短営業の開始が遅れた場合、「時短営業した日数×２万円」を交付します。</b></span><br />
+                    　その場合、<b><u>時短営業を開始した日から９月３０日まで連続して</u></b>時短営業することが必要です。<br />
+                    <span style="color:Red;">・<b>対象地域内で複数の店舗を運営している事業者は、一括して申請してください。</b></span><br />
+                    　対象店舗数に応じて、合算して交付します。<br />
+                </p>
+                <h5>申請受付期間</h5>
+                <p><b>令和３年８月１日（日曜）から令和３年８月３１日（火曜）まで</b></p>
+
+            </div>
+        </div>
+        
+
+        <div class="content4">
+            <p class="conten4Title">申請にあたっては、次の書類が必須となります。</p>
+            <div class="content4Div"><img class="content4Img" src="{!$Resource.content41}" /></div>
+            <div class="content4Div"><img class="content4Img" src="{!$Resource.content42}" /></div>
+            <div class="content4Div"><img class="content4Img" src="{!$Resource.content43}" /></div>
+            <div class="content4Div"><img class="content4Img" src="{!$Resource.content44}" /></div>
+            <div class="content4Div"><img class="content4Img" src="{!$Resource.content45}" /></div>
+            <div class="content4Div"><img class="content4Img" src="{!$Resource.content46}" /></div>
+        </div>
+        <div class="container-fluid content">
+            <div id="receptiondate" class="row">
+                <div class="col">
+                    <h3 align="center">【申請受付期間】</h3>
+                    <p align="center"><b>令和３年８月１日（日曜）から令和３年８月３１日（火曜）まで</b></p>
+                    <p align="center">※申請方法は原則、電子申請です。窓口での申請はできません。</p>
+                    <p align="center">※締切りを過ぎて提出されたものは受け付けません。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="contentDai3danOverDiv" id="Dai2dan">
+            <p class="contentDai3danOverTitle">第2弾の受付は終了しました</p>
+            <p class="contentDai3danOverText">詳細は○○県HPを御確認ください</p>
+            <div class="contentDai3danOverLinkDiv"><a class="contentDai3danOverLink" href="https://www.trans-cosmos-digtec.co.jp/" target="_blank">○○県HPはこちら</a></div>
+        </div>
+        <div class="container-fluid content"></div>
+        <div class="contentDai3danOverDiv" id="Dai1dan">
+            <p class="contentDai3danOverTitle">第1弾の受付は終了しました</p>
+            <p class="contentDai3danOverText">詳細は○○県HPを御確認ください</p>
+            <div class="contentDai3danOverLinkDiv"><a class="contentDai3danOverLink" href="https://www.trans-cosmos-digtec.co.jp/" target="_blank">○○県HPはこちら</a></div>
+        </div>
+        <div class="container-fluid content"></div>
+        
+        <div class="content3">
+            <img class="content3Img" src="{!$Resource.content3}" />
+        </div>
+
+        <div class="container-fluid content">
+            <div class="row" align="center">
+                <div class="col-sm">
+                    <a class="btn btn-primary btn-lg btn-block" style="font-size:1.75em;background-color: #483c90;"
+                        role="button" target="_parent" href="{!$Site.CurrentSiteUrl}s/login/SelfRegister"><b>利用者登録</b>
+                    </a>
+                </div>
+                <div class="col-sm">
+                    <a class="btn btn-danger btn-lg btn-block" style="font-size:1.75em;background-color: #e53444;"
+                        role="button" target="_parent" href="{!$Site.CurrentSiteUrl}s/login"><b>ログイン</b>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid content">
+            <div class="row justify-content-center">
+                <div class="col" align="center">
+                    <h3>【申請方法についてのお問合せ】</h3>
+                    <h5>○○県協力金（第３弾）コールセンター</h5>
+                    <h5><b>888-8888-8888</b><br /></h5>
+                    受付時間　9：00～17：00（祝日、12月31日～1月3日は除く）<br />
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid content">
+            <div class="use-env">
+                <b>本サイトのご利用について（推奨OSおよびWebブラウザ）</b><br />
+                Microsoft Windows 8.1/10 をご利用の場合：Internet Explorer 11 ／Edge／Google Chrome 最新版／Firefox 最新版<br />
+                Mac(OS v10.10以上)をご利用の場合：Safari 最新版／Google Chrome 最新版／Firefox 最新版<br />
+                ※上記推奨環境以外の環境をご利用の場合、CSS・JavaScript等を無効化されている場合など、適切に表示されない場合、または一部のWebサイトをご利用いただけない場合がございます <br />
+                ※パソコン および スマートフォンからの申請が可能です。
+            </div>
+        </div>
+    </body>
+</apex:page>

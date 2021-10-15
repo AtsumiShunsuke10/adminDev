@@ -1,0 +1,162 @@
+<aura:component
+  controller="customLookUpCtrl"
+  implements="force:appHostable,force:hasRecordId,force:lightningQuickAction,lightning:availableForFlowScreens"
+  access="global"
+>
+  <!--ページ変数-->
+  <aura:attribute
+    name="selectedRecord"
+    type="sObject"
+    default="{}"
+    description="選択結果を保存する"
+  />
+    <aura:attribute
+    name="defaultRecordId" 
+    type="string" 
+    description="選択初期のID"
+  />
+    <aura:attribute
+    name="defaultRecordName" 
+    type="string" 
+    description="選択初期の名"
+  />
+    
+  <aura:attribute name="recordId" type="string" />
+  <aura:attribute name="relatedFiledId" type="string" />
+  <aura:attribute name="relatedFiledname" type="string" />
+
+  <aura:attribute
+    name="listOfSearchRecords"
+    type="List"
+    description="検索結果を保存する"
+  />
+  <aura:attribute name="SearchKeyWord" type="string" />
+  <aura:attribute name="objectAPIName" type="string" default="" />
+  <aura:attribute name="IconName" type="string" default="" />
+  <aura:attribute name="showFieldName" type="String" default="name" />
+  <aura:attribute name="searchFieldName" type="String" default="name" />
+  <aura:attribute name="isRequired" type="Boolean" default="false" />
+  <aura:attribute name="inputLableName" type="String" />
+  <aura:attribute name="addWhereCondtions" type="String" />
+  <aura:attribute name="orderByName" type="String" />
+  <aura:attribute name="limitStr" type="String" default="5"/>
+  <aura:attribute name="splitSearchKeyWord" type="String" default=" "/>
+  <aura:attribute name="searchAndOR" type="String" default="and"/>
+  <aura:attribute name="helpMsg" type="String" default="検索キーワードはスペース区切りで3つまで入力してください。"/>
+   <aura:attribute name="showAlertMsg" type="String" default=" ※検索キーワードはスペース区切りで3つまで入力してください。"/>
+　
+  <aura:attribute name="Message" type="String" default="" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <!--イベントの宣言-->
+  <aura:handler
+    name="oSelectedRecordEvent"
+    event="c:selectedsObjectRecordEvent"
+    action="{!c.handleComponentEvent}"
+  />
+
+   <!--This event used to send the data from Lightning component to vf page-->
+    <aura:registerEvent name="vfEvent" type="c:SendDataToVFPage"/>
+    <!--  add by ou 0530 start vfCall AuraMethod-->
+    <aura:method name="vfCallAuraMethod" action="{!c.clear}" access="global"> 
+    </aura:method>
+    <!--  add by ou 0530 end vfCall AuraMethod-->
+    
+  <div
+    onmouseleave="{!c.onblur}"
+    aura:id="searchRes"
+    class="slds-form-element slds-lookup slds-is-close"
+    data-select="single"
+  >
+<!--      <table>
+          <tr>
+              <td>
+                  <aura:if isTrue="{!v.isRequired}">
+                      <span style="color:rgb(194, 57, 52);" align="left">* </span>
+                  </aura:if>
+                  <span class="labelColor">{!v.inputLableName}</span>
+              </td>-->
+              <!--td style="float: right;">
+                  <lightning:helptext content="{!v.helpMsg}" />
+              </td-->
+
+   <!--       </tr>
+          <tr>
+              <td colspan="2">
+                  <span style="color:red;font-size: 11px; " align="right">{!v.showAlertMsg} </span>
+                  
+              </td>
+          </tr>
+      </table>-->
+             
+    <!--　ルックアップの検索　-->
+    <div class="slds-form-element__control">
+      <div class="slds-input-has-icon slds-input-has-icon--right">
+        <!-- 選択された結果の表示 -->
+        <div aura:id="lookup-pill" class="slds-pill-container slds-hide">
+          <lightning:pill
+            class="pillSize"
+            label="{!v.selectedRecord.Name}"
+            name="{!v.selectedRecord.Name}"
+            onremove="{! c.clear }"
+          >
+            <aura:set attribute="media">
+              <lightning:icon
+                iconName="{!v.IconName}"
+                size="x-small"
+                alternativeText="{!v.IconName}"
+              />
+            </aura:set>
+          </lightning:pill>
+        </div>
+        <div aura:id="lookupField" class="slds-show">
+          <lightning:icon
+            class="slds-input__icon slds-show"
+            iconName="utility:search"
+            size="x-small"
+            alternativeText="search"
+          />
+          <span
+            class="slds-icon_container  slds-combobox__input-entity-icon"
+            title="record"
+          >
+            <lightning:icon
+              class="slds-icon slds-icon slds-icon_small slds-icon-text-default"
+              iconName="{!v.IconName}"
+              size="x-small"
+              alternativeText="icon"
+            />
+            <span class="slds-assistive-text"></span>
+          </span>
+
+          <ui:inputText
+            click="{!c.onfocus}"
+            updateOn="keyup" 
+            keyup="{!c.keyPressController}"
+            class="slds-lookup__search-input slds-input leftPaddingClass"
+            value="{!v.SearchKeyWord}"
+            placeholder="{!v.inputLableName+'を検索中...'}"
+            required="true"
+          />
+        </div>
+      </div>
+    </div>
+    <!--　検索結果の表示　-->
+    <ul
+      style="min-height:40px;margin-top:0px !important"
+      class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds"
+      role="listbox"
+    >
+      <lightning:spinner
+        class="slds-hide"
+        variant="brand"
+        size="small"
+        aura:id="mySpinner"
+      />
+      <center> {!v.Message}</center>
+      <aura:iteration items="{!v.listOfSearchRecords}" var="singleRec">
+        <c:customLookupResultCmp oRecord="{!singleRec}" IconName="{!v.IconName}" />
+      </aura:iteration>
+    </ul>
+  </div>
+</aura:component>

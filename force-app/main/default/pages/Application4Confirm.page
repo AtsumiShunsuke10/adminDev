@@ -1,0 +1,707 @@
+<apex:page docType="html-5.0" Controller="ApplicationStage4Controller" action="{!initComfirmPage}" standardStylesheets="false"
+           showHeader="false">
+    <title>申請確認画面</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <link href="{!URLFOR($Resource.SiteResources, 'css/common.css')}" rel="stylesheet" />
+    <link href="{!URLFOR($Resource.SiteResources, 'css/bootstrap.min.css')}" rel="stylesheet"/>
+    <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/bootstrap.min.js')}"/>
+    <apex:includeScript value="/soap/ajax/46.0/connection.js" />
+    <apex:includeScript value="/soap/ajax/46.0/apex.js" />
+    
+    <style>
+        p {
+        font-family: "Ek Mukta";
+        }
+        span {
+        font-family: "Ek Mukta";
+        }
+        label {
+        font-family: "Ek Mukta";
+        color: #5A5A5A;
+        }
+        h3 {
+        font-family: "Ek Mukta";
+        }
+        h5 {
+        font-family: "Ek Mukta";
+        }
+        div {
+        font-family: "Ek Mukta";
+        }
+        .slds-section__title {
+        margin-top: 15px;
+        border-top: solid #006400 !important;
+        }
+        
+        .slds-section__title span {
+        font-size: 1.125rem !important;
+        font-weight: bold;
+        }
+        
+        .uiInput {
+        padding: 1rem;
+        }
+        
+        .infoDiv {
+        padding: 6px 0;
+        border-bottom: 0.5px solid #A4A4A4;
+        }
+        .outlabelHeigth{
+        min-height:28px;
+        padding-left: 0px;
+        padding-top: 7px;
+        }
+        .outlabel{
+        padding-left: 0px;
+        padding-top: 7px;
+        }
+        
+        .infoDiv label {
+        margin: 0;
+        font-size: 0.875rem;
+        }
+        
+        .infoDiv input,select {
+        border: 1px solid #adadad;
+        border-radius: 3px;
+        line-height: 1.875rem;
+        padding: 0 16px 0 12px;
+        }
+        
+        .infoDiv select {
+        height: 30px;
+        }
+        
+        .infoDiv textarea {
+        border: 1px solid #adadad;
+        border-radius: 3px;
+        height: 74px;
+        }
+        
+        .unvCheckBox {
+        border-color: blue !important;
+        width: 1.5rem!important;
+        height: 1.5rem!important;
+        }
+        .required .filelabel:before {
+        content:"※";
+        color: red;
+        }
+        .frame-name {
+        background-color: #d6d8d9;
+        }
+        .unvCheckBoxhonsha {
+        /* -webkit-appearance: none; */
+        margin-right: 90%;
+        border-color: blue !important;
+        width: 1.5rem!important;
+        height: 1.5rem!important;
+        vertical-align: -.25em;
+        border: 1px solid rgb(242, 242, 242);
+        border-radius: .125rem;
+        transition: .5s ease all;
+        background: rgb(255, 255, 255);
+        }
+        .imgCheckbox {
+        height: 1.4rem;
+        margin-bottom: 5px;
+        }
+        
+        .effortdtable {
+        display: table; /* ブロックレベル要素をtableと同じように表示にする */
+        }
+        .effortdtable_c {
+        display: table-cell; /* ブロックレベル要素をtd(th)と同じように表示にする */
+        vertical-align: top;
+        border: none;
+        }
+        
+        @media screen and (max-width: 768px) {
+        .selectInput {
+        width: 180px;
+        }
+        .card {
+        width: 100%;
+        border: 0;
+        }
+        .container {
+        padding: 0;
+        }
+        
+        .infoDiv label {
+        padding: 0;
+        }
+        .frame-name {
+        background: transparent;
+        }
+        }
+    </style>
+    <div id ="topblock" class="topblock" style="display:none;color:red;position:fixed;width:100%;height:100%;z-index:9999;text-align:center;">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div> 
+    <div class="container col-md-7 col-xs-12">    
+        <apex:form id="formId">
+            <apex:inputhidden value="{!tempStr}" id="iptHidden"/>
+            <div class="card">
+                <div class="p-md-3">
+                    <div><b>※提出ボタンを押すまでは、申請は提出されません</b></div>
+                    <h3 class="slds-section__title">
+                        <span>申請情報</span>
+                    </h3>
+                    <div class="card-body" style="padding-top: 0">
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="申請番号" for="applyNum" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth outlabelHeigth" value="{!application4Name}" id="ApplicationNum"/>
+                        </div>
+                        
+                        <div class="row infoDiv slds-form-element_readonly">
+                            <apex:outputLabel value="対象者区分" for="applicantDivision" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth outlabelHeigth" value="{!apply4.Applicant_Division__c}" id="applicantDivision"/>
+                        </div>
+                        
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="郵便番号（所在地又は住所）" for="applicantZip" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply4.Applicant_Postal_Code__c}" id="applicantZip" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="所在地又は住所" for="applicantAddress" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply4.Applicant_Address__c}" id="applicantAddress" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="法人の名称又は氏名" for="applicantBusinessName" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply4.Applicant_Business_Name__c}" id="applicantBusinessName" />
+                        </div>
+                        
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="店舗数☆" for="applicantStoreCount" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply4.Applicant_Store_Count__c}" id="applicantStoreCount" />
+                        </div>
+                        
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="代表者の職名" for="applicantTitle" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply4.Applicant_Title__c}" id="applicantTitle" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="代表者の氏名" for="applicantName" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply4.Applicant_Name__c}" id="applicantName" />
+                        </div>
+                        
+                        <div class="row infoDiv slds-form-element_readonly">
+                            <apex:outputLabel value="代表者又は申請者の生年月日" for="applicantBirthday" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth outlabelHeigth" value="{0, date, yyyy/MM/dd}" id="applicantBirthday" >
+                                <apex:param value="{!apply4.Applicant_Birthday__c}"></apex:param>
+                            </apex:outputText>
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="電話番号" for="applicantPhone" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply4.Applicant_Phone__c}" id="applicantPhone" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="法人番号" for="corporateNum" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply4.Corporate_Number__c}" id="corporateNum" />
+                        </div>
+                        
+                    </div>
+                    
+                    <h3 class="slds-section__title">
+                        <span>振込先口座</span>
+                    </h3>
+                    <div class="card-body" style="padding-top: 0">
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application4__c.Fields['Financial_Institution_Lookup__c'].Label}" for="financialInstitution"/>
+                            <div class="col-12 outlabelHeigth"><apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply4.FinancialName__c}" id="financialInstitution" /></div>
+                        </div>
+                        
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application4__c.Fields['Finacial_Branch_Name__c'].Label}" for="branchName"/>
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply4.Finacial_Branch_Name__c}" id="branchName" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application4__c.Fields['Finacial_Branch_Code__c'].Label}" for="branchCode"/>
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply4.Finacial_Branch_Code__c}" id="branchCode" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application4__c.Fields['Finacial_Account_Type__c'].Label}" for="accountType"/>
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply4.Finacial_Account_Type__c}" id="accountType" />
+                        </div>
+                        
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application4__c.Fields['Finacial_Account_Number__c'].Label}" for="accountNumber" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply4.Finacial_Account_Number__c}" id="accountNumber" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application4__c.Fields['Account_Holder_Input__c'].Label}" for="accountHolder"/>
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply4.Account_Holder__c}" id="accountHolder" />
+                        </div>
+                    </div>
+                    
+                    <h3 class="slds-section__title">
+                        <span>営業時間短縮を行った店舗の情報</span>
+                    </h3>
+                    <apex:repeat var="stores" value="{!storeList}" id="storeRepeat">
+                        <section id="rent_{!stores.StoreIndex__c}" style="display:{!IF(AND(stores.Application_Store_Apply_Amount__c != null, stores.Application_Store_Apply_Amount__c > 0),'', 'none')}">
+                            <div class="card">
+                                <div class="card-header">
+                                    <apex:outputText value="店舗{!stores.StoreIndex__c}" style="font-size:1.125rem;color:#adadad;font-style:italic;" />
+                                </div>
+                                
+                                <div class="card-body pt-0 pb-0">
+                                    <div class="row infoDiv required">
+                                        <apex:outputLabel value="区分" for="storeKbn{!stores.StoreIndex__c}" />
+                                        <apex:outputText styleClass="col-12 outlabelHeigth" value="{!stores.Application_Store_Kbn__c}" id="storeKbn"/>
+                                    </div>
+                                    <div class="row infoDiv required">
+                                        <apex:outputLabel value="時間短縮営業等実施期間" for="timeSavingBusiness{!stores.StoreIndex__c}" />
+                                        <apex:outputText styleClass="col-12 outlabelHeigth" value="{!storeTsbStartDateMap[stores.StoreIndex__c].tsbDisplayMsg}" id="tsbDisplayMsg" />
+                                    </div>
+                                    <div class="row infoDiv required">
+                                        <apex:outputLabel value="許可番号" for="perNumber{!stores.StoreIndex__c}" />
+                                        <div class="form-inline col-12 p-0" id="perNumber{!stores.StoreIndex__c}">
+                                            <apex:outputText styleClass="col-3 outlabelHeigth" style="width:25%;" value="{!stores.Application_Store_Per_Number_Com__c}" id="perNumberCom" />
+                                            
+                                            <label for="perNumberIssue{!stores.StoreIndex__c}" class="pl-1 pr-2">第</label>
+                                            <apex:outputText styleClass="outlabelHeigth" style="width:40%;" value="{!stores.Application_Store_Per_Number_Issue__c}" id="perNumberIssue" />
+                                            <label class="pl-1 pr-2">号</label>
+                                        </div>
+                                    </div>
+                                    <div class="row infoDiv required">
+                                        <apex:outputLabel value="許可年月日" for="perDate{!stores.StoreIndex__c}" />
+                                        <apex:outputText styleClass="col-12 outlabelHeigth" value="{!stores.Application_Store_Per_Date_Jp__c}" id="perDate" />
+                                    </div>
+                                    <div class="row infoDiv required">
+                                        <apex:outputLabel value="店舗所在地区分" for="storeAddressType{!stores.StoreIndex__c}" />
+                                        <apex:outputText styleClass="col-12 outlabelHeigth" value="{!stores.Application_Store_Address_Type__c}" id="storeAddressType" />
+                                    </div>
+                                    <div class="row infoDiv required">
+                                        <apex:outputLabel value="郵便番号" for="storePostCode{!stores.StoreIndex__c}" />
+                                        <apex:outputText styleClass="col-12 outlabelHeigth" value="{!stores.Application_Store_Postal_Code__c}" id="storePostCode" />
+                                    </div>
+                                    <div class="row infoDiv required">
+                                        <apex:outputLabel value="店舗所在地" for="storeAddress{!stores.StoreIndex__c}" />
+                                        <apex:outputText styleClass="col-12 outlabelHeigth" value="{!stores.Application_Store_Address__c}" id="storeAddress" />
+                                    </div>
+                                    <div class="row infoDiv required">
+                                        <apex:outputLabel value="店舗名称" for="storeName{!stores.StoreIndex__c}" />
+                                        <span class="col-12 outlabelHeigth">
+                                            <apex:outputField value="{! stores.Application_Store_Name__c }" id="storeName" />
+                                        </span>
+                                    </div>
+                                    <div class="row infoDiv required">
+                                        <apex:outputLabel value="取組内容" for="effortDetails{!stores.StoreIndex__c}" />
+                                        <div class="effortdtable">
+                                            <div class="effortdtable_c">
+                                                <img class="imgCheckbox" src="/img/checkbox_{!IF(stores.Application_Store_Effort_DetailsA__c, '', 'un')}checked.gif" />
+                                            </div>
+                                            <div class="effortdtable_c">
+                                                <apex:outputLabel style="margin-right: 10px;" value="県からの時間短縮営業要請時は、夜22時から翌朝5時までの時間帯に営業を行っていたが、当該要請に協力し、時短営業実施期間は、5時から22時までの間に営業時間を短縮（休業）しました。" for="storeEffortDetailsA{!stores.StoreIndex__c}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </apex:repeat>
+                    
+                    <h3 class="slds-section__title">
+                        <span>申請の内訳</span>
+                    </h3>
+                    <div class="card-body pt-0">
+                        <div class="row infoDiv">
+                            <table class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <td style="width: 30%;min-width: 5.5rem;">
+                                            申請金額
+                                        </td>
+                                        <td>
+                                            <u>*<span>&emsp;&emsp;</span>
+                                                <apex:outputField value="{! apply4.Application_Amount__c }" id="apply13" />
+                                                &nbsp;円
+                                            </u>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="table-active">申請の内訳</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <table class="col-12 table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <td scope="col" style="width: 25%;min-width: 4.85rem;">店舗No</td>
+                                                <td scope="col" class="text-center">申請金額</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <apex:repeat var="stores" value="{!storeList}" id="amountRepeat">
+                                            <tr style="{!IF(AND(stores.Application_Store_Apply_Amount__c != null, stores.Application_Store_Apply_Amount__c > 0),'','display: none')}">
+                                                <td scope="row">店舗{!stores.StoreIndex__c}</td>
+                                                <td class="text-right pr-sm-4">
+                                                    <apex:outputField value="{! stores.Application_Store_Apply_Amount__c }" id="apply" />
+                                                    &nbsp;円
+                                                </td>
+                                            </tr>
+                                            </apex:repeat> 
+                                            <tr>
+                                                <td scope="row">合　計</td>
+                                                <td class="text-right pr-sm-4">
+                                                    <apex:outputField value="{! apply4.Application_Sum_Amount__c }" id="apply12" />
+                                                    &nbsp;円
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> 
+                    
+                </div>
+                
+                <div class="card-header">
+                    <div class="lh-100">
+                        <h5>必要な書類を添付してください。</h5>
+                        <p class="text-danger">添付ファイルの容量は１ファイルあたり４ＭＢまでです。</p>
+                        <p class="text-danger">ご利用されておりますブラウザの種類によっては、「ファイル選択」ボタンの部分のファイル数は、実際のファイル数と異なる場合があります。選択いただいたファイルが全て表示されていれば正しく添付されております。</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    
+                    <!-- div class="row required" style="border:1px solid white; display: {!IF(AND(kojinFlag == true,NOT(apply4.ApplicationFlag__c)), '', 'none')}" -->
+                    <div class="row required" style="border:1px solid white; display: {!IF(kojinFlag == true, '', 'none')}">
+                        <div class="col-12 col-md-3 frame-name filelabel">
+                            <apex:outputText value="本人確認書類（＊個人事業主のみ）" /><br/>
+                            <apex:outputText value="（運転免許証、保険証等の写し（住所等が裏面記載の場合は、裏面含む）。マイナンバーカードの写しの場合は表面のみ）" />
+                            <br/>（5ファイルまで）
+                        </div>
+                        <div class="col-12 col-md-6" id ="1typerow">
+                            <!-- <apex:inputFile value="{!atts.body}" fileName="{!atts.Name}" accept="zip, lzh" /> -->
+                            <input type="file" style="max-width: 100%" name="attamentFile[]" id="1type"  multiple="multiple" onchange="doFileOnChange($(this),'');" onclick="doFileOnClick($(this));" />
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <!-- <apex:commandButton value="添付クリア" /> -->
+                            <button type="button" id = '1typedel' class="btn btn-light align-self-end" style="padding: 0" onclick="doFileDelete($(this),'');"><small>添付クリア</small></button>
+                        </div>
+                    </div>
+                    
+                    <!-- div class="row required" style="border:1px solid white;display: {!IF(apply4.ApplicationFlag__c, 'none', '')}" -->
+                    <div class="row required" style="border:1px solid white;}">
+                        <div class="col-12 col-md-3 frame-name filelabel">
+                            <apex:outputText value="振込先の通帳等の写し" /><br/>
+                            <apex:outputText value="（「金融機関名」、「支店名」、「預金種別」、「口座番号」、「口座名義人（フリガナ）」がわかること。預金通帳の場合、表紙を1ページめくった中表紙の見開き。インターネットバンキングの場合、上記の情報が分かるサイトのページ）" />
+                            <br/>（5ファイルまで）
+                        </div>
+                        <div class="col-12 col-md-6" id ="2typerow">
+                            <!-- <apex:inputFile value="{!atts.body}" fileName="{!atts.Name}" accept="zip, lzh" /> -->
+                            <input type="file" style="max-width: 100%" name="attamentFile[]" id="2type"  multiple="multiple" onchange="doFileOnChange($(this),'');"  onclick="doFileOnClick($(this));"/>
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <!-- <apex:commandButton value="添付クリア" /> -->
+                            <button type="button" id = '2typedel' class="btn btn-light align-self-end" style="padding: 0" onclick="doFileDelete($(this),'');"><small>添付クリア</small></button>
+                        </div>
+                    </div>
+                    
+                    <apex:repeat var="stores" value="{!storeList}" id="uploadFileRepeat">
+                    <div class="row required" style="border:1px solid white;display: {!IF(AND(stores.Application_Store_Apply_Amount__c != null, stores.Application_Store_Apply_Amount__c > 0),'', 'none')} ">
+                        <div class="col-12 col-md-3 frame-name filelabel">
+                            <apex:outputText value="店舗{!stores.StoreIndex__c}に関する書類" /><br/>
+                            <apex:outputText value="　・ 営業許可証の写し（食品衛生法に基づく飲食店の営業許可証の写し）" /><br/>
+                            <apex:outputText value="　・ 酒類を提供していることがわかる写真など（メニューの写真、酒類の納品書（3か月以内のもの）、ホームページの画面を印刷したもの。いずれも店舗の名称が明記されたものが必要）" /><br/>
+                            <apex:outputText value="　・ 従来の営業時間が分かる写真など（看板やメニューの写真、ホームページの画面を印刷したもの。いずれも店舗の名称が明記されたものが必要）" /><br/>
+                            <apex:outputText value="　・ 「時短営業の案内」を掲示したことがわかるもの（原則として、店先や店内に掲示した案内の写真）" /><br/>
+                            （15ファイルまで）
+                        </div>
+                        <div class="col-12 col-md-6" id ="{!stores.StoreIndex__c}storerow">
+                            <!-- <apex:inputFile value="{!atts.body}" fileName="{!atts.Name}" accept="zip, lzh" /> -->
+                            <input type="file" style="max-width: 100%" name="attamentFile[]" id="{!stores.StoreIndex__c}store"  multiple="multiple" onchange="doFileOnChange($(this),'{!stores.Id}');"  onclick="doFileOnClick($(this));"/>
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <!-- <apex:commandButton value="添付クリア" /> -->
+                            <button type="button" id = '{!stores.StoreIndex__c}storedel' class="btn btn-light align-self-end" style="padding: 0" onclick="doFileDelete($(this),'{!stores.Id}');"><small>添付クリア</small></button>
+                        </div>
+                    </div>
+                    </apex:repeat> 
+                    
+                    <div class="row">
+                        <div class="col-12 col-md-3 frame-name"></div>
+                        <div class="col-12 col-md-9">
+                            <p class="text-danger">※前画面に戻ると選択された添付ファイルはクリアされます</p>
+                            <p class="text-danger">※ファイルは、PDF・Word・Excel・JPEG・PNG 等の形式のものを提出いただけます。zipファイル（圧縮ファイル）でのご提出も可能ですが、できるだけ圧縮は行わず、個別のファイルとして提出をお願いします</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <apex:actionFunction action="{!toInputPage}" name="toInput"/>
+                        <button type="button" class="btn btn-danger btn-lg col-5 col-md-3 offset-md-2" style="font-size: 1rem" onclick="toInput();">戻る</button>
+                        <button type="button" class="btn btn-danger btn-lg col-5 offset-2 col-md-3 offset-md-2" style="font-size: 1rem" data-toggle="modal" data-target="#modalCancel">提出</button>
+                    </div>
+                </div> 
+            </div>
+            <div class="modal fade" data-backdrop="static" id="modalCancel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div id="modalCancelDialog" class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">申請提出</h4>
+                            <button type="button" class="close" id="myModalLabel" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            本内容で承ります。提出後は、申請内容を変更・修正できません。
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">
+                                取消
+                            </button>
+                            <button type="button" id="confirmId" class="btn btn-primary" onclick="havafilecheck()">
+                                提出
+                            </button>
+                            <apex:actionFunction action="{!toCompletePage}" name="toComplete" />
+                        </div>
+                    </div>    
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </apex:form>
+    </div>
+    
+    
+    
+    <script type="text/javascript">
+    $(function () {
+        backToTop();
+        
+    });
+    history.pushState(null, null, null);
+    window.addEventListener("popstate", function() {
+        history.pushState(null, null, null);
+    });
+    // file onclick
+    function doFileOnClick(_this) {
+        $(_this).val('');
+    }
+    // file onchange
+    function doFileOnChange(_this,storeID) {
+        if($(_this).val()!=null && $(_this).val()!=''){
+            panelBlock();
+            var uploadFile = $(_this)[0];
+            var nameadd = $(_this)[0].id;
+            var result = nameadd + 'row';
+            var filesu = $('#'+result).find("span").length;
+            if(filecheck(uploadFile,nameadd,filesu)){
+                var filekousu=0;
+                //$(_this).prop("disabled","disabled");
+                var json = [];
+                
+                for (var i = 0; i < uploadFile.files.length; i++) {
+                    
+                    (function (file) {
+                        var filename;
+                        var filebody;
+                        //var attach = {};
+                        //var name = nameadd+'_'+file.name;
+                        var reader = new FileReader();
+                        var applicaton2 = "{!apply4.SessionRadom__c}";
+                        reader.onload = function (e) {
+                            // get file content  
+                            // ファイル名を取得する
+                            filename = nameadd+'_'+file.name;
+                            // ファイルの中身を取得する
+                            filebody = e.target.result;
+                            sforce.connection.sessionId = '{!$Api.Session_ID}';
+                            //var sessonid = '{!$Api.Session_ID}';
+                            var response = sforce.apex.execute("ApplicationStage4Controller", "saveToDocument", { filename: filename, filebody: filebody,tempStr:applicaton2, store:storeID });
+                            //json.push(attach);
+                            //var jsonStr = JSON.stringify(json);
+                            //$('input[id$="attachmentStr"]').val(jsonStr);
+                            var respObj = JSON.parse(response);
+                            if (respObj['status'] == '200') {
+                                var id= respObj['id'];
+                                $('#'+result).append('<br><span class="file-link"><a href="javascript:srcUp(\'{!$Site.BaseUrl}/sfc/servlet.shepherd/version/download/'+id+'?asPdf=false&operationContext=CHATTER\');">'+file.name+'</a></span>');
+                                filekousu++;
+                                if(filekousu==uploadFile.files.length){
+                                    panelUnblock();
+                                }
+                                
+                            } else {
+                                alert('添付ファイルアップロード失敗');
+                                filekousu++;
+                                if(filekousu==uploadFile.files.length){
+                                    panelUnblock();
+                                }
+                                // if(uploadFile.files.length>1){
+                                //     var resultdel = nameadd.replace( 'type', 'del' );
+                                //     doFileDelete(_this);
+                                // }
+                            }
+                            
+                        }
+                        reader.readAsDataURL(file);
+                        
+                    })(uploadFile.files[i]);
+                }
+            }else{
+                $(_this).val('');
+                panelUnblock();    
+            }
+        }
+    }
+    function doFileDelete(_this,storeID) {
+        var nameadd = $(_this)[0].id;
+        var result = nameadd.replace( 'del', '' );
+        var result2 = nameadd.replace( 'del', 'row' );
+        $('#'+result2).find("span").remove();
+        $('#'+result2).find("br").remove();
+        //$('#'+result).removeAttr("disabled");
+        $('#'+result).val('');
+        var applicaton2 = "{!apply4.SessionRadom__c}";
+        sforce.connection.sessionId = '{!$Api.Session_ID}';
+        //var sessonid = '{!$Api.Session_ID}';
+        var response = sforce.apex.execute("ApplicationStage4Controller", "deleteDocument", { filename: result,tempStr: applicaton2, store:storeID});
+        var respObj = JSON.parse(response);
+        if (respObj['status'] == '200') {
+            panelUnblock();
+        } else {
+            panelUnblock();
+            alert('添付ファイル削除失敗');
+        }
+    }
+    
+    function havafilecheck() {
+        $('#confirmBtn').prop('disabled','disabled');
+        var checkResult = true;
+        $('#modalCancel').modal("hide");
+        $('.required:visible').has('input[type="file"]').each(function(index, element){
+            if ($(element).find('span.file-link').length == 0) {
+                // TODO
+                $('#confirmBtn').removeAttr('disabled');
+                alert('「※」の項目全てにファイルを添付していただかないと、提出ができません。');
+                checkResult = false;
+                return false;
+            }
+        });
+        
+        if(checkResult){
+            backToTop();
+            toComplete();
+        }
+    }
+    //filecheck
+    function filecheck(files,typename,filesu){
+        var CAPACITY = 4194304;
+        if(savedFileCheck(files,typename,filesu)){
+            //filesize  と filetype
+            for(var i = 0; i < files.files.length; i++){
+                if(files.files[i].size>CAPACITY){
+                    // alert('１ファイルあたり4MBを目安に添付下さい');
+                    alert('添付ファイルの容量は１ファイルあたり4MBまでです');
+                    return false;
+                }
+                if(files.files[i].size == 0){
+                    alert('添付ファイルアップロード失敗');
+                    return false;
+                }
+                //filetype check
+                if(!fileTypeCheck(files.files[i].name)){
+                    return false;
+                }
+            }
+            return true;
+        }else{
+            return false;
+        }
+        
+    }
+    //files数量チェック
+    function savedFileCheck(uploadFile,typename,filesu){
+        // 該当タイプの最大数を取得
+        var maxNum;
+        switch(typename) {
+            case '1type':
+            case '2type':
+                maxNum = 5;
+                break;
+            default:
+                maxNum = 15;
+        }
+        
+        if(uploadFile.files.length + filesu > maxNum){
+            // alert('ファイルの最大数を超えました！');
+            alert('添付できるファイルは' + maxNum + 'ファイルまでです');
+            return false;
+        }
+        return true;
+    } 
+    // 添付ファイル拡張子チェック 
+    function fileTypeCheck(filename){
+        var isSafe = true;
+        if(filename.indexOf(".")==-1){
+            isSafe = false;
+            alert("拡張子が."  + " "  + "のファイルはアップロードできません。");
+        }
+        else{
+            var ext = filename.substring(filename.lastIndexOf('.'),filename.length).replace('.','').toLowerCase();
+            var fileType = "html,htt,mht,svg,swf,thtml,xhtml,exe,bat";
+            var arr = fileType.split(',');
+            if(IsInArray(arr,ext)){
+                isSafe = false;
+                alert("拡張子が."  + ext  + "のファイルはアップロードできません。");
+            }
+        }
+        return isSafe;
+        
+    }
+    
+    function IsInArray(arr,val){  
+        var tempStr=','+arr.join(",")+",";  
+        return tempStr.indexOf(","+val+",")!=-1;  
+    } 
+    
+    function panelBlock(){
+        
+        document.getElementById("topblock").setAttribute("style","display:block;position:fixed;width:100%;height:100%;z-index:9999;text-align:center;");
+        if(IsPC()){$('#topblock').css('padding-top', window.parent.pageYOffset  + "px");
+                  }else{
+                      $('#topblock').css('padding-top', "200px");
+                  }
+    }
+    function panelUnblock(){
+        document.getElementById("topblock").setAttribute("style","display:none;position:fixed;width:100%;height:100%;z-index:9999;text-align:center;");
+        
+    }
+    function backToTop(){
+        if(window.parent.window.scrollTo(0,0)===undefined){
+            window.scrollTo(0,0);
+        }else{
+            window.parent.window.scrollTo(0,0);
+        }
+        // document.body.scrollTop = document.documentElement.scrollTop = 0;
+        // scrollTo(0,0);
+    }
+    
+    $('#modalCancel').on('show.bs.modal', function (e) {
+        if(IsPC()){
+            if(!isIE()){
+                $('#modalCancelDialog').css('margin-top', window.parent.pageYOffset  + "px");
+            }
+        }else{
+            $('#modalCancelDialog').css('margin-top', "200px");
+        }
+    });
+    
+    function IsPC(){  
+        flag = false;
+        if (window.parent.pageYOffset > 2000) { flag = true;  }  
+        return flag;  
+    }
+    
+    function isIE(){
+        if(!!window.ActiveXObject || "ActiveXObject" in window)
+            return true;
+        else
+            return false;
+    }
+    </script>    
+</apex:page>

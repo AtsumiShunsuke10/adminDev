@@ -1,0 +1,47 @@
+<design:component>
+  <design:attribute
+    name="inputLableName"
+    label="ラベル表示内容"
+    required="true"
+  />
+  <design:attribute
+    name="objectAPIName"
+    label="オブジェクト API 参照名"
+    required="true"
+  />
+  <design:attribute
+    name="IconName"
+    label="表示Icon名（standard:account）"
+    required="true"
+  />
+  <design:attribute
+    name="searchFieldName"
+    label="検索の項目 API 参照名（複数の項目がカンマで区切り）"
+    required="true"
+  />
+    <design:attribute
+    name="showFieldName"
+    label="検索の結果表示API 参照名（複数の項目がカンマで区切り）"
+    required="true"
+  />
+  <design:attribute name="searchAndOR" label="項目検索 [and]、[or]"/>
+  <design:attribute name="isRequired" label="必須（表示の必須）" />
+    <design:attribute name="splitSearchKeyWord" label="検索条件区切りキー（デフォルト半角スペース）" description="（スペース[ ]、カンマ[,]、ナカグロ[・]、セミコロン[；]、スラッシュ[/]、ハイフン[-]）半角文字を入力してください。"/>
+
+  <design:attribute
+    name="relatedFiledname"
+    label="検索の参照項目 API 参照名（１項目のみ）"
+  />
+    <design:attribute name="addWhereCondtions" label="検索のフィルター条件" />
+    <design:attribute name="orderByName" label="検索のソート項目（空の場合は最終閲覧日でソート）" />
+    <design:attribute name="limitStr" label="検索の表示件数（5件がデフォルト）" />
+    
+  <design:attribute name="relatedFiledId" label="関連用の項目のId" />
+
+  <design:attribute name="recordId" label="選択Id" />
+   <design:attribute name="helpMsg" label="ヘルプ内容" />
+   <design:attribute name="showAlertMsg" label="ラベルの隣に追加内容" />
+    <design:attribute name="defaultRecordId" label="選択初期のID"/>
+    <design:attribute name="defaultRecordName" label="選択初期の名" />
+    
+</design:component>

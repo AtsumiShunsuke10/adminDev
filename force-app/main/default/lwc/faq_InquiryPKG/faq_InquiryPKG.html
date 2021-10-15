@@ -1,0 +1,27 @@
+<template>
+    <lightning-card title="FAQ">
+        <div class="slds-var-m-around_medium">
+            <lightning-input
+                type="search"
+                onchange={handleKeyChange}
+                class="slds-show slds-is-relative slds-var-m-bottom_small"
+            ></lightning-input>
+            <p>{titleLabel}</p>
+            <template if:true={searchResults}>
+                <template for:each={searchResults} for:item="faq">
+                    <c-faq-tile
+                        class="slds-show slds-is-relative, slds-border_bottom"
+                        key={faq.Id}
+                        faq={faq}
+                        caseid={recordId}
+                    ></c-faq-tile>
+                </template>
+            </template>
+            <template if:false={searchResults}>
+                <div class="slds-text-color_weak slds-text-align_center slds-p-bottom--large slds-p-top--large">
+                    条件に一致するFAQが見つかりません。
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,87 @@
+<template>
+    <div>
+        <p class="testcss">店舗情報を表示するLWC</p>
+        <p>進捗率：{progressRate}％（{endScreeningAppCount}／{storeCount}）</p>
+        <div>
+            店舗No.
+            <lightning-button-menu onselect={handleOnSelectStoreMenu} variant="border-filled">
+                <template for:each={storeIndexArray} for:item="storeIndex">
+                    <lightning-menu-item key={storeIndex.value} value={storeIndex.value} label={storeIndex.label}>
+                    </lightning-menu-item>
+                </template>
+            </lightning-button-menu>
+        </div>
+        <div>
+            <lightning-tabset variant="scoped" active-tab-value=''>
+                <template for:each={showingStoreInfos} for:item="showingStoreInfo">
+                    <lightning-tab key={showingStoreInfo.storeIndex} label={showingStoreInfo.label} value={showingStoreInfo.storeIndex} onactive={handleTabActive} data-index={showingStoreInfo.storeIndex}>
+                        <lightning-record-edit-form object-api-name="Store15__c" record-id={showingStoreInfo.id} data-id={showingStoreInfo.id}>
+                            <lightning-accordion active-section-name={activeSections} allow-multiple-sections-open>
+                                <lightning-accordion-section name="basicInfo" label="基本情報">
+                                    <lightning-input-field field-name="Application_Store_NameKana__c"></lightning-input-field>
+                                    <lightning-input-field field-name="Application_Store_Name__c"></lightning-input-field>
+                                    <lightning-input-field field-name="Application_Store_Phone__c"></lightning-input-field>
+                                    <lightning-input-field field-name="Application_Store_Postal_Code__c"></lightning-input-field>
+                                    <lightning-input-field field-name="Application_Store_Address__c"></lightning-input-field>
+                                    <lightning-input-field field-name="Application_Store_Per_Number__c"></lightning-input-field>
+                                    <lightning-input-field field-name="Bussinesshours_and_Liqur_or_Karaokeoffer__c"></lightning-input-field>
+                                    <lightning-input-field field-name="Sticker_Bulletin__c"></lightning-input-field>
+                                    <lightning-input-field field-name="Leader_Appointment__c"></lightning-input-field>
+                                    <lightning-input-field field-name="Karaoke_Offerstatus__c"></lightning-input-field>
+                                    <lightning-input-field field-name="Bussineshours_and_Liqurservingtime1__c"></lightning-input-field>
+                                    <lightning-input-field field-name="Bussineshours_and_Liqurservingtime2__c"></lightning-input-field>
+                                    <lightning-input-field field-name="Bussineshours_and_Liqurservingtime3__c"></lightning-input-field>
+                                    <lightning-input-field field-name="Application_Store_Apply_Amount__c"></lightning-input-field>
+                                </lightning-accordion-section>
+                                <lightning-accordion-section name="screeningInfo" label="審査情報" data-name="screeningInfo">
+                                    <lightning-input-field field-name="Store_Business_Permit_Document__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="Store_Appearance_Document__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="Store_Time_Saving_Document_Old__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="FinishedPrice_Paper__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="FinalincomeTaxReturnDocument__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="AmountOfSoldDocument__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="CertificateOfInfectionPrevention__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="Store_Business_Permit_And_Add_Is_Same__c	" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="Stacker__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="WrittenOath__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="MeterinspectionOrReceipt__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="ConditionsAndSignature__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="OLCorrespondingApplicant__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="OLCorrespondingBranchnameAndLocation__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="Store_Business_Permit_Info_Is_Correct__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="BusinessContents_NoOmission__c" onchange={handleOnChangeField}></lightning-input-field>
+                                </lightning-accordion-section>
+                            </lightning-accordion>
+                        </lightning-record-edit-form>
+                    </lightning-tab>
+                </template>
+            </lightning-tabset>
+            <lightning-button variant="brand" label="更新" onclick={updateStoreInfo} disabled={isDisabled}>
+            </lightning-button>
+        </div>
+        <!-- <div>
+            <div class="slds-tabs_default">
+                <ul class="slds-tabs_scoped__nav" role="tablist">
+                    <li class="slds-tabs_default__item slds-is-active" title="Item One" role="presentation" onclick={testHandler}>
+                        <a class="slds-tabs_default__link" href="#" role="tab" tabindex="0" aria-selected="true"
+                            aria-controls="tab-default-1" id="tab-default-1__item">Item One</a>
+                    </li>
+                    <li class="slds-tabs_default__item" title="Item Two" role="presentation" onclick={testHandler} style="background-color: pink;">
+                        <a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1" aria-selected="false"
+                            aria-controls="tab-default-2" id="tab-default-2__item">Item Two</a>
+                    </li>
+                    <li class="slds-tabs_default__item" title="Item Three" role="presentation" onclick={testHandler} style="background-color: aqua;">
+                        <a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1" aria-selected="false"
+                            aria-controls="tab-default-3" id="tab-default-3__item">Item Three</a>
+                    </li>
+                </ul>
+                <div id="tab-default-1" class="slds-tabs_default__content slds-hide" role="tabpanel"
+                    aria-labelledby="tab-default-1__item">Item One Content</div>
+                <div id="tab-default-2" class="slds-tabs_default__content slds-show" role="tabpanel"
+                    aria-labelledby="tab-default-2__item">Item Two Content</div>
+                <div id="tab-default-3" class="slds-tabs_default__content slds-hide" role="tabpanel"
+                    aria-labelledby="tab-default-3__item">Item Three Content</div>
+            </div>
+        </div> -->
+    </div>
+</template>

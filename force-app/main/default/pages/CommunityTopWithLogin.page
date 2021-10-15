@@ -1,0 +1,144 @@
+<apex:page sidebar="false" standardStylesheets="false" showHeader="false">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+
+    <link href="{!URLFOR($Resource.SiteResources, 'css/common.css')}" rel="stylesheet" />
+    <link href="{!URLFOR($Resource.SiteResources, 'css/bootstrap.min.css')}" rel="stylesheet" />
+    <link href="{!URLFOR($Resource.SiteResources, 'css/CommunityTopWithLogin.css')}" rel="stylesheet" />
+
+    <body  id="CommunityTopWithLogin">
+        <div class="container-fluid content">
+            <div id="headerarea" class="row">
+                <div class="col">
+                    <h2 align="center">○○県新型コロナウイルス感染症拡大防止協力金申請</h2>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid header__bg">
+            <div id="descriptionarea" class="row">
+                <div class="col">
+                    <h3 align="center">オンライン申請の流れ</h3>
+                </div>
+            </div>
+            <div class="row row-steps mb-20">
+                <div class="col-md-3">
+                    <div class="steps-title">
+                        <p class="text-green"><b>事前準備</b></p>
+                        <p>申請に必要な添付書類の準備</p>
+                    </div>
+                    <p class="form-explain">
+                        「マニュアル参照ください」<br />
+                        <a target="_blank" href="{!$Resource.ShinseiManual3}"><b>※</b>申請マニュアルP37</a>
+                    </p>
+                </div>
+                <div class="col-md-3 col-steps">
+                    <div class="steps-title">
+                        <p class="text-green"><b>STEP.1</b></p>
+                        <p>申請情報の入力</p>
+                    </div>
+                    <p class="form-explain">
+                        「マニュアル参照ください」<br />
+                        <a target="_blank" href="{!$Resource.ShinseiManual3}"><b>※</b>申請マニュアルP13</a><br />
+                    </p>
+                </div>
+                <div class="col-md-3 col-steps">
+                    <div class="steps-title">
+                        <p class="text-green"><b>STEP.2</b></p>
+                        <p>添付書類の選択</p>
+                    </div>
+                    <p class="form-explain">
+                        「マニュアル参照ください」<br />
+                        <a target="_blank" href="{!$Resource.ShinseiManual3}"><b>※</b>申請マニュアルP23</a><br />
+                    </p>
+                </div>
+                <div class="col-md-3 col-steps">
+                    <div class="steps-title">
+                        <p class="text-green"><b>STEP.3</b></p>
+                        <p>申請完了</p>
+                    </div>
+                    <p class="form-explain">※申請完了後に確認メールが自動送付されます</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content0">
+            <div class="divDai0dan">
+                <div class="content0Div">
+                    <a class="content1Link" href="#Dai1dan" target="_self">
+                        <img class="content1Img" src="{!$Resource.navi1}" />
+                    </a>
+                    <apex:outputPanel layout="none" rendered="{!IF(today() >date(2021,07,12) , true , false)}">
+                        <p><span class="red">※ 新規申請の受付は終了しました。</span></p>
+                    </apex:outputPanel>
+                </div>
+                <div class="content0Div">
+                    <a class="content1Link" href="#Dai2dan" target="_self">
+                        <img class="content1Img" src="{!$Resource.navi1}" />
+                    </a>
+                    <apex:outputPanel layout="none" rendered="{!IF(today() >date(2021,08,12) , true , false)}">
+                        <p><span class="red">※ 新規申請の受付は終了しました。</span></p>
+                    </apex:outputPanel>
+                </div>
+                <apex:outputPanel layout="none" rendered="{!IF(today() <=date(2021,09,30) , true , false)}">
+                    <div class="content0Div">
+                        <a class="content1Link" href="{!$Site.CurrentSiteUrl}s/Application4List"  target="_self">
+                            <img class="content1Img" src="{!$Resource.navi1}" />
+                        </a>
+                    </div>
+                </apex:outputPanel>
+                <apex:outputPanel layout="none" rendered="{!IF(today() > date(2021,09,30) , true , false)}">
+                    <div class="content0Div">
+                        <a class="content1Link" href="#Dai3dan"  target="_self">
+                            <img class="content1Img" src="{!$Resource.navi1}" />
+                        </a>
+                        <p><span class="red">※ 新規申請の受付は終了しました。</span></p>
+                    </div>
+                </apex:outputPanel>
+            </div>
+        </div>
+       
+        <!-- div class="contentDai3danOverDiv">
+            <p class="contentDai3danOverTitle">第3弾の受付は終了しました</p>
+            <div class="contentDai3danOverLinkDiv"><a class="contentDai3danOverLink" href="{!$Site.CurrentSiteUrl}s/Application4List" target="_parent">こちらから第3弾の審査状況をご確認いただけます。</a></div><br />
+            <a target="_blank" href="{!$Resource.ShinseiManual3}"><b>※</b>申請マニュアル（第3弾）はこちら</a><br />
+        </div-->
+        
+        <div class="container-fluid content">
+            <div class="contactus">
+                <h3>【申請方法についてのお問合せ】</h3>
+                <h5>○○県協力金（第３弾）コールセンター</h5>
+                <h5><b>888-8888-8888</b><br /></h5>
+                受付時間　9：00～17：00（祝日、12月31日～1月3日は除く）<br />
+            </div>
+        </div>
+        
+        <apex:outputPanel layout="none" rendered="{!IF(today() >date(2021,09,30) , true , false)}">
+            <div class="contentDai3danOverDiv" id="Dai3dan">
+                <p class="contentDai3danOverTitle">第3弾の受付は終了しました</p>
+                <p class="contentDai3danOverText">詳細は○○県HPを御確認ください</p>
+                <div class="contentDai3danOverLinkDiv"><a class="contentDai3danOverLink" href="https://www.trans-cosmos-digtec.co.jp/" target="_blank">○○県HPはこちら</a></div>
+            </div>
+            <div class="container-fluid content"></div>
+        </apex:outputPanel>
+        <div class="contentDai3danOverDiv" id="Dai2dan">
+            <p class="contentDai3danOverTitle">第2弾の受付は終了しました</p>
+            <p class="contentDai3danOverText">詳細は○○県HPを御確認ください</p>
+            <div class="contentDai3danOverLinkDiv"><a class="contentDai3danOverLink" href="https://www.trans-cosmos-digtec.co.jp/" target="_blank">○○県HPはこちら</a></div>
+        </div>
+        <div class="container-fluid content"></div>
+        <div class="contentDai3danOverDiv" id="Dai1dan">
+            <p class="contentDai3danOverTitle">第1弾の受付は終了しました</p>
+            <p class="contentDai3danOverText">詳細は○○県HPを御確認ください</p>
+            <div class="contentDai3danOverLinkDiv"><a class="contentDai3danOverLink" href="https://www.trans-cosmos-digtec.co.jp/" target="_blank">○○県HPはこちら</a></div>
+        </div>
+        
+        <div class="container-fluid content">
+            <div class="use-env">
+                <b>本サイトのご利用について（推奨OSおよびWebブラウザ）</b><br />
+                Microsoft Windows 8.1/10 をご利用の場合：Internet Explorer 11 ／Edge／Google Chrome 最新版／Firefox 最新版<br />
+                Mac(OS v10.10以上)をご利用の場合：Safari 最新版／Google Chrome 最新版／Firefox 最新版<br />
+                ※上記推奨環境以外の環境をご利用の場合、CSS・JavaScript等を無効化されている場合など、適切に表示されない場合、または一部のWebサイトをご利用いただけない場合がございます <br />
+                ※パソコン および スマートフォンからの申請が可能です。
+            </div>
+        </div>
+    </body>
+</apex:page>

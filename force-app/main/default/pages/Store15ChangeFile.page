@@ -1,0 +1,413 @@
+<!--Store15ChangeFile-->
+<apex:page docType="html-5.0" Controller="Application15ListController" action="{!initStoreChangePage}" standardStylesheets="false"
+    showHeader="false">
+    <title>店舗添付資料再提出画面</title>
+    <meta charset="utf-8" />
+    <!-- <meta name="viewport" content="width=device-width, user-scalable=yes, minimum-scale=0.5, maximum-scale=3.0, initial-scale=1, shrink-to-fit=no" /> -->
+
+    <link href="{!URLFOR($Resource.SiteResources, 'css/common.css')}" rel="stylesheet" />
+    <link href="{!URLFOR($Resource.SiteResources, 'css/bootstrap.min.css')}" rel="stylesheet" />
+    <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/jquery.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/bootstrap.min.js')}" />
+    <apex:includeScript value="/soap/ajax/46.0/connection.js" />
+    <apex:includeScript value="/soap/ajax/46.0/apex.js" />
+
+    <style>
+        p {
+            font-family: "Ek Mukta";
+        }
+
+        span {
+            font-family: "Ek Mukta";
+        }
+
+        label {
+            font-family: "Ek Mukta";
+            color: #5A5A5A;
+        }
+
+        h3 {
+            font-family: "Ek Mukta";
+        }
+
+        h5 {
+            font-family: "Ek Mukta";
+        }
+
+        div {
+            font-family: "Ek Mukta";
+        }
+
+        .slds-section__title {
+            margin-top: 15px;
+            border-top: solid #006400 !important;
+        }
+
+        .slds-section__title span {
+            font-size: 1.125rem !important;
+            font-weight: bold;
+        }
+
+        .uiInput {
+            padding: 1rem;
+        }
+
+        .infoDiv {
+            padding: 6px 0;
+            border-bottom: 0.5px solid #A4A4A4;
+        }
+
+        .outlabelHeigth {
+            min-height: 28px;
+            padding-left: 0px;
+            padding-top: 7px;
+        }
+
+        .outlabel {
+            padding-left: 0px;
+            padding-top: 7px;
+        }
+
+        .infoDiv label {
+            margin: 0;
+            font-size: 0.875rem;
+        }
+
+        .infoDiv input,
+        select {
+            border: 1px solid #adadad;
+            border-radius: 3px;
+            line-height: 1.875rem;
+            padding: 0 16px 0 12px;
+        }
+
+        .infoDiv select {
+            height: 30px;
+        }
+
+        .infoDiv textarea {
+            border: 1px solid #adadad;
+            border-radius: 3px;
+            height: 74px;
+        }
+
+        .unvCheckBox {
+            border-color: blue !important;
+            width: 1.5rem!important;
+            height: 1.5rem!important;
+        }
+
+        .frame-name {
+            background-color: #d6d8d9;
+        }
+
+        .required .filelabel:before {
+            content: "※";
+            color: red;
+        }
+
+        filelabel .unvCheckBoxhonsha {
+            /* -webkit-appearance: none; */
+            margin-right: 90%;
+            border-color: blue !important;
+            width: 1.5rem!important;
+            height: 1.5rem!important;
+            vertical-align: -.25em;
+            border: 1px solid rgb(242, 242, 242);
+            border-radius: .125rem;
+            transition: .5s ease all;
+            background: rgb(255, 255, 255);
+        }
+
+        .imgCheckbox {
+            height: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .selectInput {
+                width: 180px;
+            }
+            .card {
+                width: 100%;
+                border: 0;
+            }
+            .container {
+                padding: 0;
+            }
+
+            .infoDiv label {
+                padding: 0;
+            }
+            .frame-name {
+                background: transparent;
+            }
+        }
+    </style>
+    <div id="topblock" class="topblock" style="display:none;color:red;position:fixed;width:100%;height:100%;z-index:9999;text-align:center;">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <div class="container col-md-7 col-xs-12">
+        <apex:form id="formId">
+            <apex:inputhidden value="{!tempStr}" id="iptHidden" />
+            <div class="card">
+                <div class="card-header">
+                    <div class="lh-100">
+                        <h5>必要な書類を添付してください。</h5>
+                        <p class="text-danger">添付ファイルの容量は１ファイルあたり４ＭＢまでです。</p>
+                        <p class="text-danger">ご利用されておりますブラウザの種類によっては、「ファイル選択」ボタンの部分のファイル数は、実際のファイル数と異なる場合があります。選択いただいたファイルが全て表示されていれば正しく添付されております。</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <apex:outputPanel layout="block">
+                        <div class="row required">
+                            <div class="col-12 col-md-3 frame-name filelabel">
+                                <apex:outputText value="店舗{!store.StoreIndex__c}に関する書類" /><br/>
+                                <apex:outputText value="　・ 営業許可証の写し（食品衛生法に基づく飲食店の営業許可証の写し）" /><br/>
+                                <apex:outputText value="　・ 酒類を提供していることがわかる写真など（メニューの写真、酒類の納品書（3か月以内のもの）、ホームページの画面を印刷したもの。いずれも店舗の名称が明記されたものが必要）" /><br/>
+                                <apex:outputText value="　・ 従来の営業時間が分かる写真など（看板やメニューの写真、ホームページの画面を印刷したもの。いずれも店舗の名称が明記されたものが必要）" /><br/>
+                                <apex:outputText value="　・ 「時短営業の案内」を掲示したことがわかるもの（原則として、店先や店内に掲示した案内の写真）" /><br/>
+                                （15ファイルまで）
+                            </div>
+                            <div class="col-12 col-md-6" id ="{!store.StoreIndex__c}storerow">
+                                <input type="file" style="max-width: 100%" name="attamentFile[]" id="{!store.StoreIndex__c}store"  multiple="multiple" onchange="doFileOnChange($(this),'{!store.Id}');"  onclick="doFileOnClick($(this));"/>
+                            </div>
+                            <div class="col-4 col-md-3">
+                                <button type="button" id = '{!store.StoreIndex__c}storedel' class="btn btn-light align-self-end" style="padding: 0" onclick="doFileDelete($(this),'{!store.Id}');"><small>添付クリア</small></button>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                    <div class="row">
+                        <apex:actionFunction action="{!returnPrevPage}" name="returnPrevPage" />
+                        <apex:actionFunction action="{!returnDetailPage}" name="toComplete" />
+                        <button type="button" class="btn btn-info btn-lg col-5 col-md-3 offset-md-2" style="font-size: 1rem" onclick="returnPrevPage();">戻る</button>
+                        <button type="button" class="btn btn-danger btn-lg col-5 offset-2 col-md-3 offset-md-2" style="font-size: 1rem" onclick="havafilecheck()">提出</button>
+                    </div>
+                </div>
+            </div>
+        </apex:form>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            backToTop();
+        });
+        history.pushState(null, null, null);
+        window.addEventListener("popstate", function () {
+            history.pushState(null, null, null);
+        });
+        // file onclick
+        function doFileOnClick(_this) {
+            $(_this).val('');
+        }
+        // file onchange
+        function doFileOnChange(_this,storeID) {
+            if ($(_this).val() != null && $(_this).val() != '') {
+                panelBlock();
+                var uploadFile = $(_this)[0];
+                var nameadd = $(_this)[0].id;
+                var result = nameadd + 'row';
+                var filesu = $('#' + result).find("span").length;
+                if (filecheck(uploadFile, nameadd, filesu)) {
+                    var filekousu = 0;
+                    var json = [];
+
+                    for (var i = 0; i < uploadFile.files.length; i++) {
+                        (function (file) {
+                            var filename;
+                            var filebody;
+                            var reader = new FileReader();
+                            var applicaton = "{!apply15.SessionRadom__c}";
+                            var numberUpload = "{!apply15.Number_FileReUpload__c}";
+                            reader.onload = function (e) {
+                                // get file content  
+                                // ファイル名を取得する
+                                filename = nameadd + '_re' + numberUpload + '_' + file.name;
+                                // ファイルの中身を取得する
+                                filebody = e.target.result;
+                                sforce.connection.sessionId = '{!$Api.Session_ID}';
+
+                                var response = sforce.apex.execute("Application15ListController", "saveToDocument", { filename: filename, filebody: filebody, tempStr: applicaton , store:storeID});
+                                var respObj = JSON.parse(response);
+                                if (respObj['status'] == '200') {
+                                    var id = respObj['id'];
+                                    $('#' + result).append('<br><span class="file-link"><a href="javascript:srcUp(\'{!$Site.BaseUrl}/sfc/servlet.shepherd/version/download/' + id + '?asPdf=false&operationContext=CHATTER\');">' + file.name + '</a></span>');
+                                    filekousu++;
+                                    if (filekousu == uploadFile.files.length) {
+                                        panelUnblock();
+                                    }
+
+                                } else {
+                                    alert('添付ファイルアップロード失敗');
+                                    filekousu++;
+                                    if (filekousu == uploadFile.files.length) {
+                                        panelUnblock();
+                                    }
+                                }
+
+                            }
+                            reader.readAsDataURL(file);
+
+                        })(uploadFile.files[i]);
+                    }
+                } else {
+                    $(_this).val('');
+                    panelUnblock();
+                }
+            }
+        }
+        function doFileDelete(_this,storeID) {
+            var nameadd = $(_this)[0].id;
+            var result = nameadd.replace('del', '');
+            $('#' + result).val('');
+            result = result + '_re' + "{!apply15.Number_FileReUpload__c}";
+            var result2 = nameadd.replace('del', 'row');
+            $('#' + result2).find("span").remove();
+            $('#' + result2).find("br").remove();
+
+            var applicaton2 = "{!apply15.SessionRadom__c}";
+            sforce.connection.sessionId = '{!$Api.Session_ID}';
+            
+            var response = sforce.apex.execute("Application15ListController", "deleteDocument", { filename: result, tempStr: applicaton2 , store:storeID});
+            var respObj = JSON.parse(response);
+            if (respObj['status'] == '200') {
+                panelUnblock();
+            } else {
+                panelUnblock();
+                alert('添付ファイル削除失敗');
+            }
+        }
+
+        function havafilecheck() {
+            $('#confirmBtn').prop('disabled', 'disabled');
+            var checkResult = true;
+            $('#modalCancel').modal("hide");
+            $('.required:visible').has('input[type="file"]').each(function (index, element) {
+                if ($(element).find('span.file-link').length == 0) {
+                    $('#confirmBtn').removeAttr('disabled');
+                    alert('「※」の項目全てにファイルを添付していただかないと、提出ができません。');
+                    checkResult = false;
+                    return false;
+                }
+            });
+
+            if (checkResult) {
+                backToTop();
+                toComplete();
+            }
+        }
+
+        //filecheck
+        function filecheck(files, typename, filesu) {
+            var CAPACITY = 4194304;
+            if (savedFileCheck(files, typename, filesu)) {
+                //filesize  と filetype
+                for (var i = 0; i < files.files.length; i++) {
+                    if (files.files[i].size > CAPACITY) {
+                        alert('１ファイルあたり4MBを目安に添付下さい');
+                        return false;
+                    }
+                    //filetype check
+                    if (!fileTypeCheck(files.files[i].name)) {
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+        //files数量チェック
+        function savedFileCheck(uploadFile, typename, filesu) {
+            // 該当タイプの最大数を取得
+            var maxNum;
+            switch(typename) {
+                case '1type':
+                case '2type':
+                    maxNum = 5;
+                    break;
+                default:
+                    maxNum = 15;
+            }
+
+            if(uploadFile.files.length + filesu > maxNum){
+                alert('ファイルの最大数を超えました！');
+                return false;
+            }
+            return true;
+        }
+        
+        // 添付ファイル拡張子チェック 
+        function fileTypeCheck(filename) {
+            var isSafe = true;
+            if (filename.indexOf(".") == -1) {
+                isSafe = false;
+                alert("拡張子が." + " " + "のファイルはアップロードできません。");
+            }
+            else {
+                var ext = filename.substring(filename.lastIndexOf('.'), filename.length).replace('.', '').toLowerCase();
+                var fileType = "html,htt,mht,svg,swf,thtml,xhtml,exe,bat";
+                var arr = fileType.split(',');
+                if (IsInArray(arr, ext)) {
+                    isSafe = false;
+                    alert("拡張子が." + ext + "のファイルはアップロードできません。");
+                }
+            }
+            return isSafe;
+
+        }
+
+        function IsInArray(arr, val) {
+            var tempStr = ',' + arr.join(",") + ",";
+            return tempStr.indexOf("," + val + ",") != -1;
+        }
+
+        function panelBlock() {
+
+            document.getElementById("topblock").setAttribute("style", "display:block;position:fixed;width:100%;height:100%;z-index:9999;text-align:center;");
+            if (IsPC()) {                
+                $('#topblock').css('padding-top', window.parent.pageYOffset + "px");
+            } else {
+                $('#topblock').css('padding-top', "200px");
+            }
+        }
+        function panelUnblock() {
+            document.getElementById("topblock").setAttribute("style", "display:none;position:fixed;width:100%;height:100%;z-index:9999;text-align:center;");
+
+        }
+        function backToTop() {
+            if (window.parent.window.scrollTo(0, 0) === undefined) {
+                window.scrollTo(0, 0);
+            } else {
+                window.parent.window.scrollTo(0, 0);
+            }
+        }
+
+        $('#modalCancel').on('show.bs.modal', function (e) {
+            if (!isIE() && IsPC()) {
+                $('#modalCancelDialog').css('margin-top', window.parent.pageYOffset + "px");
+            }
+        });
+
+
+
+        function IsPC() {
+            var userAgentInfo = navigator.userAgent.toLowerCase();
+            var Agents = new Array("android", "iphone", "symbianOS", "windows phone", "ipad", "ipod");
+            var flag = true;
+            for (var v = 0; v < Agents.length; v++) {
+                if (userAgentInfo.indexOf(Agents[v]) > 0) { flag = false; break; }
+            }
+            return flag;
+        }
+
+        function isIE() {
+            if (!!window.ActiveXObject || "ActiveXObject" in window)
+                return true;
+            else
+                return false;
+        }
+    </script>
+</apex:page>

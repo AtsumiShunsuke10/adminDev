@@ -1,0 +1,12 @@
+<template>
+    <div class="slds-clearfix">
+        <lightning-datatable
+            key-field="Name"
+            data={informationBrowsingHistories}
+            onrefresh={handleRefresh}
+            columns={columns}
+            onheaderaction={handleHeaderAction}>
+        </lightning-datatable>
+        <div class="slds-float_right">既読: {readCount}名　未読: {unreadCount}名　既読率: {readRate}%</div>
+    </div>
+</template>

@@ -1,0 +1,125 @@
+<apex:page controller="NewNoticesController"
+             sidebar="false"
+            showHeader="false"
+            standardStylesheets="false"
+            contentType="text/html"
+            applyBodyTag="false"
+            applyHtmlTag="false"
+            docType="html-5.0"
+            >
+      <html>
+          <head>
+              <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+              <meta http-equiv="x-ua-compatible" content="ie=edge" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+              <meta name="format-detection" content="telephone=no"/>
+              <apex:slds />
+              <style type="text/css">
+                /*_top_common.scss*/
+                body {
+                    font-family: 'Noto Sans JP',sans-serif;
+                    letter-spacing: .05em;
+                    color: #333;
+                    font-size: 1.6rem;
+                    font-weight: 500;
+                }
+                body {
+                    font-feature-settings: "palt";
+                }
+                body {
+                    line-height: 1.7;
+                }
+                body {
+                    font-size: 1.6rem;
+                }
+
+                .mb50 {
+                    margin-bottom: 50px!important;
+                }
+                #news h2  {
+                    letter-spacing: .2em;
+                }
+                #news h2{
+                    margin-bottom: 10px!important;
+                }
+
+                #news h2{
+                  font-size: 2.2rem;
+                }
+                
+                /*top.scss*/
+                #news {
+                    padding: 0 0 0;
+                }
+
+                #news .box_wrap {
+                    padding: 20px 30px 10px;
+                    border: 2px solid #6781a0;
+                }
+
+                #news h2 {
+                    color: #6781a0;
+                    text-align: center;
+                }
+                #news .inner_box {
+                    max-height: 260px;
+                    overflow-y: auto;
+                }
+                #news .recordArea {
+                    width: 100%;
+                    box-sizing: border-box;
+                    padding-right: 50px;
+                    border-bottom: 1px solid #ddd;
+                    padding-top: 1em;
+                    padding-bottom: 1em;
+                    align-items: flex-start;
+                    display: flex;
+                    justify-content: space-between;
+                    position: relative;
+                    flex-wrap: wrap;
+                }
+                
+                #news .recordArea span {
+                    display: block;
+                }
+
+                #news .recordArea :last-child {
+                  border-right: 0px 
+                }
+                #news .date {
+                    font-size: 80%;
+                }
+
+                #news .ttl {
+                    width: 84%;
+                }
+                 /*common.scss*/
+                .inner {
+                    max-width: 960px;
+                    width: 96%;
+                    margin: 0 auto;
+                    box-sizing: border-box;
+                }
+
+              </style>
+            </head> 
+          <body>
+              <apex:form >
+                <div class="mb50" id="news">
+                  <div class="inner">
+                    <div class="box_wrap">
+                      <h2>新着のお知らせ</h2>
+                      <div class="inner_box">
+                        <div class="link"> 
+                          <apex:repeat value="{!NoticeList}" var="Notice" id="theRepeat">
+                            <apex:outputField value="{!Notice.Content__c}"></apex:outputField>
+                          </apex:repeat>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </apex:form>
+          </body> 
+      </html>
+  </apex:page>

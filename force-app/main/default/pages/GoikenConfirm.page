@@ -1,0 +1,131 @@
+<apex:page docType="html-5.0" showHeader="false" standardStylesheets="false" controller="GoikenController" cache="false">
+<head>
+    <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/>
+    <!-- Import the Design System style sheet -->
+    <apex:slds />
+</head>
+<style type = "text/css">
+    .section{
+        padding: 5em 2% 3em;
+        box-sizing: border-box;
+    }
+    .title {
+        font-size: 3.3rem;
+        letter-spacing: 4px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    .messageText {
+        text-align: center;
+    }
+    .inner {
+        background: #FFF;
+        max-width: 960px;
+        box-shadow: 0 0 10px rgb(0 0 0 / 30%);
+        margin: 40px auto;
+        padding: 50px;
+    }
+    .subjectBox{
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        font-size: 1.6rem;
+    }
+    .subjectName {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        width: 200px;
+        text-align: center;
+        background: #6781a0;
+        color: #FFF;
+        letter-spacing: 6px;
+        padding: 20px;
+    }
+    .subject {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 30px;
+        box-sizing: border-box;
+        background: #f6f6f6;
+        width: calc(100% - 200px);
+        position: relative;
+    }
+    .iken {
+        position: relative;
+        background: #f6f6f6;
+        margin-top: 20px;
+        padding: 40px;
+        margin-bottom: 30px;
+    }
+    .ikenMoji {
+        color: #6781a0;
+        letter-spacing: 1px;
+        width: 100%;
+        font-size: 2rem;
+        margin: 5px 0 10px;
+    }
+    .ikenBox {
+        width: 100%;
+        border: none;
+        box-sizing: border-box;
+        height: 300px;
+        font-size: 1.6rem;
+        box-shadow: 0 0 10px rgb(0 0 0 / 20%);
+        padding: 16px;
+        border-radius: 4px;
+    }
+    .button {
+        appearance: none;
+        width: 90%;
+        background: #d55d5d;
+        color: #FFF;
+        border: 0;
+        font-size: 2rem;
+        max-width: 580px;
+        border-radius: 4px;
+        padding: 18px;
+        box-shadow: 0 0 10px rgb(0 0 0 / 30%);
+        margin: 30px auto 0 auto;
+        letter-spacing: 3px;
+    }
+</style>
+<body>
+    <apex:form >
+        <section id = "section">
+            <br><label for="subject">件名</label><input  id="subject" maxlength="80" name="subject" size="20" type="text" /></br>
+            <br>ご意見:<textarea  id="00N0l0000095wEm" name="00N0l0000095wEm" rows="3" type="text" wrap="soft"></textarea></br>
+            
+            <br>掲載内容の分かりやすさ:<select  id="00N0l0000095wG9" name="00N0l0000095wG9" title="掲載内容の分かりやすさ"><option value="">--なし--</option><option value="分かりづらい">分かりづらい</option>
+            <option value="やや分かりづらい">やや分かりづらい</option>
+            <option value="どちらでもない">どちらでもない</option>
+            <option value="やや分かりやすい">やや分かりやすい</option>
+            <option value="分かりやすい">分かりやすい</option>
+            </select></br>
+            
+            <br>申請しやすさ:<select  id="00N0l0000095wHW" name="00N0l0000095wHW" title="申請しやすさ"><option value="">--なし--</option><option value="申請しづらい">申請しづらい</option>
+            <option value="やや申請しづらい">やや申請しづらい</option>
+            <option value="どちらでもない">どちらでもない</option>
+            <option value="やや申請しやすい">やや申請しやすい</option>
+            <option value="申請しやすい">申請しやすい</option>
+            </select></br>
+            
+            <br>サイトデザイン:<select  id="00N0l0000095wHg" name="00N0l0000095wHg" title="サイトデザイン"><option value="">--なし--</option><option value="分かりづらい">分かりづらい</option>
+            <option value="やや分かりづらい">やや分かりづらい</option>
+            <option value="どちらでもない">どちらでもない</option>
+            <option value="やや分かりやすい">やや分かりやすい</option>
+            <option value="分かりやすい">分かりやすい</option>
+            </select></br>
+            
+            <br><input type="hidden"  id="external" name="external" value="1" /></br>
+                <div>
+                    <apex:commandButton value="内容を送信する" action="{!submit}"/>
+                    <apex:commandButton value="修正する" action="{!input}"/>
+                </div>
+        </section>
+    </apex:form>
+</body>
+</apex:page>

@@ -1,0 +1,1330 @@
+<!--Application4Input-->
+<apex:page docType="html-5.0" Controller="ApplicationStage4Controller" action="{!initInputPage}" sidebar="false" standardStylesheets="false" showHeader="false" applyHtmlTag="false" applyBodyTag="false">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <head>
+            <title>申請確認画面</title>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+            
+            <link href="{!URLFOR($Resource.SiteResources, 'css/common.css')}" rel="stylesheet" />
+            <link href="{!URLFOR($Resource.SiteResources, 'css/bootstrap.min.css')}" rel="stylesheet"/>
+            <apex:stylesheet value="{!URLFOR($Resource.otherResource, 'otherResource/css/animate.min.css')}" />
+            
+            <!--add by ou start　20200525 lookupコンポーネント用のjs-->
+            <apex:includeLightning /> 
+            <script>
+            var cmpvar; //add by ou 0530
+            $Lightning.use("c:customLookupApp", function() {
+                
+                var createComponentOptions = {};
+                if("{!$CurrentPage.parameters.backflag}"=="true"){
+                    createComponentOptions["SearchKeyWord"] ="{!apply4.FinancialName__c}";
+                }
+                createComponentOptions["inputLableName"] ="金融機関名"; //入力欄の表示名
+                createComponentOptions["objectAPIName"] ="C_FinancialInstitutiokanji__c"; //検索のオブジェクト名
+                createComponentOptions["IconName"] ="standard:account"; //検索のIcon
+                createComponentOptions["searchFieldName"] ="name,name,name"; //検索項目
+                createComponentOptions["showFieldName"] ="name"; //検索の結果用の表示項目
+                createComponentOptions["searchAndOR"] ="and"; //検索のAND or
+                createComponentOptions["orderByName"] ="name"; //検索のソート
+                createComponentOptions["splitSearchKeyWord"] =" "; //検索の区切り
+                
+                $Lightning.createComponent(
+                    "c:customLookupCmp",
+                    createComponentOptions,
+                    "lookup",
+                    function(cmp) {
+                        cmpvar = cmp; //add by ou 0530
+                        //コンポーネントの値の渡す事件
+                        $A.eventService.addHandler({ "event": "c:SendDataToVFPage", "handler" : retriveEventData }); 
+                    });
+                function retriveEventData(event) {
+                    //コンポーネントの値を取得
+                    var recordinfo= event.getParam("currentRecDetails");
+                    $('input[id$="FinancialHidden"]').val(recordinfo.Id);
+                }
+            }); 
+            //add by ou 0530 start
+            function auraMethodCall(){
+                if(cmpvar!=null && cmpvar!=undefined){
+                    cmpvar.vfCallAuraMethod();
+                }
+            }
+            //add by ou 0530 end 
+            
+            function changeStoreDisplay(idx){
+                var index = idx+1;
+                jQuery('[id$=store'+index+'Card]').show();
+                jQuery('[id$=store'+idx+'tr]').show(); 
+            }
+
+            </script>
+            <!--add by ou end 20200525-->
+            <apex:slds />
+            
+            <style>
+                p {
+                font-family: "Ek Mukta";
+                }
+                span {
+                font-family: "Ek Mukta";
+                }
+                label {
+                font-family: "Ek Mukta";
+                color: #5A5A5A;
+                }
+                select {
+                font-family: "Ek Mukta";
+                }
+                h3 {
+                font-family: "Ek Mukta";
+                }
+                h5 {
+                font-family: "Ek Mukta";
+                }
+                li {
+                font-family: "Ek Mukta";
+                }
+                div {
+                font-family: "Ek Mukta";
+                }
+                .slds-lookup__search-input::-webkit-input-placeholder {
+                font: 1rem "Ek Mukta";
+                /* padding-left: 1rem; */
+                }
+                .slds-listbox__option .slds-listbox__option-meta{
+                color: #222222;
+                font: 1rem "Ek Mukta";
+                }
+                .slds-pill__label {
+                font: 1rem "Ek Mukta";
+                }
+                .slds-section__title {
+                margin-top: 15px;
+                border-top: solid #006400 !important;
+                }
+                
+                .slds-section__title span {
+                font-size: 1.125rem !important;
+                font-weight: bold;
+                }
+                
+                .uiInput {
+                padding: 1rem;
+                }
+                
+                .infoDiv {
+                padding: 6px 0;
+                }
+                
+                .infoDiv label {
+                margin: 0;
+                font-size: 1rem;
+                }
+                
+                .infoDiv input,select {
+                border: 1px solid #adadad;
+                border-radius: 3px;
+                line-height: 1.875rem;
+                padding: 0 14px;
+                height: 40px;
+                }
+                
+                .infoDiv select {
+                border: 1px solid #adadad;
+                border-radius: 3px;
+                line-height: 1.875rem;
+                padding: 0 0 0 14px;
+                height: 40px;
+                }
+                
+                .infoDiv textarea {
+                border: 1px solid #adadad;
+                border-radius: 3px;
+                height: 74px;
+                }
+                
+                .unvCheckBox {
+                /* -webkit-appearance: none; */
+                border-color: blue !important;
+                width: 1.5rem!important;
+                height: 1.5rem!important;
+                vertical-align: -.25em;
+                border: 1px solid rgb(242, 242, 242);
+                border-radius: .125rem;
+                transition: .5s ease all;
+                background: rgb(255, 255, 255);
+                }
+                .unvCheckBoxhonsha {
+                /* -webkit-appearance: none; */
+                margin-right: 90%;
+                border-color: blue !important;
+                width: 1.5rem!important;
+                height: 1.5rem!important;
+                vertical-align: -.25em;
+                border: 1px solid rgb(242, 242, 242);
+                border-radius: .125rem;
+                transition: .5s ease all;
+                background: rgb(255, 255, 255);
+                }
+                .unvCheckBoxSecond {
+                margin-left: 5px;
+                border-color: blue !important;
+                width: 1.25rem!important;
+                height: 1.25rem!important;
+                vertical-align: -.25em;
+                border: 1px solid rgb(242, 242, 242);
+                border-radius: .125rem;
+                transition: .5s ease all;
+                background: rgb(255, 255, 255);
+                }
+                
+                .noteDiv {
+                /* padding-bottom: 20px; */
+                }
+                
+                .noteDiv p {
+                border:1px solid #adadad;
+                border-radius: 3px;
+                padding: 6px;
+                }
+                
+                .required>label:before {
+                content:"*";
+                color: red;
+                }
+                
+                .helpIcon:hover {   
+                background-image: url(/img/help/helpOrbs.gif);   
+                background-repeat: no-repeat;   
+                width: 16px;   
+                height: 15px;      
+                background-position: right;   
+                
+                }   
+                .helpIcon {   
+                background-image: url(/img/help/helpOrbs.gif);   
+                background-repeat: no-repeat;   
+                width: 16px;   
+                height: 15px;   
+                }
+                
+                .slds-scope .slds-nubbin_bottom-left:before {
+                left: 6rem;
+                }
+                .slds-scope .slds-nubbin_bottom-left:after {
+                left: 6rem;
+                }
+                .slds-form-element__icon {
+                color: rgb(171, 173, 176);
+                margin-left: .5rem;
+                }
+                .slds-form-element__icon:hover .slds-popover{
+                display: block!important;
+                }
+                
+                .helptext-container {
+                position: absolute!important;
+                min-width: 17rem;
+                /* margin-bottom: 0.875rem; */
+                bottom: 1.75rem;
+                margin-left: -5.6rem;
+                }
+                
+                .hasFieldError {   
+                border: 1px solid rgb(194, 57, 52)!important; 
+                }
+                .fieldErrorMsg {
+                font-size: 0.85rem;   
+                color: rgb(194, 57, 52)!important;
+                }
+                .error-header {
+                background: rgb(194, 57, 52);
+                padding: 1rem;
+                color: rgb(255, 255, 255);
+                line-height: 1.25;
+                border-radius: 0.25rem;
+                }
+                
+                .icon-plus::before {
+                content: '\FF0B';
+                color: #A7C0DE;
+                background-color: #F0F8FF;
+                font-size: 1.1em;
+                margin-left: -1rem;
+                margin-right: .25rem;
+                padding: 0 5px;
+                border: 1px solid #A7C0DE;
+                border-radius: .1em;
+                text-align: center;
+                width: 1.7em;
+                left: 0;
+                }
+                .icon-minus::before {
+                content: '\FF0D';
+                color: #A7C0DE;
+                font-size: 1.1em;
+                margin-left: -1rem;
+                margin-right: .25rem;
+                padding: 0 5px;
+                border: 1px solid #A7C0DE;
+                border-radius: .1em;
+                background-color: #FFF;
+                text-align: center;
+                width: 1.7em;
+                left: 0;
+                }
+                
+                .postcode-padding {
+                padding-right: 10px;
+                }
+                
+                .effortdtable {
+                display: table; /* ブロックレベル要素をtableと同じように表示にする */
+                }
+                .effortdtable_c {
+                display: table-cell; /* ブロックレベル要素をtd(th)と同じように表示にする */
+                vertical-align: top;
+                border: none;
+                }
+                
+                @media screen and (max-width: 768px) {
+                
+                .card {
+                width: 100%;
+                border: 0;
+                }
+                .container {
+                padding: 0;
+                }
+                
+                .infoDiv label {
+                padding: 0;
+                font-size: 0.875rem;
+                }
+                
+                .slds-form-element__icon {
+                bottom: .2rem;
+                }
+                
+                .message {
+                margin-top: .5rem;
+                }
+                
+                /*xs画面でのみ非表示にする（大きな画面に切り替えたときに元のdisplayスタイル(例：display：table-header-group)を変更しないようにするため、一般的なdisplayスタイルについては、Bootstrapの標準スタイル：d-noneを使用してください）*/
+                .d-xs-none {
+                visibility: collapse;
+                }
+                }
+            </style>
+        </head>
+        
+        <div class="container col-md-7"> 
+            <apex:form id="formId">
+                
+                <div class="card">
+                    <div id="errorMsgArea" class="message d-none">
+                        <apex:inputHidden value="{!JSONString}" id="msgHidden" />
+                        <div class="error-header col-12">
+                            <h5>このページのエラーを確認してください。</h5>
+                        </div>
+                    </div>
+                    <div class="pt-md-3 pl-md-3 pr-md-3">
+                        <h3 class="slds-section__title">
+                            <span>申請情報</span>
+                        </h3>
+                        <div class="card-body" style="padding-top: 0">
+                            
+                            <!-- div class="row noteDiv mb-3">
+<p class="col-12">中小企業・個人事業主支援金（第1弾）、中小企業・個人事業主支援金（第２弾）の申請が「支給決定」の方（支援金が支給された方）は、簡易申請を利用することができます。<br/>   
+簡易申請を利用すると、一部の入力や申請を省略できます。<br/>
+簡易申請を利用するには、中小企業・個人事業主支援金（第1弾）、中小企業・個人事業主支援金（第２弾）の申請情報を利用することに同意する必要があります。 
+</p>
+<div class="col text-center">
+<apex:inputCheckbox styleClass="unvCheckBox" value="{!apply4.Simple_Application_Agree__c}" id="ApplicationFlagPledge" onchange="isSimplechanged(this)"/>
+<apex:outputLabel value="簡易申請を行う" for="ApplicationFlagPledge"/>
+</div>
+</div>
+<div class="form-group" id="tbox" style="display: none;">   
+<div class="row infoDiv">
+<apex:outputLabel value="{!$ObjectType.Application4__c.Fields['ApplicationName__c'].Label}" for="applyNum" style="width:100%"/>
+<apex:selectList id="application" size="1" styleClass="form-control" style="height:40px;width:50%" value="{!selectedApplication}" disabled="">
+<apex:selectOptions value="{!SelectApplication}"/>
+<apex:actionSupport event="onchange" oncomplete="doApplictionChange(this)" rerender="applyNum"/>
+</apex:selectList>
+<apex:selectList id="applyNum" size="1" styleClass="form-control" style="height:40px;width:50%" value="{!selectedApplicationId}" onchange="doApplictionNumChange(this)" disabled="">
+<apex:selectOptions value="{!SelectApplicationNum}"/>
+</apex:selectList>
+<p>※申請番号を選択いただくと以下★の項目は自動反映されます。
+</p>
+</div>
+</div -->
+                            
+                            
+                            <div class="row noteDiv mb-3">
+                                <p class="col-12">中小企業・個人事業主支援金（第1弾）、中小企業・個人事業主支援金（第２弾）の申請が「支給決定」の方（支援金が支給された方）は、簡易申請を利用することができます。<br/>   
+                                    簡易申請を利用すると、一部の入力や申請を省略できます。<br/>
+                                    簡易申請を利用するには、中小企業・個人事業主支援金（第1弾）、中小企業・個人事業主支援金（第２弾）の申請情報を利用することに同意する必要があります。 
+                                </p>
+                                <div class="col text-center">
+                                    <apex:inputCheckbox styleClass="unvCheckBox" value="{!apply4.Simple_Application_Agree__c}" id="ApplicationFlagPledge" onchange="isSimplechanged(this)"/>
+                                    <apex:outputLabel value="簡易申請を行う" for="ApplicationFlagPledge"/>
+                                </div>
+                            </div>
+                            <div class="form-group" id="tbox" style="display: none;">   
+                                <div class="row infoDiv">
+                                    <apex:outputLabel value="{!$ObjectType.Application4__c.Fields['ApplicationName__c'].Label}" for="applyNum" style="width:100%"/>
+                                    <apex:selectList id="application" size="1" styleClass="form-control" style="height:40px;width:50%" value="{!selectedApplication}" disabled="">
+                                        <apex:selectOptions value="{!SelectApplication}"/>
+                                        <apex:actionSupport event="onchange" oncomplete="doApplictionChange(this)" rerender="applyNum"/>
+                                    </apex:selectList>
+                                    <apex:selectList id="applyNum" size="1" styleClass="form-control" style="height:40px;width:50%" value="{!selectedApplicationId}" onchange="doApplictionNumChange(this)" disabled="">
+                                        <apex:selectOptions value="{!SelectApplicationNum}"/>
+                                    </apex:selectList>
+                                    <p>※申請番号を選択いただくと以下★の項目は自動反映されます。
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="row infoDiv required autofill">
+                                <apex:outputLabel value="対象者区分（法人番号なしの団体は個人事業主を選択してください。）" for="applicantDivision" />
+                                <apex:inputField styleClass="form-control" value="{!apply4.Applicant_Division__c}" id="applicantDivision" onchange="dodivisionChange(this)"/>
+                            </div>
+                            <div class="row infoDiv required autofill">
+                                <apex:outputLabel value="郵便番号（所在地又は住所）" for="applicantZip" />
+                                <div class="slds-scope">
+                                    <div class="slds-form-element">
+                                        <div class="slds-form-element__icon">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS,'assets/icons/utility-sprite/svg/symbols.svg#info')}"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Help</span>
+                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-hide helptext-container" role="tooltip" id="help_applicantZip">
+                                                <div class="slds-popover__body">{!$ObjectType.Application4__c.Fields.Applicant_Postal_Code__c.inlineHelpText}。</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-100 slds-scope row">
+                                    <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Applicant_Postal_Code__c}" id="applicantZip"/></div>
+                                    <div>
+                                        <button type="button" id="srchAppAddrBtn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('applicantZip', 'applicantAddress')">
+                                            <apex:outputText value="住所を検索" />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row infoDiv required autofill">
+                                <apex:outputLabel value="所在地又は住所（番地以降は入力してください。）" for="applicantAddress" />
+                                <apex:inputField styleClass="form-control" value="{!apply4.Applicant_Address__c}" id="applicantAddress" />
+                            </div>
+                            <div class="row infoDiv required autofill">
+                                <apex:outputLabel value="法人の名称又は氏名" for="applicantBusinessName" />
+                                <apex:inputField styleClass="form-control" value="{!apply4.Applicant_Business_Name__c}" id="applicantBusinessName" />
+                            </div>
+                            <div class="row infoDiv required">
+                                <apex:outputLabel value="店舗数☆" for="applicantStoreCount" />
+                                <span>
+                                    ※○○市内にある要請に協力し時短営業等を実施した全店舗数を記載してください。
+                                </span>
+                                <apex:inputField styleClass="form-control" value="{!apply4.Applicant_Store_Count__c}" id="applicantStoreCount" />
+                            </div>
+                            <div class="row infoDiv autofill">
+                                <apex:outputLabel value="代表者の職名" for="applicantTitle" />
+                                <div  class="slds-scope">
+                                    <div class="slds-form-element">
+                                        <div class="slds-form-element__icon">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS,'assets/icons/utility-sprite/svg/symbols.svg#info')}"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Help</span>
+                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-hide helptext-container" role="tooltip" id="help_applicantTitle">
+                                                <div class="slds-popover__body">法人のみ</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <apex:inputField styleClass="form-control" value="{!apply4.Applicant_Title__c}" id="applicantTitle" />
+                            </div>
+                            <div class="row infoDiv autofill">
+                                <apex:outputLabel value="代表者の氏名" for="applicantName" />
+                                <div  class="slds-scope">
+                                    <div class="slds-form-element">
+                                        <div class="slds-form-element__icon">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS,'assets/icons/utility-sprite/svg/symbols.svg#info')}"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Help</span>
+                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-hide helptext-container" role="tooltip" id="help_applicantName">
+                                                <div class="slds-popover__body">法人のみ</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <apex:inputField styleClass="form-control" value="{!apply4.Applicant_Name__c}" id="applicantName" />
+                            </div>
+                            <div class="row infoDiv required">
+                                <apex:outputLabel value="代表者又は申請者の生年月日" for="applicantBirthday" />
+                                <div  class="slds-scope">
+                                    <div class="slds-form-element">
+                                        <div class="slds-form-element__icon">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS,'assets/icons/utility-sprite/svg/symbols.svg#info')}"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Help</span>
+                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-hide helptext-container" role="tooltip" id="help_applicantBirthday">
+                                                <div class="slds-popover__body">法人の場合は代表者の生年月日</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="form-inline col-12 p-0" id="applicantBirthday">
+                                    
+                                    <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="birthYear" value="{!year}">
+                                        <apex:selectOptions value="{!SelectYear}"/> 
+                                    </apex:selectList><label for="year" class="pl-1 pr-2">年</label><br class="d-block d-sm-none"/>
+                                    
+                                    <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="birthMonth" value="{!month}" >
+                                        <apex:selectOptions value="{!SelectMonth}"/>
+                                    </apex:selectList><label for="month" class="pl-1 pr-2">月</label><br class="d-block d-sm-none"/>
+                                    
+                                    <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="birthDay" value="{!day}">
+                                        <apex:selectOptions value="{!SelectDay}"/>
+                                    </apex:selectList><label for="day" class="pl-1 pr-2">日</label>
+                                    
+                                </div>
+                            </div>
+                            <div class="row infoDiv required autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application4__c.Fields['Applicant_Phone__c'].Label}" for="applicantPhone" />
+                                <apex:inputField styleClass="form-control" value="{!apply4.Applicant_Phone__c}" id="applicantPhone" />
+                            </div>
+                            <div class="row infoDiv autofill">
+                                <apex:outputLabel value="法人番号" for="corporateNum" />
+                                
+                                <div  class="slds-scope">
+                                    <div class="slds-form-element">
+                                        <div class="slds-form-element__icon">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS,'assets/icons/utility-sprite/svg/symbols.svg#info')}"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Help</span>
+                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-hide helptext-container" role="tooltip" id="help_corporateNum">
+                                                <div class="slds-popover__body">法人番号は、国税庁から指定・通知される13桁の番号を記入してください。</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <apex:inputField styleClass="form-control" value="{!apply4.Corporate_Number__c}" id="corporateNum" />
+                            </div>
+                            
+                        </div>
+                        
+                        <h3 class="slds-section__title">
+                            <span>振込先口座</span>
+                        </h3>
+                        <div class="card-body" style="padding-top: 0">
+                            <div class="row infoDiv required noneValidateDiv">
+                                <apex:outputLabel value="{!$ObjectType.Application4__c.Fields['Financial_Institution_Lookup__c'].Label}" for="FinancialHidden"/>
+                                <div class="col-12 d-none" id="financialInstitution">{!apply4.FinancialName__c} </div>
+                                <!-- コンポーネントの表示用div -->
+                                <div class="col-12 pl-0 pr-0" id="lookup" />
+                                <apex:inputhidden value="{!apply4.Financial_Institution_Lookup__c}" id="FinancialHidden"/>
+                            </div>
+                            <div class="row infoDiv required autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application4__c.Fields['Finacial_Branch_Name__c'].Label}" for="branchName"/>
+                                <apex:inputField styleClass="form-control" value="{!apply4.Finacial_Branch_Name__c}" id="branchName" />
+                            </div>
+                            <div class="row infoDiv required autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application4__c.Fields['Finacial_Branch_Code__c'].Label}" for="branchCode"/>
+                                <apex:inputField styleClass="form-control" value="{!apply4.Finacial_Branch_Code__c}" id="branchCode" />
+                            </div>
+                            <div class="row infoDiv required autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application4__c.Fields['Finacial_Account_Type__c'].Label}" for="accountType"/>
+                                <apex:inputField styleClass="form-control" value="{!apply4.Finacial_Account_Type__c}" id="accountType" />
+                            </div>
+                            
+                            <div class="row infoDiv required autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application4__c.Fields['Finacial_Account_Number__c'].Label}" for="accountNumber" />
+                                <div  class="slds-scope">
+                                    <div class="slds-form-element">
+                                        <div class="slds-form-element__icon">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS,'assets/icons/utility-sprite/svg/symbols.svg#info')}"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Help</span>
+                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-hide helptext-container" role="tooltip" id="help_accountNumber">
+                                                <div class="slds-popover__body">{!$ObjectType.Application4__c.Fields.Finacial_Account_Number__c.inlineHelpText}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <apex:inputField styleClass="form-control" value="{!apply4.Finacial_Account_Number__c}" id="accountNumber" />
+                            </div>
+                            <div class="row infoDiv required autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application4__c.Fields['Account_Holder_Input__c'].Label}" for="accountHolder"/>
+                                <div  class="slds-scope">
+                                    <div class="slds-form-element">
+                                        <div class="slds-form-element__icon">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS,'assets/icons/utility-sprite/svg/symbols.svg#info')}"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Help</span>
+                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-hide helptext-container" role="tooltip" id="help_accountHolder">
+                                                <div class="slds-popover__body">{!$ObjectType.Application4__c.Fields.Account_Holder_Input__c.inlineHelpText}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>　※振込先は申請者名義の口座に限ります</div>
+                                <apex:inputField styleClass="form-control" value="{!apply4.Account_Holder_Input__c}" id="accountHolder" />
+                                
+                            </div>
+                        </div>
+                        
+                        <h3 class="slds-section__title">
+                            <span>営業時間短縮を行った店舗の情報</span>
+                            <div class="card">
+                                <div class="card-body pt-0 pb-0">
+                                    <div class="row infoDiv">
+                                        <apex:outputLabel value="許可番号・許可年月日と店舗名称の入力は下記営業許可証イメージの記載内容を参照してください。" for="perCertificateImg" />
+                                        <apex:image id="perCertificateImg" value="{!$Resource.PermitCertificateDescription}" width="100%" height="100%"/>
+                                        <apex:image id="perCertificateImg2" value="{!$Resource.PermitCertificateDescription2}" width="100%" height="100%"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </h3>
+                        
+                        <apex:repeat var="stores" value="{!storeList}" id="storeRepeat">
+                            <section class="accordion" id="store_{!stores.StoreIndex__c}">
+                                <div class="card"  style="display:{!stores.StoreDisplay__c};" id="store{!stores.StoreIndex__c}Card">
+                                    <a data-toggle="collapse" href="#rentCollapse{!stores.StoreIndex__c}" role="button" aria-expanded="false" aria-controls="rentCollapse{!stores.StoreIndex__c}" onclick="changeStoreDisplay({!stores.StoreIndex__c})">
+                                        <div class="card-header" id="rentHeading{!stores.StoreIndex__c}">  
+                                            <apex:outputText id="No" value="店舗{!stores.StoreIndex__c}" styleClass="icon-plus" style="font-size:1.125rem;color:#adadad;font-style:italic;" />
+                                            <apex:outputText value="「＋」アイコンをクリックすると入力フォームが表示されます。" style="color:#adadad;font-style:italic;" />  
+                                        </div>
+                                    </a>
+                                    <div id="rentCollapse{!stores.StoreIndex__c}" class="collapse {!IF(ISBLANK(stores.Application_Store_Name__c), '', 'show')}" aria-labelledby="rentHeading{!stores.StoreIndex__c}" data-parent="#store_{!stores.StoreIndex__c}">
+                                        <div class="card-body pt-0 pb-0">
+                                            <div class="row infoDiv">
+                                                <apex:outputLabel value="区分" for="storeKbn" />
+                                                <apex:inputField styleClass="form-control" value="{!stores.Application_Store_Kbn__c}" id="storeKbn"/>
+                                            </div>
+                                            
+                                            <div class="row infoDiv timeSavingBusiness">
+                                                <apex:outputLabel value="時間短縮営業等実施期間（{!startDateLbl}以降の時短営業をした初日を記入してください。）" for="timeSavingBusiness{!stores.StoreIndex__c}" />
+                                                <div class="form-inline col-12 p-0" id="timeSavingBusiness{!stores.StoreIndex__c}">
+                                                    <label class="pl-1 pr-2">{!startYearLbl}</label>
+                                                    <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="tsbStartDay" value="{!storeTsbStartDateMap[stores.StoreIndex__c].customDateStr}" onchange="calculateAmount(this)">
+                                                        <apex:selectOptions value="{!SelectTsbDate}"/>
+                                                    </apex:selectList>
+                                                    <label style="padding-right: .75rem">　から</label>
+                                                    <label for="tsbStartDay" class="pl-1 pr-2">{!endDateLbl}まで（<apex:outputText value="{!stores.Application_Store_Days__c}" id="tsbDaysDiff" />日間）</label>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row infoDiv">
+                                                <apex:outputLabel value="許可番号（飲食店営業許可書の許可番号・許可年月日を記載してください。）" for="perNumber{!stores.StoreIndex__c}" />
+                                                <div class="form-inline col-12 p-0" id="perNumber">
+                                                    <apex:inputField styleClass="form-control" style="width:25%;" value="{!stores.Application_Store_Per_Number_Com__c}" id="perNumberCom" />
+                                                    
+                                                    <label for="perNumberIssue" class="pl-1 pr-2">第</label>
+                                                    <apex:inputField styleClass="form-control" style="width:40%;" value="{!stores.Application_Store_Per_Number_Issue__c}" id="perNumberIssue" />
+                                                    <label class="pl-1 pr-2">号</label>
+                                                </div>
+                                            </div>
+                                            <div class="row infoDiv">
+                                                <apex:outputLabel value="許可年月日" for="perDate{!stores.StoreIndex__c}" />
+                                                <div class="form-inline col-12 p-0" id="perDate">
+                                                    <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="perYear" value="{!storePerDateMap[stores.StoreIndex__c].customYear}">
+                                                        <apex:selectOptions value="{!selectWarekiYear}"/> 
+                                                    </apex:selectList>
+                                                    <label for="perYear" class="pl-1 pr-2">年</label>
+                                                    
+                                                    <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="perMonth" value="{!storePerDateMap[stores.StoreIndex__c].customMonth}" >
+                                                        <apex:selectOptions value="{!selectMonth}"/>
+                                                    </apex:selectList>
+                                                    <label for="perMonth" class="pl-1 pr-2">月</label>
+                                                    
+                                                    <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="perDay" value="{!storePerDateMap[stores.StoreIndex__c].customDay}">
+                                                        <apex:selectOptions value="{!selectDay}"/>
+                                                    </apex:selectList>
+                                                    <label for="perDay" class="pl-1 pr-2">日</label>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row infoDiv">
+                                                <apex:outputLabel value="店舗所在地区分" for="storeAddressType" />
+                                                <apex:inputField styleClass="form-control" value="{!stores.Application_Store_Address_Type__c}" id="storeAddressType" />
+                                            </div>
+                                            <div class="row infoDiv">
+                                                <apex:outputLabel value="郵便番号" for="storePostCode" />
+                                                <div class="w-100 slds-scope row">
+                                                    <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!stores.Application_Store_Postal_Code__c}" id="storePostCode"/></div>
+                                                    <div>
+                                                        <button type="button" id="srchOffAddrBtn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('storePostCode', 'storeAddress')">
+                                                            <apex:outputText value="住所を検索" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row infoDiv">
+                                                <apex:outputLabel value="店舗所在地（番地以降は入力してください。申請できるのは横浜市、川崎市の店舗に限ります。）" for="storeAddress" />
+                                                <apex:inputField styleClass="form-control" value="{!stores.Application_Store_Address__c}" id="storeAddress" />
+                                            </div>
+                                            <div class="row infoDiv">
+                                                <apex:outputLabel value="店舗名称" for="storeName" />
+                                                <apex:inputField styleClass="form-control" value="{!stores.Application_Store_Name__c}" id="storeName"/>
+                                            </div>
+                                            <div class="row infoDiv effortDetails">
+                                                <apex:outputLabel value="取組内容（※該当する項目にチェック（✔）を付けてください。）" />
+                                                <div class="effortdtable">
+                                                    <div class="effortdtable_c">
+                                                        <apex:inputCheckbox style="width: auto;margin-right: 10px;" styleClass="unvCheckBox" value="{!stores.Application_Store_Effort_DetailsA__c}" id="storeEffortDetailsA"/>
+                                                    </div>
+                                                    <div class="effortdtable_c">
+                                                        <apex:outputLabel style="margin-right: 10px;" value="県からの時間短縮営業要請時は、夜22時から翌朝5時までの時間帯に営業を行っていたが、当該要請に協力し、時短営業実施期間は、5時から22時までの間に営業時間を短縮（休業）しました。" for="storeEffortDetailsA{!stores.StoreIndex__c}" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </apex:repeat>
+                        
+                        
+                        <h3 class="slds-section__title">
+                            <span>申請の内訳</span>
+                        </h3>
+                        <div class="card-body" style="padding-top: 0">
+                            <div class="row infoDiv">
+                                <table class="table mb-0">
+                                    <thead>
+                                        <tr>
+                                            <td style="width: 30%;min-width: 5.5rem;">
+                                                申請金額
+                                            </td>
+                                            <td>
+                                                <u>*<span>&emsp;&emsp;</span>
+                                                    <apex:outputField value="{! apply4.Application_Amount__c }" id="applyApplication" />
+                                                    &nbsp;円
+                                                </u>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="table-active">申請の内訳</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <table class="col-12 table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <td scope="col" style="width: 25%;min-width: 4.85rem;">店舗No</td>
+                                                    <td scope="col" class="text-center">申請金額</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <apex:repeat var="stores" value="{!storeList}" id="amountRepeat">
+                                                    <tr style="display:{!stores.StoreDisplay__c};" id="store{!stores.StoreIndex__c}tr">
+                                                        <td scope="row">店舗{!stores.StoreIndex__c}</td>
+                                                        <td class="text-right">
+                                                            <apex:outputField value="{! stores.Application_Store_Apply_Amount__c }" id="applyN"/>
+                                                            &nbsp;円&emsp;
+                                                        </td>
+                                                    </tr>
+                                                </apex:repeat> 
+                                                <tr>
+                                                    <td scope="row">合　計</td>
+                                                    <td class="text-right">
+                                                        <apex:outputField value="{! apply4.Application_Sum_Amount__c }" id="applySum" />
+                                                        &nbsp;円&emsp;
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <h3 class="slds-section__title">
+                            <span>誓約事項<br/>
+                                私は、○○県の営業時間短縮の要請に基づき「○○県新型コロナウイルス感染症拡大防止協力金（第３弾）」の交付を申請するに当たり、下記の内容について誓約します。<br/>
+                                （相違がないことを確認いただき、□にチェック☑を入れてください。）
+                            </span>
+                        </h3>
+                        <div class="card-body pt-0 pb-0">
+                            <div class="row noteDiv mb-3">
+                                <p class="col-12">誓約事項<br/>
+                                    (1) 申請内容に記載した内容に相違ありません。申請内容に虚偽が判明した場合は、協力金の返還等に応じます。また、これにより県から協力金と同額の違約金の支払いを求められた場合は、これに応じます。<br/><br/>
+                                    (2) ○○県の時間短縮営業の要請日（令和２年12月３日（木））より前から、食品衛生法に基づく飲食店営業の許可を受けて営業しています。<br/><br/>
+                                    (3) 本協力金を重複して申請していません。<br/><br/>
+                                    (4) 令和２年12月７日（月）から令和２年12月17日（木）までの間に営業停止等の行政処分を受けていません。<br/><br/>
+                                    (5) ○○県から報告を求められた場合はこれに応じるとともに、必要に応じて県が行う調査に全面的に協力します。<br/><br/>
+                                    (6) 本協力金の交付を受けた店舗名及び所在地の公表（ホームページへの屋号及び所在地の掲載）に応じます。<br/><br/>
+                                    (7) 本協力金の申請書及び提出書類の記載内容や交付又は不交付に関する情報を所在地の自治体に提供することについて同意します。<br/><br/>
+                                    (8) 本協力金の申請書及び提出書類の記載内容や交付又は不交付に関する情報を、今後県が実施するその他の協力金交付業務のために使用すること及び税務情報として使用することに同意します。<br/><br/>
+                                    (9) 代表者、役員、従業員、構成員等は、次のいずれにも該当しません。<br/>
+                                    &emsp;ア　暴力団員による不当な行為の防止等に関する法律（平成３年法律第77号。以下第１号様式において「法」という。）第２条第２号に規定する暴力団<br/>
+                                    &emsp;イ　法第２条第６号に規定する暴力団員（以下「暴力団員」という。）<br/>
+                                    &emsp;ウ　法人にあっては、代表者又は役員のうちに暴力団員に該当する者があるもの<br/>
+                                    &emsp;エ　法第２条第２項に規定する暴力団又は反社会的勢力が経営に事実上参画してること<br/><br/>
+                                    (10) 暴力団又は暴力団員でないことを確認するため、本様式に記載した情報その他必要な情報を○○県警察本部に照会することについて同意します。また、県から暴力団又は暴力団員でないことを確認するための追加書類の提出を求められた場合は、協力金の受領後であっても応じます。<br/><br/>
+                                </p>
+                                <div class="col text-center">
+                                    <apex:inputCheckbox styleClass="unvCheckBox" value="{!apply4.Pledge1__c}" id="pledge1" />
+                                    <apex:outputLabel value="誓約事項について誓約する" for="pledge1"/>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4 mb-3 ml-0 mr-0">
+                    <apex:actionFunction action="{!toConfirmPage}" reRender="msgHidden" name="toConfirmPage" oncomplete="backcheck();"/>
+                    <apex:actionFunction action="{!toConfirm}" name="toConfirm"/>
+                    <button type="button" id="submitBtn" class="col-10 offset-1 col-md-6 offset-md-3 btn btn-danger btn-lg" style="min-width: 150px;font-size: 1rem" onclick="inputCheck()">
+                        <apex:outputText value="申請内容確認及び申請書類添付へ" />
+                    </button>
+                </div>
+            </apex:form>
+        </div>
+        <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/jquery.min.js')}"/>
+        
+        <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/bootstrap.min.js')}"/>
+        
+        <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/svg4everybody.min.js')}"/>
+        <script>svg4everybody();</script>
+        
+        <apex:includeScript value="/soap/ajax/25.0/connection.js" />
+            <apex:includeScript value="/soap/ajax/25.0/apex.js" />
+                
+                <script type="text/javascript">
+                    $(function() {
+                        $('.show').each(function(index, element){
+                            var show = $(element).closest(".card").find(".card-header").find("span").eq(0);
+                            $(show).addClass("icon-minus");
+                            $(show).removeClass("icon-plus");
+                            $(element).find(".card-body").children("div:not(.noRequired)").addClass("required");
+                        });
+                    });
+        
+        $('.collapse').on('hide.bs.collapse', function () {
+            var hide = $(this).closest(".card").find(".card-header").find("span").eq(0);
+            $(hide).addClass("icon-plus");
+            $(hide).removeClass("icon-minus");
+        });
+        $('.collapse').on('show.bs.collapse', function () {
+            var show = $(this).closest(".card").find(".card-header").find("span").eq(0);
+            $(show).addClass("icon-minus");
+            $(show).removeClass("icon-plus");
+        });
+        
+        $('.collapse').find("input,textarea,select").on('change', function () {
+            var isInputNull = true;
+            $(this).closest(".card-body").find("input[type='checkbox']").each(function(index,element){
+                var vBox = $(element).prop("checked");
+                if(vBox){
+                    isInputNull = false;
+                }
+            });
+            $(this).closest(".card-body").find("input:not(input[type='checkbox']),textarea").each(function(index,element) {
+                var vInput = $(element).val();
+                if(vInput !== undefined && vInput !== '' ){
+                    isInputNull = false;
+                }
+            });
+            $(this).closest(".card-body").find("textarea").each(function(index,element) {
+                var vTextArea = $(element).val();
+                if(vTextArea !== undefined && vTextArea !== '' ){
+                    isInputNull = false;
+                }
+            });
+            $(this).closest(".card-body").find("select").each(function(index,element) {
+                var vSelect = $(element).val();
+                if(vSelect !== undefined && vSelect !== '' ){
+                    isInputNull = false;
+                }
+            });
+            if(isInputNull){
+                $(this).closest(".card-body").children("div").removeClass("required");
+            } else{
+                $(this).closest(".card-body").children("div:not(.noRequired)").addClass("required");
+            }
+        });
+        
+        function calculateAmount(_this) {
+            // 申請内訳の金額設定
+            // 該当店舗の申請金額設定
+            var unitPricePerDay = parseInt('{!$Label.APPLICATION4_PAYMENT_UNIT_PRICE}');
+            var tsbEndDay = new Date("{!CONST_SHORTER_BUSI_END_DATE}");
+            const dayZone = '{!$Label.CONST_DAILY_ZONE_REQ}'.split(',');
+            const amountZone = '{!$Label.CONST_DAILY_AMOUNT_REQ}'.split(',');
+            var id = $(_this).attr("id");
+            var index = parseInt(id.split(":")[3]);
+            var tsbStartDay = $(_this).val();
+            var storeAmount = 0;
+            if(tsbStartDay){
+                if(dayZone.length+1 !=amountZone.length){
+                    var startDate = new Date(tsbStartDay.replace(/-/g, "/"));
+                    var endDate = tsbEndDay;
+                    var diff = endDate - startDate;
+                    tsbDaysDiff = diff /1000/60/60/24 + 1;
+                    storeAmount = unitPricePerDay * tsbDaysDiff;
+                }else{
+                    var startDate = new Date(tsbStartDay.replace(/-/g, "/"));
+                    var endDate = tsbEndDay;
+                    var diff = endDate - startDate;
+                    tsbDaysDiff = diff /1000/60/60/24 + 1;
+                    for (let i = 0; i < amountZone.length; i++) {
+                        
+                        if(i!=amountZone.length-1){
+                            endDate = new Date(dayZone[i].replace(/-/g, "/"));
+                        }else{
+                            endDate = tsbEndDay;
+                        }
+                        var subDiff = endDate - startDate;
+                        if(subDiff>=0){
+                            var daysDiff = subDiff /1000/60/60/24 + 1;
+                            storeAmount += amountZone[i] * daysDiff;
+                            startDate=new Date((endDate).valueOf() + 1000*60*60*24);
+                        }
+                    }
+                }
+                
+                $("span[id$='amountRepeat:" + index + ":applyN']").text(storeAmount.toLocaleString());
+                $("span[id$='storeRepeat:" + index + ":tsbDaysDiff']").text(tsbDaysDiff);
+            } else {
+                $("span[id$='amountRepeat:" + index + ":applyN']").text('');
+                $("span[id$='storeRepeat:" + index + ":tsbDaysDiff']").text('');
+            }
+            
+            // 申請金額の合計を計算
+            var storeAmountSum = 0;
+            for (var i = 0; i < '{!JSENCODE($Label.STORE_CNT)}'; i++) {
+                if ($("select[id$='storeRepeat:" + i + ":tsbStartDay']").val()) {
+                    tsbStartDay=$("select[id$='storeRepeat:" + i + ":tsbStartDay']").val();
+       
+                    if(dayZone.length+1 !=amountZone.length){
+                        var startDate = new Date(tsbStartDay.replace(/-/g, "/"));
+                        var endDate = tsbEndDay;
+                        var diff = endDate - startDate;
+                        tsbDaysDiff = diff /1000/60/60/24 + 1;
+                        storeAmount = unitPricePerDay * tsbDaysDiff;
+                    }else{
+                        var startDate = new Date(tsbStartDay.replace(/-/g, "/"));
+                        var endDate = tsbEndDay;
+                        var diff = endDate - startDate;
+                        tsbDaysDiff = diff /1000/60/60/24 + 1;
+                        for (let i = 0; i < amountZone.length; i++) {
+                            
+                            if(i!=amountZone.length-1){
+                                endDate = new Date(dayZone[i].replace(/-/g, "/"));
+                            }else{
+                                endDate = tsbEndDay;
+                            }
+                            var subDiff = endDate - startDate;
+                            if(subDiff>=0){
+                                var daysDiff = subDiff /1000/60/60/24 + 1;
+                                storeAmountSum += amountZone[i] * daysDiff;
+                                startDate=new Date((endDate).valueOf() + 1000*60*60*24);
+                            }
+                        }
+                    }
+                    
+                    //tsbStartDay = parseInt($("select[id$='storeRepeat:" + i + ":tsbStartDay']").val());
+                    //storeAmountSum += unitPricePerDay * (tsbEndDay - parseInt(tsbStartDay) + 1);
+                }
+            }
+            if (storeAmountSum != 0) {
+                $("span[id$='applySum']").text(storeAmountSum.toLocaleString());
+                $("span[id$='applyApplication']").text(storeAmountSum.toLocaleString());
+            }
+            
+        }
+        
+        $(function () {
+            backToTop();
+            if($('select[id$="applyNum"]').val()!=''&&$('select[id$="applyNum"]').val()!= undefined){
+                $('select[id$="applicantDivision"]').prop('disabled','disabled');
+                $('input[id$="applicantBusinessName"]').prop('disabled','disabled');
+                $('input[id$="applicantZip"]').prop('disabled','disabled');
+                $("#srchAppAddrBtn").prop("disabled", true);
+                $('textarea[id$="applicantAddress"]').prop('disabled','disabled');
+                $('input[id$="applicantTitle"]').prop('disabled','disabled');
+                $('input[id$="applicantName"]').prop('disabled','disabled');
+                $('input[id$="applicantPhone"]').prop('disabled','disabled');
+                $('input[id$="corporateNum"]').prop('disabled','disabled');
+                $('div[id$="financialInstitution"]').removeClass('d-none');
+                $('div[id$="lookup"]').addClass('d-none');
+                $('select[id$="accountType"]').prop('disabled','disabled');
+                $('input[id$="branchName"]').prop('disabled','disabled');
+                $('input[id$="branchCode"]').prop('disabled','disabled');
+                $('input[id$="accountHolder"]').prop('disabled','disabled');
+                $('input[id$="accountNumber"]').prop('disabled','disabled');
+                
+                
+            }
+        });
+        
+        function doApplictionNumChange(_this) {
+            var selectedIndex = $(_this).val();
+            if(selectedIndex == ''){
+                $('.autofill').each(function(n,e){
+                    $(this).find('input,textarea').val('').removeAttr('disabled');
+                    $(this).find('input[type="checkbox"]').attr("checked", false).removeAttr('disabled');
+                    $(this).find('select').each(function(n,select){
+                        $(this).removeAttr('disabled').children().eq(0).prop("selected", true);
+                    });
+                });
+                $('div[id$="lookup"]').removeClass('d-none');
+                $('div[id$="financialInstitution"]').addClass('d-none');
+                
+                $('input[id$="applicantTitle"]').closest('div').removeClass('required');
+                $('input[id$="applicantName"]').closest('div').removeClass('required');
+                $('input[id$="corporateNum"]').closest('div').removeClass('required');
+                $("#srchAppAddrBtn").prop("disabled", false);
+                
+                return false;
+            }
+            var applicationName = selectedIndex;
+            
+            var json = [];
+            
+            sforce.connection.sessionId = '{!$Api.Session_ID}';
+            var response = sforce.apex.execute("ApplicationStage4Controller", "putInfo", {applicationName: applicationName});
+            var respObj = JSON.parse(response);
+            
+            $('select[id$="applicantDivision"]').val(respObj['applicantDivision']).prop('disabled','disabled');
+            $('input[id$="applicantZip"]').val(respObj['applicantZip']).prop('disabled','disabled');
+            $("#srchAppAddrBtn").prop("disabled", true);
+            $('textarea[id$="applicantAddress"]').val(respObj['applicantAddress']).prop('disabled','disabled');
+            $('input[id$="applicantBusinessName"]').val(respObj['applicantBusinessName']).prop('disabled','disabled');
+            $('input[id$="applicantTitle"]').val(respObj['applicantTitle']).prop('disabled','disabled');
+            $('input[id$="applicantTitle"]').closest('div').removeClass('required');
+            $('input[id$="applicantName"]').val(respObj['applicantName']).prop('disabled','disabled');
+            $('input[id$="applicantPhone"]').val(respObj['applicantPhone']).prop('disabled','disabled');
+            $('input[id$="corporateNum"]').val(respObj['corporateNum']).prop('disabled','disabled');
+            $('div[id$="financialInstitution"]').removeClass('d-none');
+            auraMethodCall();
+            $('div[id$="financialInstitution"]').text(respObj['financialInstitutionName']);
+            $('div[id$="lookup"]').addClass('d-none');
+            $('input[id$="FinancialHidden"]').val(respObj['financialInstitution']);
+            $('input[id$="branchName"]').val(respObj['branchName']).prop('disabled','disabled');
+            $('input[id$="branchCode"]').val(respObj['branchCode']).prop('disabled','disabled');
+            $('select[id$="accountType"]').val(respObj['accountType']).prop('disabled','disabled');
+            $('input[id$="accountNumber"]').val(respObj['accountNumber']).prop('disabled','disabled');
+            $('input[id$="accountHolder"]').val(respObj['accountHolder']).prop('disabled','disabled');
+            // $('input[id$="isapply2Payee"]').attr("checked", true).prop('disabled','disabled');
+            
+            if($('select[id$="applicantDivision"]').val() == '法人'){
+                
+                $('input[id$="applicantName"]').closest('div').addClass('required');
+                $('input[id$="corporateNum"]').closest('div').addClass('required');
+            }else{
+                
+                $('input[id$="applicantName"]').closest('div').removeClass('required');
+                $('input[id$="corporateNum"]').closest('div').removeClass('required');
+            }
+            
+        }
+        
+        function inputCheck(){
+            $('#submitBtn').prop('disabled','disabled');
+            $('.fieldErrorMsg').remove();
+            $('#errorMsgArea').addClass('d-none');
+            $('.hasFieldError').each(function(){
+                $(this).removeClass('hasFieldError');
+            });
+            
+            var errorMsgOnTop = "";
+            var checkResult = true;
+            var checkBirthday = true;
+            var checkPerDate = true;
+            var checkPerDateSet = new Set();
+            var checkPerDateNullSet = new Set();
+            var checkPerNumber = true;
+            var storeCount = '';
+            var storeNum = 0;
+            $('.required:not(.noneValidateDiv)').find(':input').not(':hidden').each(function(index, element){
+                var inputElement = $(element);
+                var inputValue = inputElement.val();
+                // Id
+                var inputId = inputElement.attr('id');
+                //店舗数☆
+                if(inputId.indexOf('applicantStoreCount') !== -1){
+                    storeCount=$('input[id$="applicantStoreCount"]').val();
+                }
+                //営業時間短縮を行った店舗情報
+                if(inputId.indexOf('storeName') !== -1){
+                    var storeName = $('input[id$="storeName"]').val();
+                    if (storeName !== undefined || storeName !== '' ) {
+                        storeNum = storeNum + 1;
+                    }
+                }
+                
+                if (inputValue === undefined || inputValue === '' ) {
+                    // ボタンの場合、何もしない
+                    if (inputElement[0].type == 'button') return true;
+                    
+                    if(inputId.indexOf('birth') !== -1){
+                        checkBirthday = false;
+                        if(inputId.includes('birthYear')){
+                            var inputLabel = $('label[for$="applicantBirthday"]').text();
+                            addError($('#applicantBirthday'), inputLabel);
+                        }
+                    } else {
+                        var inputLabel = $('label[for="' + inputId + '"]').text();
+                        // 許可年月日
+                        var idx = -1;
+                        checkPerDate = true;
+                        if(inputId.indexOf('perYear') !== -1 || inputId.indexOf('perMonth') !== -1 || inputId.indexOf('perDay') !== -1) {
+                            if(inputId.includes('perYear')){
+                                checkPerDate = false;
+                                idx = parseInt(inputId.split(':')[3])+1;
+                                inputLabel = $('label[for$="perDate' + idx + '"]').text();
+                                checkPerDateNullSet.add(idx);
+                            } else {
+                                return true;
+                            }
+                        } 
+                        // 許可番号
+                        checkPerNumber = true;
+                        if(inputId.indexOf('perNumberCom') !== -1 || inputId.indexOf('perNumberIssue') !== -1) {
+                            if(inputId.includes('perNumberCom')){
+                                checkPerNumber = false;
+                                idx = parseInt(inputId.split(':')[3])+1;
+                                inputLabel = $('label[for$="perNumber' + idx + '"]').text();
+                            } else {
+                                return true;
+                            }
+                        }
+                        // 時間短縮営業等実施期間
+                        if (inputId.indexOf('tsbStartDay') !== -1) {
+                            idx = parseInt(inputId.split(':')[3])+1;
+                            inputLabel = $('label[for$="timeSavingBusiness' + idx + '"]').text();
+                        }
+                        
+                        var sectionIndex = inputElement.parent().parent().parent().parent().children().children(".card-header").children("span").eq(0).text();
+
+                        // 許可年月日、許可番号、取組内容、時間短縮営業等実施期間
+                        if (inputLabel.includes('許可年月日') || inputLabel.includes('許可番号') || inputLabel.includes('取組内容')  || inputLabel.includes('時間短縮営業等実施期間')) {
+                            sectionIndex = inputElement.parent().parent().parent().parent().parent().children().children(".card-header").children("span").eq(0).text();
+                        }
+                        // 郵便番号
+                        if (inputLabel.includes('郵便番号')) {
+                            sectionIndex = inputElement.parent().parent().parent().parent().parent().parent().children().children(".card-header").children("span").eq(0).text();
+                        }
+                        if (!checkPerDate || !checkPerNumber || (checkPerDate && checkPerNumber)) {
+                            errorMsgOnTop = errorMsgOnTop + sectionIndex + inputLabel + "を入力してください<br/>";
+                            inputElement.closest('.required').append('<div class="col-12 fieldErrorMsg">'+ inputLabel +'を入力してください</div>');
+                        } 
+                    }
+                    inputElement.addClass('hasFieldError');
+                    checkResult = false;
+                } else {
+                    if(inputId.indexOf('perYear') !== -1) {
+                        checkPerDateSet.add(inputId.slice(20));
+                    }
+                }
+            });
+
+            if(storeNum === 0){
+                errorMsgOnTop = errorMsgOnTop +  "営業時間短縮を行った店舗情報を入力してください<br/>";
+                checkResult = false;
+            }
+            if(storeNum !== Number(storeCount)){
+                errorMsgOnTop = errorMsgOnTop +  "「店舗数☆」と入力した申請店舗の数が一致するように入力してください<br/>";
+                checkResult = false;
+            }
+            
+            $('.required.effortDetails').each(function(index, element){
+                var checkedCnt = 0;
+                $(element).find("input[type='checkbox']").each(function(boxIndex, box){
+                    if($(box).prop('checked')){
+                        checkedCnt++;
+                    }
+                });
+                
+                if(checkedCnt != 1){
+                    var sectionIndex = $(element).parent().parent().parent().children().children(".card-header").children("span").eq(0).text();
+                    var inputLabel = $(element).children("label").text();
+                    errorMsgOnTop = errorMsgOnTop + sectionIndex + inputLabel + "はすべての項目を選択してください<br/>";
+                    
+                    $(element).find("input[type='checkbox']").each(function(boxIndex, box){
+                        $(box).addClass('hasFieldError');
+                    });
+                    $(element).append('<div class="col-12 fieldErrorMsg">' + inputLabel + 'はすべての項目を選択してください</div>');
+                    checkResult = false;
+                }
+            });
+            
+            $('input[id$="FinancialHidden"]').each(function(index, element){
+                var inputElement = $(element);
+                var inputValue = inputElement.val();
+                if (inputValue === undefined || inputValue === '' ) {
+                    
+                    var inputId = inputElement.attr('id');
+                    var inputLabel = $('label[for="' + inputId + '"]').text();
+                    errorMsgOnTop = errorMsgOnTop + inputLabel + "を入力してください</div>";
+                    inputElement.closest('.required').find(':input').not(':hidden').addClass('hasFieldError');
+                    inputElement.closest('.required').append('<div class="col-12 fieldErrorMsg">'+ inputLabel +'を入力してください</div>');
+                    checkResult = false;
+                }
+            });
+            
+            function addError(_element, inputLabel){
+                errorMsgOnTop = errorMsgOnTop + inputLabel + "を入力してください<br/>";
+                _element.closest('.required').append('<div class="col-12 fieldErrorMsg">'+ inputLabel +'を入力してください</div>');
+            }
+            
+            if(checkBirthday) {
+                if(!doCheckDate($('select[id$="birthYear"]').val(), $('select[id$="birthMonth"]').val(), $('select[id$="birthDay"]').val())) {
+                    var inputLabel = $('label[for$="applicantBirthday"]').text();
+                    errorMsgOnTop = errorMsgOnTop + inputLabel + "を正しく入力してください<br/>";
+                    $('#applicantBirthday').closest('.required').append('<div class="col-12 fieldErrorMsg">'+ inputLabel +'を正しく入力してください</div>'); 
+                    
+                    checkResult = false;
+                }
+            }
+            
+            $('section[id*="store_"]').not(":hidden").each(function(index, element) {
+                var parentDiv = $(element).find('div[id^="perDate"]');
+                var parentDivId = parentDiv.attr('id');
+                var storeIdx = parentDivId.slice(7);
+                if(checkPerDateSet.has(storeIdx) && !checkPerDateNullSet.has(storeIdx)){
+                    var perYear = parentDiv.find('select').eq(0).val();
+                    var perMonth = parentDiv.find('select').eq(1).val();
+                    var perDay = parentDiv.find('select').eq(2).val();
+                    
+                    if(!doCheckDate(perYear, perMonth, perDay)) {
+                        console.log('parentDivId:' + parentDivId);
+                        var sectionLabel = storeIdx == '1' ? $(element).children('.card').children('.card-header').children('span').eq(0).text() :
+                        $(element).children('.card').children('a').children('.card-header').children('span').eq(0).text();
+                        var inputLabel = $('label[for$="' + parentDivId + '"]').text();
+                        errorMsgOnTop = errorMsgOnTop + sectionLabel + inputLabel + "を正しく入力してください<br/>";
+                        $(parentDiv).closest('.required').append('<div class="col-12 fieldErrorMsg">'+ inputLabel +'を正しく入力してください</div>'); 
+                        
+                        checkResult = false;
+                    }
+                }
+            });
+            
+
+            
+            if (!checkResult) {
+                // errorMsgOnTop = errorMsgOnTop.slice( 0, -2 );
+                $('#errorMsgArea').append('<div class="col-12 fieldErrorMsg">'+ errorMsgOnTop +'</div>');
+            }
+            
+            if (!checkResult) {
+                $('#errorMsgArea').removeClass('d-none');
+                $('#submitBtn').removeAttr('disabled');
+                backToTop();
+                
+                return false;
+            }
+            
+            $('input[id$="msgHidden"]').val('');
+            toConfirmPage();
+            return true;
+            
+        }
+        function backcheck(){
+            if($('input[id$="msgHidden"]').val()==''){
+                toConfirm();
+            }else{
+                $('.fieldErrorMsg').remove();
+                $('#errorMsgArea').addClass('d-none');
+                $('#errorMsgArea').removeClass('d-none');
+                $('#errorMsgArea').append('<div class="col-12 fieldErrorMsg">'+ $('input[id$="msgHidden"]').val() +'</div>');
+                $('#submitBtn').removeAttr('disabled');
+                backToTop();
+            }
+        }
+        function backToTop(){
+            if(window.parent.window.scrollTo(0,0)===undefined){
+                window.scrollTo(0,0);
+            }else{
+                window.parent.window.scrollTo(0,0);
+            }
+        }
+        
+        function isSimplechanged(_this) {
+            if($(_this).prop('checked')){
+                $("#tbox").css("display","block");
+            }else{
+                if($("select[id$='application']").val()=='' && $("select[id$='applyNum']").val()==''){
+                    $("#tbox").css("display","none");
+                }else{
+                    $("#tbox").css("display","none");
+                    $("select[id$='applyNum']").val('');
+                    $("select[id$='application']").val('');
+                    doApplictionNumChange($("select[id$='applyNum']"));
+                }  
+            } 
+        }
+        
+        function doApplictionChange(_this) {
+            if($(_this).val() == ''){
+                $("select[id$='applyNum']").val('');
+                doApplictionNumChange($("select[id$='applyNum']"));
+            } 
+        }
+        
+        function dodivisionChange(_this){
+            var ssd = $(_this).val();
+            
+            if (ssd == '法人'){
+                $('input[id$="applicantTitle"]').closest('div').addClass('required');
+                $('input[id$="applicantName"]').closest('div').addClass('required');
+                $('input[id$="corporateNum"]').closest('div').addClass('required');
+            }else{
+                $('input[id$="applicantTitle"]').closest('div').removeClass('required');
+                $('input[id$="applicantName"]').closest('div').removeClass('required');
+                $('input[id$="corporateNum"]').closest('div').removeClass('required');
+            }
+        }
+        
+        /**
+        * 郵便番号で住所マスタから住所を取得する
+        */
+        function getAddressByPostCode(postcodeFieldId, addressFieldId) {
+            
+            let postcode = $('input[id$="' + postcodeFieldId + '"]').val();
+            if (postcode) {
+                // 半角数字7桁(ハイフン無し)の場合、住所を検索する
+                if (postcode.match(/[0-9]{7}/)) {
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.ApplicationStage4Controller.getAddress}',
+                        $('input[id$="' + postcodeFieldId + '"]').val(), 
+                        function(result, event){
+                            if (event.status) {
+                                if (!result) {
+                                    alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
+                                }
+                                $('textarea[id$="' + addressFieldId + '"]').val(result);
+                            } else {
+                                // 何もしない
+                            }
+                        }, 
+                        {escape: true}
+                    );
+                    // 半角数字7桁(ハイフン無し)以外の場合
+                } else {
+
+                }
+            }
+            
+        }
+        
+        function doCheckDate(y, m, d) {
+            y = y.substring(0, 4);
+            const date = new Date(y, m - 1, d);
+            return y == date.getFullYear() && m == date.getMonth()+1 && d == date.getDate();
+        }
+        </script>
+    </html>
+</apex:page>

@@ -1,0 +1,45 @@
+<apex:page controller="filePreviewController"
+           action="{!init}"
+           sidebar="true"
+           showHeader="false"
+           standardStylesheets="false"
+           contentType="text/html"
+           applyBodyTag="false"
+           applyHtmlTag="false"
+           docType="html-5.0"
+           >
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <meta name="format-detection" content="telephone=no"/>
+        <apex:slds />
+    </head>
+    <style type = "text/css">
+        
+        .page_title {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .messageText {
+            text-align: center;
+        }
+        
+    </style>
+    <apex:form >
+        <div class="slds-scope">
+            <ul class="slds-m-around_medium " style="text-align: center">
+                <apex:repeat value="{!filelist}" var="file" id="theRepeat">
+                    <div class="slds-m-bottom_xx-large">
+                        <div class = 'messageText'>
+                            <span class="page_title">{!file.Title}</span>
+                        </div>
+                        <p class="slds-p-horizontal_small centering">
+                            <img src="/sfc/servlet.shepherd/document/download/{!file.ContentDocumentId}" />
+                        </p>
+                    </div>
+                </apex:repeat>
+            </ul>
+        </div>
+    </apex:form>
+</apex:page>

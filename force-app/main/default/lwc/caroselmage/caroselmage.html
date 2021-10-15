@@ -1,0 +1,47 @@
+<template>
+    <template if:true={isLoading}>
+        <div>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </div>
+    </template>
+    <div class={btn} style="text-align: right;">
+        <template if:true={isApplicationPage}>
+            <lightning-button variant="brand-outline" label="申請の画像表示" onclick={handleShowingApplicationImage}></lightning-button>
+        </template>
+        <template if:true={filesList}>
+            <lightning-button variant="brand" label="別タブで表示" title="Primary action" onclick={navigateToVFPage} class="slds-m-left_x-small"></lightning-button>
+            <lightning-button variant="brand" label="一括ダウンロード" title="Primary action" onclick={downloadFiles} class="slds-m-left_x-small"></lightning-button>
+        </template>
+    </div>
+    <template if:true={filesList}>
+        <div class="slds-is-relative" style="height: 630px;">
+            <div class="tracking">
+                <div>
+                    <template for:each={filesList} for:item="slide">
+                        <div class={slide.cardClasses} key = {slide.slideIndex}>
+                            <div class="text-section">
+                                <h3 class = "slds-text-heading_medium">{slide.label}</h3>
+                            </div>
+                            <div class="slideNumbers">{slide.slideIndex}/{filesList.length}</div>
+                            <div class="fileScroll zoomerBasic">
+                                <img src = {slide.url} onload={finishLoading} />
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <a class ="prev" onclick={backSilde}>&#10094;</a>
+                <a class ="next" onclick={forwardSilde}>&#10095;</a>
+                <p class="zoomIn" onclick={zoomInImg}>&plus;</p>
+                <p class="zoomOut" onclick={zoomOutImg}>&minus;</p>
+            </div>
+        </div>
+        <!-- <div class="slds-text-align_center slds-p-around_medium">
+            <template for:each={filesList} for:item="slide">
+                <span class ={slide.dotClasses} data-id = {slide.slideIndex} key = {slide.slideIndex} onclick={currentSilde}></span>
+            </template>
+        </div> -->
+    </template>
+    <template if:false={filesList}>
+        <p>添付ファイルがありません。</p>
+    </template>
+</template>

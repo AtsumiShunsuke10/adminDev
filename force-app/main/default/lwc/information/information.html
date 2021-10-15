@@ -1,0 +1,10 @@
+<template>
+    <c-common-datatable 
+        keyfield="Name" 
+        records={informations} 
+        columns={columns} 
+        onrefresh={handleRefresh}
+        height={height} 
+        sort-field-name-map={sortFieldNameMap}>
+    </c-common-datatable>
+</template>

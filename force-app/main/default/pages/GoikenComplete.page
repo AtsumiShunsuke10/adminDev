@@ -1,0 +1,36 @@
+<apex:page docType="html-5.0" showHeader="false" standardStylesheets="false">
+<head>
+    <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/>
+    <!-- Import the Design System style sheet -->
+    <apex:slds />
+</head>
+<style type = "text/css">
+    .messageText {
+        text-align: center;
+    }
+    .inner {
+        background: #FFF;
+        max-width: 960px;
+        box-shadow: 0 0 10px rgb(0 0 0 / 30%);
+        margin: 40px auto;
+        padding: 50px;
+    }
+    .title {
+        font-size: 3.3rem;
+        letter-spacing: 4px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+</style>
+<body>
+    <apex:form >
+        <div class = "inner">
+            <div class="title">ご意見フォーム</div>
+            <div class="messageText">ご協力ありがとうございました。
+                <p>お寄せいただいたご意見については、より良いサービスに改善するために参考とさせていただきます。</p>
+            </div>
+            <div class="messageText"><a href="https://dev-trans-cosmos-digital.cs58.force.com/s/" >トップへ戻る</a></div>
+        </div>
+    </apex:form>
+</body>
+</apex:page>

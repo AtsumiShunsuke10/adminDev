@@ -1,0 +1,121 @@
+@charset "UTF-8";
+/* ========BASIC======== */
+.content {
+   margin-top:1.5em;
+   margin-bottom:2em;
+}
+.header__bg {
+   /* background: url('../img/sky.png') no-repeat; */
+   /* background: linear-gradient(to right, rgb(167, 192, 222), rgb(225, 245, 196));*/
+   background-color:rgb(167, 192, 222);
+   margin-top:15px;
+   padding-top:15px;
+}
+.form-explain {
+   min-height: 5em;
+}
+.btn-bg{
+   margin: .5rem 0 0 0;
+}
+.btn-lg{
+   margin: 1rem 0 1em 0;
+}
+.steps-title {
+   width: 90%;
+   margin: 0 .5em 1em 0em;
+   background: #FFF;
+   text-decoration: none;
+   color: #444;
+   position: relative;
+   height: 100px;
+   text-align: center;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-flow: column nowrap;
+}
+
+.form-explain {
+   min-height: 5em;
+}
+
+.steps-title::after {
+   content: " ";
+   display: block;
+   width: 0;
+   height: 0;
+   border-top: 50px solid transparent;
+   border-bottom: 50px solid transparent;
+   border-left: 30px solid #FFF;
+   position: absolute;
+   top: 50%;
+   margin-top: -50px;
+   left: 100%;
+   z-index: 2;
+}
+a.white {
+   color: #FFF;
+   text-decoration: none;
+   background-color: transparent;
+}
+
+a.btn1{
+   background-color: #A7C0DE !important;
+   padding: 1rem 1.5rem !important;
+}
+a.btn2{
+  background-color: #6A6F9D !important;
+  padding: 1rem 1.5rem !important;
+}
+
+@media print,
+screen and (max-width: 576px) {
+   .steps-title {
+      width: 80%;
+      margin: 0 auto 30px;
+      background: #FFF;
+      text-decoration: none;
+      color: #444;
+      position: relative;
+      height: auto;
+      text-align: center;
+      padding: 10px;
+   }
+   .steps-title::after {
+      content: "";
+      display: block;
+      border-top: 20px solid #FFF !important;
+      border-right: 38vw solid transparent !important;
+      border-left: 38vw solid transparent !important;
+      border-bottom: none;
+      position: absolute;
+      width: 0;
+      height: 0;
+      bottom: -20px !important;
+      top: auto !important;
+      left: 50%;
+      margin-top: 0 !important;
+      margin-left: -38vw;
+   }
+   .form-explain {
+      min-height: 0.5em;
+      min-height: 1em;
+   }
+}
+body{
+   width:94% !important;
+   margin-left:auto !important;
+   margin-right:auto !important;
+}
+.buttonerea{
+   margin-top:1em;
+   margin-bottom:1em;
+}
+.container-fluid .content{
+   margin-top:2em !important;
+}
+.use-env{
+   margin-top:2em;
+   font-size:.9em;
+   text-align:left;
+}

@@ -1,0 +1,372 @@
+body {
+    max-width: 1300px;
+}
+
+.content1Link {
+    color: black;
+}
+
+.content0 {
+    height: auto;
+    margin: 30px 0 30px 0;
+    /* background-color: #FFFFFF; */
+    text-align: center;
+}
+
+.content1 {
+    height: auto;
+    margin: 30px 0 50px 0;
+    background-color: #FFFFFF;
+    text-align: center;
+}
+
+.content4 {
+    height: auto;
+    padding: 10px;
+    margin: 10px 0 10px 0;
+    background-color: #DCE6F2;
+    text-align: center;
+}
+
+.content21, .content22, .content3 {
+    text-align: center;
+}
+
+.content0Div {
+    margin: 10px 2px 10px 2px;
+    display: inline-block;
+    vertical-align: top;
+    width: 24%;
+}
+
+.red{font-weight: bold; color:red;font-size:1em;}
+
+.content1Div {
+    background-color: #F2F2F2;
+    padding: 50px;
+    margin: 10px 10px 10px 10px;
+    display: inline-block;
+    vertical-align: middle;
+    height: 300px;
+    width: 300px;
+    min-width: 31%;
+}
+
+.content4Div {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 30px;
+}
+
+.conten4Title {
+    text-align: left;
+    font-size: 1.25em;
+    margin: 30px 16px 30px 16px;
+    ; }
+
+.transparentDiv {
+    opacity: 0;
+}
+
+.content0Img {
+    display: block;
+    margin: 0 auto;
+    width: 90%;
+    height: auto;
+}
+
+.content1Img, .content4Img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+}
+
+.content2Img, .content3Img {
+    max-width: 100%;
+    margin: 15px 0 15px 0;
+}
+
+.content1Title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.dainidanDiv {
+    background-color: #DBEEF4;
+    position: relative;
+}
+
+.dainidan {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 10px;
+    box-sizing: border-box;
+    padding: 0 10px;
+    margin: 0;
+    height: 30px;
+    line-height: 30px;
+    font-size: 18px;
+    letter-spacing: 0.1em;
+    color: white;
+    background: #ff7470;
+    box-shadow: 1px -1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.dainidan:before {
+    position: absolute;
+    content: '';
+    top: -8px;
+    left: -7px;
+    border: none;
+    height: 38px;
+    width: 7px;
+    background: #ff7470;
+    border-radius: 5px 0 0 5px;
+}
+
+.dainidan:after {
+    position: absolute;
+    content: '';
+    top: -7px;
+    left: -5px;
+    border: none;
+    height: 7px;
+    width: 5px;
+    background: #b25552;
+    border-radius: 5px 0 0 5px;
+}
+
+.about_head {
+    padding: .5rem;
+    border-bottom: 4px solid #B0C4DE;
+}
+
+.about_contents {
+    text-align: left;
+}
+
+.about_contents h5, .about_contents p {
+    width: 100%;
+    display: inline-block;
+}
+
+.about_contents h5 {
+    border-left: .5rem solid #B0C4DE;
+    padding-left: .5rem;
+    font-weight: bold;
+}
+
+.about_contents table {
+    width: 50%;
+    margin-bottom: 1rem;
+    border-collapse: inherit;
+}
+
+.about_item {
+    padding-left: .25rem;
+}
+
+.bg_gray {
+    color: inherit;
+    background-color: #E5ECF5;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.contentDai3danOverDiv {
+    background-color: #DCE6F2 !important;
+    padding: 50px 20px 50px 20px;
+    margin: 10px 0 10px 0;
+    display: inline-block;
+    vertical-align: middle;
+    height: 250px;
+    width: 100%;
+    text-align: center;
+}
+
+.contentDai3danOverTitle {
+    text-align: center;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.contentDai3danOverText {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.25em;
+}
+
+.contentDai3danOverLink {
+    font-size: 1.5em;
+    padding: 5px 10%;
+    color: white;
+    background-color: #153858;
+}
+
+.contentDai3danOverLink:link {
+    background-color: #153858;
+    color: white;
+    text-decoration: none;
+}
+
+.contentDai3danOverLink:visited {
+    color: white;
+    text-decoration: none;
+}
+
+.contentDai2danOverDiv {
+    background-color: #33CCCC;
+    padding: 50px;
+    margin: 10px 0 10px 0;
+    display: inline-block;
+    vertical-align: middle;
+    height: 250px;
+    width: 100%;
+}
+
+.contentDai2danOverTitle {
+    text-align: center;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.contentDai2danOverText {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.25em;
+}
+
+.contentDai2danOverLink {
+    font-size: 1.5em;
+    padding: 5px 15%;
+    color: white;
+    background-color: #009999;
+}
+
+.contentDai2danOverLink:link {
+    background-color: #009999;
+    color: white;
+    text-decoration: none;
+}
+
+.contentDai2danOverLink:visited {
+    color: white;
+    text-decoration: none;
+}
+
+.divDai0dan {
+    height: auto;
+}
+
+.divDai3dan {
+    background-color: #DCE6F2 !important;
+    margin: 40px 0 40px 0;
+    padding: 40px 40px 40px 40px;
+    height: auto;
+}
+
+.divDai4dan {
+    background-color: #C3D69B !important;
+    margin: 10px 0 10px 0;
+    padding: 10px 40px 10px 40px;
+    height: auto;
+}
+
+.contentDai3danTitle {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.8em;
+}
+container-fluid content{
+    margin-top: 100px;
+    margin-bottom: 60px;
+}
+
+@media screen and (max-width: 768px) {
+    .content0Div {
+        width: 100%;
+        margin: 5px 0px 5px 0px;
+    }
+
+    .content4Div {
+        margin: 5px;
+    }
+
+    .content0, .content1, .content4 {
+        margin: 3px 0 3px 0;
+    }
+
+    .transparentDiv {
+        display: none;
+    }
+
+    .content1Div {
+        width: 90%;
+        height: 160px;
+        padding: 5px;
+    }
+
+    .content1Title {
+        text-align: center;
+        font-weight: bold;
+        font-size: 1em;
+    }
+
+    .about_contents table {
+        width: 100%;
+    }
+
+    .contentDai3danOverTitle {
+        font-size: 1.3em;
+    }
+
+    .contentDai3danOverText, .contentDai3danOverLink {
+        font-size: 1.1em;
+    }
+
+    .contentDai3danOverDiv {
+        width: 100%;
+    }
+
+    .contentDai2danOverTitle {
+        font-size: 1.3em;
+    }
+
+    .contentDai2danOverText, .contentDai2danOverLink {
+        font-size: 1.1em;
+    }
+
+    .contentDai2danOverDiv {
+        width: 100%;
+    }
+
+    .divDai3dan {
+        width: 100%;
+        padding: 0 10px 0 10px;
+        margin: 0 0 0 0;
+    }
+
+    .contentDai3danTitle {
+        font-size: 1.3em;
+    }
+    .content{
+       margin-top: 0em !important;
+       margin-bottom: 0em !important;
+    }
+    .btn-lg {
+      margin: 0 0 0.4em 0;
+    }
+    container-fluid content{
+    margin-top: 10px;
+    margin-bottom: 6px;
+    }
+    .conten4Title {
+    font-size: 1.1em;
+    margin: 3px 16px 3px 16px;
+    ; }
+}

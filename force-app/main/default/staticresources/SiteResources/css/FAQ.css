@@ -1,0 +1,166 @@
+h1 {
+    text-align: center;
+    margin: .5em;
+}
+
+label:not(.tab_item) {
+    display: block;
+    padding: 0 0 1.5em 3em;
+    margin: 1em 1em 2em 1em;
+    cursor: pointer;
+    border-bottom: .05em solid #A7C0DE;
+    color: black;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: ease .5s;
+    position: relative;
+}
+
+label:not(.tab_item)::before {
+    content: '＋';
+    color: #FFF;
+    background-color: #A7C0DE;
+    font-size: 1.1em;
+    font-weight: bold;
+    position: absolute;
+    border: .1em solid #A7C0DE;
+    border-radius: .15em;
+    text-align: center;
+    width: 1.7em;
+    left: 0;
+}
+
+input:not(.navitab):checked+label:not(.tab_item)::before {
+    content: '－';
+    color: #A7C0DE;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: .1em solid #A7C0DE;
+    border-radius: .2em;
+    background-color: white;
+    text-align: center;
+    width: 1.6em;
+    left: 0;
+}
+
+.content {
+    background: #F0F0F0;
+    padding: .5em 2em;
+    border: 0 solid #A7A7A7;
+    margin: .5em 1.2em 2em 1.25em;
+}
+
+input:not(.navitab)+label:not(.tab_item)+.content {
+    display: none;
+}
+
+input:not(.navitab):checked+label:not(.tab_item)+.content {
+    display: block;
+}
+
+input:not(.navitab) {
+    display: none;
+}
+
+*,
+*:before,
+*:after {
+    -webkit-user-select: none;
+    /* Chrome/Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE10+ */
+}
+
+.tabs {
+    margin-top: 50px;
+    padding-bottom: 40px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tab_item {
+    height: 60px;
+    border-bottom: 3px solid #A7C0DE;
+    background-color: #d9d9d9;
+    line-height: 60px;
+    font-size: 1.25em;
+    text-align: center;
+    color: black;
+    display: block;
+    float: left;
+    text-align: center;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+.tab_item[for=shinsei1],.tab_item[for=shinsei2] {
+    width:30%;
+}
+.tab_item[for=shinsei1and2] {
+    width:40%;
+}
+.tab_item:hover {
+    opacity: 0.75;
+}
+
+input[name="tab_item"] {
+    display: none;
+}
+
+.tab_content {
+    display: none;
+    clear: both;
+    overflow: hidden;
+}
+
+#shinsei1:checked~#shinsei1_content,
+#shinsei2:checked~#shinsei2_content,
+#shinsei1and2:checked~#shinsei1and2_content {
+    display: block;
+}
+
+.tabs input:checked+.tab_item {
+    background-color: #A7C0DE;
+    color: #fff;
+}
+
+.shinsei1 {
+    background-color: #84B14C;
+}
+
+.shinsei2 {
+    background-color: #EAAA62;
+}
+
+.shinsei1and2 {
+    background-color: #F2021D;
+}
+
+.subtitle1,
+.subtitle2,
+.subtitle3 {
+    font-size: 1em;
+    color: white;
+    font-weight: bold;
+    background-color: #A7C0DE;
+    margin: .5em 1em .5em 1em;
+    padding: .1em 0 .1em 0;
+}
+
+.bg_gray {
+    background-color: #9fa0a0;
+}
+
+@media screen and (max-width: 768px) {
+
+    label,
+    label:not(.tab_item),
+    input:not(.navitab),
+    .tab_item,
+    .navitab {
+        font-size: .9em;
+    }
+}

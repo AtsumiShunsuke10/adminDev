@@ -1,0 +1,419 @@
+<!--Application15List-->
+<apex:page docType="html-5.0" Controller="Application15ListController" sidebar="false" standardStylesheets="false" showHeader="false" applyHtmlTag="false" applyBodyTag="false">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="format-detection" content="telephone=no" />
+        <link href="{!URLFOR($Resource.SiteResources, 'css/common.css')}" rel="stylesheet" />
+        <link href="{!URLFOR($Resource.SiteResources, 'css/bootstrap.min.css')}" rel="stylesheet" />
+        <apex:stylesheet value="{!URLFOR($Resource.otherResource, 'otherResource/css/animate.min.css')}" />
+
+        <apex:slds />
+
+        <style type="text/css">
+            span {
+                font-family: "Ek Mukta";
+            }
+
+            label {
+                font-family: "Ek Mukta";
+            }
+
+            div {
+                font-family: "Ek Mukta";
+            }
+
+            .row-border {
+                padding-top: 15px;
+            }
+
+            .div-participant {}
+
+            .infoDiv {
+                font-size: 1rem;
+                /* padding-top: .5rem;
+                padding-bottom: .5rem; */
+                border-bottom: .5px solid rgb(242, 242, 242);
+            }
+
+            .infoDiv span {
+                color: #222222;
+            }
+
+            .infoDiv label {
+                color: #5A5A5A;
+                font-weight: 650;
+            }
+
+            .headdiv {
+                flex-wrap: nowrap;
+                line-height: 1.5rem;
+                font-size: 1rem;
+                font-weight: 700;
+                color: #5A5A5A;
+                /* background-color:#C4E3F7; */
+                /* border-top: .5px solid rgb(242, 242, 242);
+                border-bottom: .5px solid rgb(242, 242, 242); */
+            }
+
+            .headdiv div {
+                border-top: .5px solid rgb(242, 242, 242);
+                border-bottom: .5px solid rgb(242, 242, 242);
+            }
+
+            .border-right {
+                border-right-color: rgba(0, 0, 0, .25)!important;
+            }
+
+            .vertical-padding {
+                padding: .5rem .375rem;
+            }
+
+            @media screen and (min-width: 769px) {
+                .div-participant {
+                    flex-wrap: nowrap;
+                    line-height: 1.5rem;
+                }
+
+                .div-participant:hover div {
+                    background-color: rgba(25, 124, 190, 0.05);
+                }
+
+                .infoDiv {
+                    white-space: nowrap;
+                }
+
+                .infoDiv:hover {
+                    background-color: white!important;
+                }
+
+                .ellipsis {
+                    max-width: 100%;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+
+                .fixedtext-3 {
+                    width: 3.875rem;
+                    min-width: 3.875rem;
+                }
+                .fixedtext-4 {
+                    width: 4.875rem;
+                    min-width: 4.875rem;
+                }
+                .fixedtext-5 {
+                    width: 5.875rem;
+                    min-width: 5.875rem;
+                }
+                .fixedtext-6 {
+                    width: 6.875rem;
+                    min-width: 6.875rem;
+                }
+                .fixedtext-7 {
+                    width: 7.875rem;
+                    min-width: 7.875rem;
+                }
+                .fixedtext-11 {
+                    width: 11.875rem;
+                    min-width: 11.875rem;
+                }
+                .fixedtext-12 {
+                    width: 12.875rem;
+                    min-width: 12.875rem;
+                }
+                .fixedNumber-7 {
+                    width: 5.25rem;
+                    min-width: 5.25rem;
+                }
+                .fixedNumber-10 {
+                    width: 7.5rem;
+                    min-width: 7.5rem;
+                }
+                .fixedNumber-11 {
+                    width: 8.125rem;
+                    min-width: 8.125rem;
+                }
+                .fixedNumber-13 {
+                    width: 9.375rem;
+                    min-width: 9.375rem;
+                }
+                .fixedNumber-16 {
+                    width: 11.25rem;
+                    min-width: 11.25rem;
+                }
+            }
+
+            @media screen and (max-width: 768px) {
+                .div-participant {
+                    border: 1px solid rgba(0, 0, 0, .125);
+                    border-radius: .25rem;
+                    margin-top: 15px;
+                    margin-bottom: 30px;
+                    box-shadow: 0 .25rem .5rem rgba(0,0,0,.15);
+                }
+
+                .div-participant label {
+                    padding-right: 15px;
+                    margin: 0;
+                    width: 45%;
+                }
+
+                .div-participant span {
+                    width: 55%;
+                }
+
+                .infoDiv {
+                    border-bottom: 1px solid rgba(0, 0, 0, .125);
+                }
+
+                .infoDiv label {
+                    padding-left: .625rem;
+                }
+
+                .infoDiv:hover {
+                    background-color: rgba(25, 124, 190, 0.05);
+                }
+
+                .noReupload {
+                    padding: 0;
+                    border: 0;
+                }
+
+                .repTitle span,
+                .repName span,
+                .address span {
+                    white-space: normal;
+                    word-wrap: break-word; 
+                    word-break: break-all; 
+                    float: right;
+                }
+
+                .fixedtext-3 {
+                    width: 100%;
+                }
+                .fixedtext-4 {
+                    width: 100%;
+                }
+                .fixedtext-5 {
+                    width: 100%;
+                }
+                .fixedtext-6 {
+                    width: 100%;
+                }
+                .fixedtext-7 {
+                    width: 100%;
+                }
+                .fixedtext-11 {
+                    width: 100%;
+                }
+                .fixedtext-12 {
+                    width: 100%;
+                }
+                .fixedNumber-7 {
+                    width: 100%;
+                }
+                .fixedNumber-10 {
+                    width: 100%;
+                }
+                .fixedNumber-11 {
+                    width: 100%;
+                }
+                .fixedNumber-13 {
+                    width: 100%;
+                }
+                .fixedNumber-16 {
+                    width: 100%;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <apex:form id="formId">
+            <div class="row m-0 pt-3 justify-content-end">
+                <apex:commandButton styleClass="btn btn-primary" value="新規申請" action="{!toInputPage}"/>
+            </div>
+            <div class="slds-scope mt-2">
+                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                    <span>
+                        <p style="font-size: 1rem">申請を新規作成する場合は、画面右上の「新規申請」ボタンを押してください。</p>
+                    </span>
+                </div>
+            </div>
+                        
+            <div class="card-body">
+                <div class="row d-md-flex d-none headdiv">
+                    <div class="border-right fixedNumber-10 vertical-padding">
+                        <span class="center">
+                            {!$ObjectType.Application15__c.Fields.Name.Label}<!-- 申請番号 -->
+                        </span>
+                    </div>
+                    <div class="border-right fixedNumber-11 vertical-padding">
+                        <span class="center">
+                            {!$ObjectType.Application15__c.Fields.Reference_Number__c.Label}<!-- 整理番号 -->
+                        </span>
+                    </div>
+                    <div class="border-right fixedtext-6 vertical-padding">
+                        <span class="center">
+                            {!$ObjectType.Application15__c.Fields.Screening_Status__c.Label}<!-- 審査状況 -->
+                        </span>
+                    </div>
+                    <div class="border-right fixedtext-6 vertical-padding">
+                        <span class="center">
+                            {!$ObjectType.Application15__c.Fields.Applicant_Division__c.Label}<!-- 法人／個人★ -->
+                        </span>
+                    </div>
+                    <div class="border-right fixedNumber-13 vertical-padding">
+                        <span class="center">
+                            {!$ObjectType.Application15__c.Fields.Corporate_Number__c.Label}<!-- 法人番号★ -->
+                        </span>
+                    </div>
+                    <div class="border-right fixedtext-7 repTitle vertical-padding">
+                        <span class="center">
+                            {!$ObjectType.Application15__c.Fields.Applicant_Title__c.Label}<!-- 代表者職名★ -->
+                        </span>
+                    </div>
+                    <div class="border-right fixedtext-7 repName vertical-padding">
+                        <span class="center">
+                            {!$ObjectType.Application15__c.Fields.Applicant_Name__c.Label}<!-- 代表者氏名★ -->
+                        </span>
+                    </div>
+                    <div class="border-right fixedtext-12 vertical-padding">
+                        <span class="center">
+                            {!$ObjectType.Application15__c.Fields.Applicant_Postal_Code__c.Label}<!-- 本店所在地又は住所郵便番号 -->
+                        </span>
+                    </div>
+                    <div class="border-right fixedtext-11 address vertical-padding">
+                        <span class="center">
+                            {!$ObjectType.Application15__c.Fields.Applicant_Address__c.Label}<!-- 本社所在地または住所★ -->
+                        </span>
+                    </div>
+                    <div class="fixedNumber-16 vertical-padding">
+                        <span class="center">
+                            {!$ObjectType.Application15__c.Fields.CreatedDate.Label}<!-- 作成日 -->
+                        </span>
+                    </div>
+                </div>
+
+                <apex:actionFunction action="{!toDetailPage}" name="toDetailPage" />
+                <apex:repeat value="{!apply15List}" var="apply" id="apply">
+                    <apex:variable var="reuploadFlag" value="{!(apply.Document_Reupload__c == '再提出待ち' && apply.Status__c == '不備回答待ち')}" />
+                    <div class='row div-participant border-bottom-0'>
+
+                        <div class="fixedNumber-10 infoDiv vertical-padding">
+                            <label class="d-md-none">{!$ObjectType.Application15__c.Fields.Name.Label}</label>
+                            <!-- <apex:outputText id="applyName" value="{!apply.Name}" /> -->
+                            <apex:commandLink value="{!apply.Name}" action="{!toDetailPage}">
+                            <!-- <apex:commandLink value="{!apply.Name}" action="{!toRevisePage}"> -->
+                                <apex:param name="applyId" value="{!apply.Id}" assignTo="{!applyId}" />
+                            </apex:commandLink>
+                        </div>
+
+                        <div class="fixedNumber-11 infoDiv vertical-padding">
+                            <label class="d-md-none">{!$ObjectType.Application15__c.Fields.Reference_Number__c.Label}</label>
+                            <apex:outputText id="ReferenceNum" value="{!apply.Reference_Number__c}" />
+                        </div>
+                        <!-- 審査状況 -->
+                        <div class="fixedtext-6 infoDiv vertical-padding">
+                            <label class="d-md-none">{!$ObjectType.Application15__c.Fields.Screening_Status__c.Label}</label>
+                            <apex:outputText id="screeningStatus" value="{!apply.Screening_Status__c}" />
+                        </div>
+
+                        <div class="fixedtext-6 infoDiv vertical-padding">
+                            <label class="d-md-none">{!$ObjectType.Application15__c.Fields.Applicant_Division__c.Label}</label>
+                            <apex:outputText id="applicantDivision" value="{!apply.Applicant_Division__c}" />
+                        </div>
+
+                        <div class="fixedNumber-13 infoDiv vertical-padding">
+                            <label class="d-md-none">{!$ObjectType.Application15__c.Fields.Corporate_Number__c.Label}</label>
+                            <apex:outputText id="corporateNum" value="{!apply.Corporate_Number__c}" />
+                        </div>
+
+                        <div class="fixedtext-6 infoDiv repTitle vertical-padding">
+                            <label class="d-md-none">{!$ObjectType.Application15__c.Fields.Applicant_Title__c.Label}</label>
+                            <apex:outputText id="applicantTitle" value="{!apply.Applicant_Title__c}" />
+                        </div>
+
+                        <div class="fixedtext-6 infoDiv repName vertical-padding">
+                            <label class="d-md-none">{!$ObjectType.Application15__c.Fields.Applicant_Name__c.Label}</label>
+                            <apex:outputText id="applicantName" value="{!apply.Applicant_Name__c}" />
+                        </div>
+
+                        <div class="fixedtext-12 infoDiv vertical-padding">
+                            <label class="d-md-none">{!$ObjectType.Application15__c.Fields.Applicant_Postal_Code__c.Label}</label>
+                            <apex:outputText id="applicantZip" value="{!apply.Applicant_Postal_Code__c}" />
+                        </div>
+
+                        <div class="fixedtext-11 infoDiv address vertical-padding">
+                            <label class="d-md-none">{!$ObjectType.Application15__c.Fields.Applicant_Address__c.Label}</label>
+                            <apex:outputText id="applicantAddress" value="{!apply.Applicant_Address__c}" />
+                        </div>
+
+                        <div class="fixedNumber-16 infoDiv vertical-padding">
+                            <label class="d-md-none">{!$ObjectType.Application15__c.Fields.CreatedDate.Label}</label>
+                            <apex:outputText id="createdDate" value="{0,date,yyyy/MM/dd HH:mm}">
+                                <apex:param value="{!apply.CreatedDate + 9 / 24}" />
+                            </apex:outputText>
+                        </div>
+                    </div>
+                </apex:repeat>
+            </div>
+        </apex:form>
+        <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/jquery.min.js')}" />
+        <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/bootstrap.min.js')}" />
+        <!-- <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/svg4everybody.min.js')}" />
+        <script>svg4everybody();</script> -->
+        <script type="text/javascript">
+            $(function(){
+                setMaxLength('.repTitle');
+                setMaxLength('.repName');
+                setMaxLength('.address');
+            })
+            $(window).resize(function (){
+                setMaxLength('.repTitle');
+                setMaxLength('.repName');
+                setMaxLength('.address');
+            });
+
+            function setMaxLength(_class) {
+                var maxw = 0;
+                $(_class).each(function(){
+                    // var w = 0;
+                    // var txt = $(this).text();
+                    // for(var i = 0; i < txt.length; i++){
+                    //     var c = txt.charAt(i);
+                    //     w += /^[\u0000-\u00ff]$/.test(c) ? 1 : 0.625;
+                    // }
+                    // maxw = w > maxw ? w : maxw;
+                    var wpx = parseFloat($(this).find('span').width());
+                    var fsize = parseFloat($(this).find('span').css('font-size'));
+                    var wrem = wpx / fsize;
+
+                    maxw = wrem > maxw ? wrem : maxw;
+                });
+                maxw += 0.875;
+                if($(window).width() > 768){
+                    $(_class).each(function(n,element){
+                        $(element).css('min-width', maxw + 'rem');
+                    });
+                }else {
+                    $(_class).each(function(n,element){
+                        $(element).css('min-width', '0');
+                    });
+                }
+            }
+
+			function checkNoDup(_flag){
+                if(_flag){
+					toChangeFile();
+                }else {
+                    location.reload();
+                }
+            }
+        </script>
+    </body>
+
+    </html>
+</apex:page>

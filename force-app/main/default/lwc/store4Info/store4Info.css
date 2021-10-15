@@ -1,0 +1,6 @@
+.testcss {
+    background-color: var(--backColor);
+}
+a {
+    background-color: var(--backColor);
+}

@@ -1,0 +1,19 @@
+<template>
+    <template if:true={faq}>
+        <lightning-layout vertical-align="center">
+            <lightning-layout-item padding="around-small">
+                <a onclick={handleClick} onmouseout={handleMouseOut} onmouseover={handleMouseOver}>{faq.Title__c}</a>
+                <p class="slds-truncate" title={faq.Summary__c}>{faq.Summary__c}</p>
+            </lightning-layout-item>
+            <lightning-layout-item padding="around-small" alignment-bump="left">
+                <!-- 添付機能削除のため
+                    <lightning-button-menu onselect={handleButtonSelect} menu-alignment="right"> 
+                        <lightning-menu-item label={menuItemLabel}></lightning-menu-item>
+                    </lightning-button-menu>
+                -->
+            </lightning-layout-item>
+        </lightning-layout>
+    </template>
+    <c-faq-popover>
+    </c-faq-popover>
+</template>

@@ -1,0 +1,198 @@
+<apex:page showHeader="false" standardStylesheets="false">
+<head>
+    <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/>
+    <!-- Import the Design System style sheet -->
+    <apex:slds />
+    <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/jquery.min.js')}"/>
+</head>
+<style type = "text/css">
+    .section{
+        padding: 5em 2% 3em;
+        box-sizing: border-box;
+    }
+    .title {
+        font-size: 3.3rem;
+        letter-spacing: 4px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    .inner {
+        background: #FFF;
+        max-width: 960px;
+        box-shadow: 0 0 10px rgb(0 0 0 / 30%);
+        margin: 40px auto;
+        padding: 50px;
+    }
+    .subjectBox{
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        font-size: 1.6rem;
+    }
+    .subjectName {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        width: 200px;
+        text-align: center;
+        background: #6781a0;
+        color: #FFF;
+        letter-spacing: 6px;
+        padding: 36px;
+    }
+    .subject {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 30px;
+        box-sizing: border-box;
+        background: #f6f6f6;
+        width: calc(100% - 200px);
+        position: relative;
+        border: none;
+    }
+    .iken {
+        position: relative;
+        background: #f6f6f6;
+        margin-top: 20px;
+        padding: 40px;
+        margin-bottom: 30px;
+    }
+    .ikenMoji {
+        color: #6781a0;
+        letter-spacing: 1px;
+        width: 100%;
+        font-size: 2rem;
+        margin: 5px 0 10px;
+    }
+    .ikenBox {
+        width: 100%;
+        border: none;
+        box-sizing: border-box;
+        height: 300px;
+        font-size: 1.6rem;
+        box-shadow: 0 0 10px rgb(0 0 0 / 20%);
+        padding: 16px;
+        border-radius: 4px;
+    }
+    input[type=radio]+label:before{
+                    content: "";
+                    display: inline-block;
+                    background-size: contain;
+                    width: 140px;
+                    height: 140px;
+    }
+    input[type=radio][value="rate1"]+label:before{
+        background-image: url({!URLFOR($Resource.survey,'rate1.gif')});
+    }
+    input[type=radio][value="rate2"]+label:before{
+        background-image: url({!URLFOR($Resource.survey,'rate2.gif')});
+    }
+    input[type=radio][value="rate3"]+label:before{
+        background-image: url({!URLFOR($Resource.survey,'rate3.gif')});
+    }
+    input[type=radio][value="rate4"]+label:before{
+        background-image: url({!URLFOR($Resource.survey,'rate4.gif')});
+    }
+    input[type=radio][value="rate5"]+label:before{
+        background-image: url({!URLFOR($Resource.survey,'rate5.gif')});
+    }
+    input[type=radio]:checked+label::before{
+        border: 4px solid rgba(250, 246, 3, 0.973);
+        box-sizing: border-box;
+    }
+    input[type=radio]{
+        display: none;
+    }
+    .mienai {
+    visibility:collapse;
+    }
+</style>
+<body>
+        <form action="https://d5h000003kbkoeay--dev.my.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8" method="POST">
+        <input type="hidden" name="orgid" value="00D0l0000002nFr"/>
+        <input type="hidden" name="retURL" value="http://https://dev-trans-cosmos-digital.cs58.force.com/s/"/>
+        <section id = "section">
+            <div class = 'title'>サイト改善のご提案</div>
+            <div class="inner">
+                <div class="subjectbox">
+                    <label for="subject">件名</label>
+                    <input id="subject" maxlength="80" name="subject" size="20" type="text" />
+                </div>
+                <div class="iken">
+                    <div class="ikenMoji">ご意見:</div>
+                    <div>
+                        <textarea  id="00N0l0000095wEm" name="00N0l0000095wEm" rows="5" type="text" wrap="soft"></textarea>
+                    </div>
+                
+                    <div class="ikenMoji">掲載内容の分かりやすさ:
+                    <select  id="00N0l0000095wG9" name="00N0l0000095wG9" title="掲載内容の分かりやすさ" class="mienai">
+                        <option value="分かりづらい">分かりづらい</option>
+                        <option value="やや分かりづらい">やや分かりづらい</option>
+                        <option value="どちらでもない">どちらでもない</option>
+                        <option value="やや分かりやすい">やや分かりやすい</option>
+                        <option value="分かりやすい">分かりやすい</option>
+                    </select></div>
+                    <br>
+                    <input type="radio" name="list1" value="rate1" id="1" onchange="setValue1('分かりづらい')"/><label for="1"></label>
+                    <input type="radio" name="list1" value="rate2" id="2" onchange="setValue1('やや分かりづらい')"/><label for="2"></label>
+                    <input type="radio" name="list1" value="rate3" id="3" onchange="setValue1('どちらでもない')"/><label for="3"></label>
+                    <input type="radio" name="list1" value="rate4" id="4" onchange="setValue1('やや分かりやすい')"/><label for="4"></label>
+                    <input type="radio" name="list1" value="rate5" id="5" onchange="setValue1('分かりやすい')"/><label for="5"></label>
+                    </br>
+                    
+                    <div class="ikenMoji">申請しやすさ:
+                    <select  id="00N0l0000095wHW" name="00N0l0000095wHW" title="申請しやすさ" class="mienai">
+                    <option value="申請しづらい">申請しづらい</option>
+                    <option value="やや申請しづらい">やや申請しづらい</option>
+                    <option value="どちらでもない">どちらでもない</option>
+                    <option value="やや申請しやすい">やや申請しやすい</option>
+                    <option value="申請しやすい">申請しやすい</option>
+                    </select></div>
+                    <br>
+                    <input type="radio" name="list2" value="rate1" id="one" onchange="setValue2('申請しづらい')"/><label for="one"></label>
+                    <input type="radio" name="list2" value="rate2" id="two" onchange="setValue2('やや申請しづらい')"/><label for="two"></label>
+                    <input type="radio" name="list2" value="rate3" id="three" onchange="setValue2('どちらでもない')"/><label for="three"></label>
+                    <input type="radio" name="list2" value="rate4" id="four" onchange="setValue2('やや申請しやすい')"/><label for="four"></label>
+                    <input type="radio" name="list2" value="rate5" id="five" onchange="setValue2('申請しやすい')"/><label for="five"></label>
+                    </br>
+                    
+                    <div class="ikenMoji">サイトデザイン:
+                    <select  id="00N0l0000095wHg" name="00N0l0000095wHg" title="サイトデザイン" class="mienai">
+                    <option value="分かりづらい">分かりづらい</option>
+                    <option value="やや分かりづらい">やや分かりづらい</option>
+                    <option value="どちらでもない">どちらでもない</option>
+                    <option value="やや分かりやすい">やや分かりやすい</option>
+                    <option value="分かりやすい">分かりやすい</option>
+                    </select></div>
+                    <br>
+                    <input type="radio" name="sizeSelect" value="rate1" id="first" onchange="setValue3('分かりづらい')"/><label for="first"></label>
+                    <input type="radio" name="sizeSelect" value="rate2" id="second" onchange="setValue3('やや分かりづらい')"/><label for="second"></label>
+                    <input type="radio" name="sizeSelect" value="rate3" id="third" onchange="setValue3('どちらでもない')"/><label for="third"></label>
+                    <input type="radio" name="sizeSelect" value="rate4" id="forth" onchange="setValue3('やや分かりやすい')"/><label for="forth"></label>
+                    <input type="radio" name="sizeSelect" value="rate5" id="fifth" onchange="setValue3('分かりやすい')"/><label for="fifth"></label>
+                    </br>
+                    <script>
+                        function setValue1(val){
+                            $('select[id$="00N0l0000095wG9"]').val(val);
+                        }
+                        function setValue2(val){
+                            $('select[id$="00N0l0000095wHW"]').val(val);
+                        }
+                        function setValue3(val){
+                            $('select[id$="00N0l0000095wHg"]').val(val);
+                        }
+                    </script>
+            
+                    <br><input type="hidden"  id="external" name="external" value="1" /></br>
+                    <!--<br><apex:commandButton id="button1" value="確認画面へ進む" action="{!confirm}"/></br>
+                    <br><apex:commandButton id="button2" value="修正する" action="{!input}"/></br>-->
+                    <br><input type="submit" name="submit" value="内容を送信する"/></br>
+                </div>
+            </div>
+        </section>
+    </form>
+</body>
+</apex:page>

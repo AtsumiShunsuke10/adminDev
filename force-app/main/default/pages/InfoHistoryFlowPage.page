@@ -1,0 +1,6 @@
+<apex:page standardController="Information__c">
+    <flow:interview name="InfoHistoryFlow" finishLocation="/{!Information__c}">
+		<apex:param name="recordId" value="{!Information__c.Id}"/>
+		<apex:param name="userId" value="{!$User.Id}"/>
+    </flow:interview>
+</apex:page>

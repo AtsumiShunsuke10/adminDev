@@ -1,0 +1,271 @@
+<apex:page docType="html-5.0" showHeader="false" standardStylesheets="false" controller="GoikenController" cache="false">
+<head>
+    <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/>
+    <!-- Import the Design System style sheet -->
+    <apex:slds />
+    <apex:includeScript value="{!URLFOR($Resource.otherResource, 'otherResource/js/jquery.min.js')}"/>
+</head>
+<style type = "text/css">
+    .section{
+        padding: 5em 2% 3em;
+        box-sizing: border-box;
+    }
+    .title {
+        font-size: 3.3rem;
+        letter-spacing: 4px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    .inner {
+        background: #FFF;
+        max-width: 960px;
+        box-shadow: 0 0 10px rgb(0 0 0 / 30%);
+        margin: 40px auto;
+        padding: 50px;
+    }
+    .subjectBox{
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        font-size: 1.6rem;
+    }
+    .subjectName {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        width: 200px;
+        text-align: center;
+        background: #6781a0;
+        color: #FFF;
+        letter-spacing: 6px;
+        padding: 36px;
+    }
+    .subject {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 30px;
+        box-sizing: border-box;
+        background: #f6f6f6;
+        width: calc(100% - 200px);
+        position: relative;
+        border: none;
+    }
+    .iken {
+        position: relative;
+        background: #f6f6f6;
+        margin-top: 20px;
+        padding: 40px;
+        margin-bottom: 30px;
+    }
+    .ikenMoji {
+        color: #6781a0;
+        letter-spacing: 1px;
+        width: 100%;
+        font-size: 2rem;
+        margin: 5px 0 10px;
+    }
+    .ikenBox {
+        width: 100%;
+        border: none;
+        box-sizing: border-box;
+        height: 300px;
+        font-size: 1.6rem;
+        box-shadow: 0 0 10px rgb(0 0 0 / 20%);
+        padding: 16px;
+        border-radius: 4px;
+    }
+    input[type=radio]+label:before{
+                    content: "";
+                    display: inline-block;
+                    background-size: contain;
+                    width: 140px;
+                    height: 140px;
+    }
+    input[type=radio][value="rate1"]+label:before{
+        background-image: url({!URLFOR($Resource.survey,'rate1.gif')});
+    }
+    input[type=radio][value="rate2"]+label:before{
+        background-image: url({!URLFOR($Resource.survey,'rate2.gif')});
+    }
+    input[type=radio][value="rate3"]+label:before{
+        background-image: url({!URLFOR($Resource.survey,'rate3.gif')});
+    }
+    input[type=radio][value="rate4"]+label:before{
+        background-image: url({!URLFOR($Resource.survey,'rate4.gif')});
+    }
+    input[type=radio][value="rate5"]+label:before{
+        background-image: url({!URLFOR($Resource.survey,'rate5.gif')});
+    }
+    input[type=radio]:checked+label::before{
+        border: 4px solid rgba(250, 246, 3, 0.973);
+        box-sizing: border-box;
+    }
+    input[type=radio]{
+        display: none;
+    }
+    .mienai {
+    visibility:collapse;
+    }
+</style>
+<script>
+    function setValue1(val){
+        $('input[id$="item1"]').val(val);
+    }
+    function setValue2(val){
+        $('input[id$="item2"]').val(val);
+    }
+    function setValue3(val){
+        $('input[id$="item3"]').val(val);
+    }
+    function func1(){
+        let subject_val = document.getElementById("subject").value;
+        let iken_val = document.getElementById("00N0l0000095wEm").value;
+        let list1_val = document.getElementById("item1").value;
+        let list2_val = document.getElementById("item2").value;
+        let list3_val = document.getElementById("item3").value;
+        if (subject_val == null ||
+            iken_val == null ||
+            list1_val == 'なし' ||
+            list2_val == 'なし' ||
+            list3_val == 'なし'){
+            document.getElementById("button1").style.visibility = 'visible';
+            document.getElementById("button2").style.visibility = 'hidden';
+            document.getElementById("submit").style.visibility = 'hidden';
+        }else{
+            document.getElementById("button1").style.visibility = 'hidden';
+            document.getElementById("button2").style.visibility = 'visible';
+            document.getElementById("submit").style.visibility = 'visible';
+            document.getElementById("subject").disabled = true;
+            document.getElementById("00N0l0000095wEm").disabled = true;
+            document.getElementById("item1").disabled = true;
+            document.getElementById("item2").disabled = true;
+            document.getElementById("item3").disabled = true;
+            document.getElementById("1").disabled = true;
+            document.getElementById("2").disabled = true;
+            document.getElementById("3").disabled = true;
+            document.getElementById("4").disabled = true;
+            document.getElementById("5").disabled = true;
+            document.getElementById("one").disabled = true;
+            document.getElementById("two").disabled = true;
+            document.getElementById("three").disabled = true;
+            document.getElementById("four").disabled = true;
+            document.getElementById("five").disabled = true;
+            document.getElementById("first").disabled = true;
+            document.getElementById("second").disabled = true;
+            document.getElementById("third").disabled = true;
+            document.getElementById("forth").disabled = true;
+            document.getElementById("fifth").disabled = true;
+        }   
+    }
+    function func2(){
+        document.getElementById("button1").style.visibility = 'visible';
+        document.getElementById("button2").style.visibility = 'hidden';
+        document.getElementById("submit").style.visibility = 'hidden';
+        document.getElementById("subject").disabled = false;
+        document.getElementById("00N0l0000095wEm").disabled = false;
+        document.getElementById("00N0l0000095wG9").disabled = false;
+        document.getElementById("00N0l0000095wHW").disabled = false;
+        document.getElementById("00N0l0000095wHg").disabled = false;
+        document.getElementById("1").disabled = false;
+        document.getElementById("2").disabled = false;
+        document.getElementById("3").disabled = false;
+        document.getElementById("4").disabled = false;
+        document.getElementById("5").disabled = false;
+        document.getElementById("one").disabled = false;
+        document.getElementById("two").disabled = false;
+        document.getElementById("three").disabled = false;
+        document.getElementById("four").disabled = false;
+        document.getElementById("five").disabled = false;
+        document.getElementById("first").disabled = false;
+        document.getElementById("second").disabled = false;
+        document.getElementById("third").disabled = false;
+        document.getElementById("forth").disabled = false;
+        document.getElementById("fifth").disabled = false;
+    }
+</script>
+<body>
+        <section id = "section">
+            <div class = 'title'>サイト改善のご提案</div>
+            <div class="inner">
+                <apex:form >
+                <div class="subjectbox">
+                    <label class="subjectName" for="subject">件名</label>
+                    <div class="subject"><input id="subject" name="subject" type="text" required="true"/></div>
+                    <div id="output"></div>
+                </div>
+                <div class="iken">
+                    <div class="ikenMoji">ご意見:</div>
+                    <div class="ikenbox">
+                        <textarea  id="00N0l0000095wEm" name="00N0l0000095wEm" type="text" wrap="soft" required="true" />
+                    </div>
+                
+                    <div class="ikenMoji">掲載内容の分かりやすさ:
+                    <input id="item1" name="item1" />
+                    <!--<select  id="00N0l0000095wG9" name="00N0l0000095wG9" title="掲載内容の分かりやすさ" class="mienai">
+                        <option value="なし">なし</option>
+                        <option value="分かりづらい">分かりづらい</option>
+                        <option value="やや分かりづらい">やや分かりづらい</option>
+                        <option value="どちらでもない">どちらでもない</option>
+                        <option value="やや分かりやすい">やや分かりやすい</option>
+                        <option value="分かりやすい">分かりやすい</option>
+                    </select>--></div>
+                    <br>
+                    <input type="hidden" name="list1" value="rate0" id="0" onchange="setValue1('なし')" class="mienai"/><label for="0"></label>
+                    <input type="radio" name="list1" value="rate1" id="1" onchange="setValue1('分かりづらい')"/><label for="1"></label>
+                    <input type="radio" name="list1" value="rate2" id="2" onchange="setValue1('やや分かりづらい')"/><label for="2"></label>
+                    <input type="radio" name="list1" value="rate3" id="3" onchange="setValue1('どちらでもない')"/><label for="3"></label>
+                    <input type="radio" name="list1" value="rate4" id="4" onchange="setValue1('やや分かりやすい')"/><label for="4"></label>
+                    <input type="radio" name="list1" value="rate5" id="5" onchange="setValue1('分かりやすい')"/><label for="5"></label>
+                    </br>
+                    
+                    <div class="ikenMoji">申請しやすさ:
+                        <input id="item2" name="item2" />
+                        <!--<select  id="00N0l0000095wHW" name="00N0l0000095wHW" title="申請しやすさ" class="mienai">
+                    <option value="なし">なし</option>
+                    <option value="申請しづらい">申請しづらい</option>
+                    <option value="やや申請しづらい">やや申請しづらい</option>
+                    <option value="どちらでもない">どちらでもない</option>
+                    <option value="やや申請しやすい">やや申請しやすい</option>
+                    <option value="申請しやすい">申請しやすい</option>
+                    </select>--></div>
+                    <br>
+                    <input type="hidden" name="list2" value="rate0" id="zero" onchange="setValue2('なし')"/><label for="zero"></label>
+                    <input type="radio" name="list2" value="rate1" id="one" onchange="setValue2('申請しづらい')"/><label for="one"></label>
+                    <input type="radio" name="list2" value="rate2" id="two" onchange="setValue2('やや申請しづらい')"/><label for="two"></label>
+                    <input type="radio" name="list2" value="rate3" id="three" onchange="setValue2('どちらでもない')"/><label for="three"></label>
+                    <input type="radio" name="list2" value="rate4" id="four" onchange="setValue2('やや申請しやすい')"/><label for="four"></label>
+                    <input type="radio" name="list2" value="rate5" id="five" onchange="setValue2('申請しやすい')"/><label for="five"></label>
+                    </br>
+                    
+                    <div class="ikenMoji">サイトデザイン:
+                        <input id="item3" name="item3" />
+                    <!--<select  id="00N0l0000095wHg" name="00N0l0000095wHg" title="サイトデザイン" class="mienai">
+                    <option value="なし">なし</option>
+                    <option value="分かりづらい">分かりづらい</option>
+                    <option value="やや分かりづらい">やや分かりづらい</option>
+                    <option value="どちらでもない">どちらでもない</option>
+                    <option value="やや分かりやすい">やや分かりやすい</option>
+                    <option value="分かりやすい">分かりやすい</option>
+                    </select>--></div>
+                    <br>
+                    <input type="hidden" name="sizeSelect" value="rate0" id="zeroo" onchange="setValue3('なし')"/><label for="zeroo"></label>
+                    <input type="radio" name="sizeSelect" value="rate1" id="first" onchange="setValue3('分かりづらい')"/><label for="first"></label>
+                    <input type="radio" name="sizeSelect" value="rate2" id="second" onchange="setValue3('やや分かりづらい')"/><label for="second"></label>
+                    <input type="radio" name="sizeSelect" value="rate3" id="third" onchange="setValue3('どちらでもない')"/><label for="third"></label>
+                    <input type="radio" name="sizeSelect" value="rate4" id="forth" onchange="setValue3('やや分かりやすい')"/><label for="forth"></label>
+                    <input type="radio" name="sizeSelect" value="rate5" id="fifth" onchange="setValue3('分かりやすい')"/><label for="fifth"></label>
+                    </br>
+                    <br><input type="hidden"  id="external" name="external" value="1" /></br>
+                    <br><input type="submit" id="submit" name="submit" value="内容を送信する" style="visibility:collapse" /></br>
+                </div>
+            </apex:form>
+            <button type="button1" id="button1" name="button1" onclick="func1();return false">確認画面へ進む</button>
+            <button type="button2" id="button2" name="button2" onclick="func2()" style="visibility:collapse">修正する</button>
+        </div>    
+    </section>
+    
+</body>
+</apex:page>
