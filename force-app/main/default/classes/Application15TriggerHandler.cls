@@ -126,11 +126,11 @@ public class Application15TriggerHandler {
      * @param List<String> scrRetListPerApp15 新申請（感染症拡大防止協力金：第15弾）レコード毎に審査結果リスト
      */
     private static void getStoresScrRetInfo(Application15__c app15, List<String> scrRetListPerApp15) {
-        List<String> fieldsList = Application15Utility.getAllColumnsList('Store__c');
-        String query = Application15Utility.makeSoql(fieldsList, 'Store__c', 'Application15__c = \''+ app15.Id +'\'', '', '', '');
-        List<Store__c> storeList = Database.query(query);
+        List<String> fieldsList = Application15Utility.getAllColumnsList('Store15__c');
+        String query = Application15Utility.makeSoql(fieldsList, 'Store15__c', 'Application15__c = \''+ app15.Id +'\'', '', '', '');
+        List<Store15__c> storeList = Database.query(query);
         
-        for (Store__c s : storeList) {
+        for (Store15__c s : storeList) {
 
             // 申請金額がnullの場合、対象外
             if (s.Application_Store_Apply_Amount__c == null) {

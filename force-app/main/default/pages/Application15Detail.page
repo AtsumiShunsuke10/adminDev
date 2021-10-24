@@ -235,15 +235,13 @@
                         <span>申請情報</span>
                     </h3>
                     <div class="card-body" style="padding-top: 0">
-                        <!-- div class="row infoDiv">
-                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['ApplicationFlag__c'].Label}" for="ApplicationFlag" />
-                            <div class="col-12 outlabelHeigth">
-                                <img class="imgCheckbox" src="/img/checkbox_{!IF(apply15.ApplicationFlag__c, '', 'un')}checked.gif" />
-                            </div>
-                        </div -->
                         <div class="row infoDiv">
                             <apex:outputLabel value="申請番号" for="ApplicationName" />
                             <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Name}" id="ApplicationName" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Company_Scale__c'].Label}" for="companyScale"/>
+                            <apex:outputText styleClass="col-12 outlabelHeigth outlabelHeigth" value="{!apply15.Company_Scale__c}" id="companyScale"/>
                         </div>
                         <div class="row infoDiv slds-form-element_readonly">
                             <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Applicant_Division__c'].Label}" for="applicantDivision" />
@@ -276,6 +274,10 @@
                             <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Applicant_Name__c}" id="applicantName" />
                         </div>
                         <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Applicant_NameKana__c'].Label}" for="applicantNameKana" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Applicant_NameKana__c}" id="applicantNameKana" />
+                        </div>
+                        <div class="row infoDiv">
                             <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Applicant_Birthday__c'].Label}" for="applicantBirthday" />
                             <apex:outputText styleClass="col-12 outlabelHeigth outlabelHeigth" value="{0, date, yyyy/MM/dd}" id="applicantBirthday" >
                                 <apex:param value="{!apply15.Applicant_Birthday__c}"/>
@@ -288,6 +290,35 @@
                         <div class="row infoDiv">
                             <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Corporate_Number__c'].Label}" for="corporateNum" />
                             <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Corporate_Number__c}" id="corporateNum" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Personnel_Name__c'].Label}" for="personnelName" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Personnel_Name__c}" id="personnelName" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Personnel_NameKana__c'].Label}" for="personnelNameKana" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Personnel_NameKana__c}" id="personnelNameKana" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Personnel_Phone__c'].Label}" for="personnelPhone" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Personnel_Phone__c}" id="personnelPhone" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Payment_Amount_Calculation__c'].Label}" for="paymentAmountCalculation" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Payment_Amount_Calculation__c}" id="paymentAmountCalculation" />
+                        </div>
+
+                        <div align="left" class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Special_Application_Store__c'].Label}" for="specialApplicationStore"/>
+                            <div class="effortdtable_c">
+                                <img class="imgCheckbox" src="/img/checkbox_{!IF(apply15.Special_Application_Store__c, '', 'un')}checked.gif" />
+                            </div>
+                        </div>
+                        <div align="left" class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Applicant_Status__c'].Label}" for="applicantStatus"/>
+                            <div class="effortdtable_c">
+                                <img class="imgCheckbox" src="/img/checkbox_{!IF(apply15.Applicant_Status__c, '', 'un')}checked.gif" />
+                            </div>
                         </div>
                     </div>
 

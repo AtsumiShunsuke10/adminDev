@@ -1,5 +1,5 @@
 <!--Application15Input-->
-<apex:page docType="html-5.0" Controller="ApplicationStage15ControllerTemp" action="{!initInputPage}" sidebar="false" standardStylesheets="false" showHeader="false" applyHtmlTag="false" applyBodyTag="false">
+<apex:page docType="html-5.0" Controller="ApplicationStage15Controller" action="{!initInputPage}" sidebar="false" standardStylesheets="false" showHeader="false" applyHtmlTag="false" applyBodyTag="false">
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <head>
             <title>申請確認画面</title>
@@ -10,15 +10,14 @@
             <link href="{!URLFOR($Resource.SiteResources, 'css/bootstrap.min.css')}" rel="stylesheet"/>
             <apex:stylesheet value="{!URLFOR($Resource.otherResource, 'otherResource/css/animate.min.css')}" />
             
-            <!--add by ou start　20200525 lookupコンポーネント用のjs-->
             <apex:includeLightning /> 
             <script>
-            var cmpvar; //add by ou 0530
+            var cmpvar;
             $Lightning.use("c:customLookupApp", function() {
-                
+
                 var createComponentOptions = {};
                 if("{!$CurrentPage.parameters.backflag}"=="true"){
-                    createComponentOptions["SearchKeyWord"] ="{!apply15.FinancialName__c}";
+                    createComponentOptions["SearchKeyWord"] ="{!financialInstitutionName}";
                 }
                 createComponentOptions["inputLableName"] ="金融機関名"; //入力欄の表示名
                 createComponentOptions["objectAPIName"] ="C_FinancialInstitutiokanji__c"; //検索のオブジェクト名
@@ -44,22 +43,13 @@
                     $('input[id$="FinancialHidden"]').val(recordinfo.Id);
                 }
             }); 
-            //add by ou 0530 start
+
             function auraMethodCall(){
                 if(cmpvar!=null && cmpvar!=undefined){
                     cmpvar.vfCallAuraMethod();
                 }
             }
-            //add by ou 0530 end 
-            
-            function changeStoreDisplay(idx){
-                var index = idx+1;
-                jQuery('[id$=store'+index+'Card]').show();
-                jQuery('[id$=store'+idx+'tr]').show(); 
-            }
-
             </script>
-            <!--add by ou end 20200525-->
             <apex:slds />
             
             <style>
@@ -499,15 +489,15 @@
                                 <div class="row infoDiv  required"  id= "oldBirthdayDiv" style="display: none;">
                                     <apex:outputLabel value="代表者又は申請者の生年月日" for="oldBirthday" />
                                     <div class="form-inline col-12 p-0" id="oldBirthday">
-                                        <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="oldBirthYear" value="{!oldYear}">
+                                        <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="oldBirthYear" value="{!applicationYear}">
                                             <apex:selectOptions value="{!SelectYear}"/> 
                                         </apex:selectList><label for="year" class="pl-1 pr-2">年</label><br class="d-block d-sm-none"/>
                                         
-                                        <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="oldBirthMonth" value="{!oldMonth}" >
+                                        <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="oldBirthMonth" value="{!applicationMonth}" >
                                             <apex:selectOptions value="{!SelectMonth}"/>
                                         </apex:selectList><label for="month" class="pl-1 pr-2">月</label><br class="d-block d-sm-none"/>
                                         
-                                        <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="oldBirthDay" value="{!oldDay}">
+                                        <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="oldBirthDay" value="{!applicationDay}">
                                             <apex:selectOptions value="{!SelectDay}"/>
                                         </apex:selectList><label for="day" class="pl-1 pr-2">日</label>
                                     </div>
@@ -516,6 +506,7 @@
                                 <p>※検索ボタンを押下いただくと過去申請の項目は自動反映されます↓。
                                 </p>
                                 <apex:actionFunction name="setStoreHistoryAction" action="{!setStoreHistory}" rerender="refreshOutPutPannel"/>
+                                <apex:actionFunction name="clearStoreHistoryAction" action="{!clearStoreHistory}" rerender="refreshOutPutPannel"/>
                                 <button type="button" id="submitBtn" class="col-10 offset-1 col-md-6 offset-md-3 btn btn-danger btn-lg" style="min-width: 160px;font-size: 1rem" onclick="getApplicationHistory()">
                                     <apex:outputText value="過去申請を検索" />
                                 </button>
@@ -523,9 +514,9 @@
                                     <span> </span>
                                 </h3>
                             </div>
-                            
+
                             <div class="row infoDiv required autofill">
-                                <apex:outputLabel value="企業規模" for="companyScale"/>
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Company_Scale__c'].Label}" for="companyScale"/>
                                 <apex:inputField styleClass="form-control" value="{!apply15.Company_Scale__c}" id="companyScale"/>
                             </div>
                             <div class="row infoDiv required autofill">
@@ -564,8 +555,8 @@
                                 <apex:outputLabel value="法人の名称又は氏名" for="applicantBusinessName" />
                                 <apex:inputField styleClass="form-control" value="{!apply15.Applicant_Business_Name__c}" id="applicantBusinessName" />
                             </div>
-                            <div class="row infoDiv required autofill">
-                                <apex:outputLabel value="フリガナ" for="applicantNameKana" />
+                            <div class="row infoDiv autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Applicant_NameKana__c'].Label}" for="applicantNameKana" />
                                 <apex:inputField styleClass="form-control" value="{!apply15.Applicant_NameKana__c}" id="applicantNameKana" />
                             </div>
                             <div class="row infoDiv required">
@@ -627,30 +618,30 @@
                                 <br/>
                                 <div class="form-inline col-12 p-0" id="applicantBirthday">
                                     
-                                    <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="birthYear" value="{!applyh.Birthdate_Year__c}">
+                                    <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="birthYear" value="{!year}">
                                         <apex:selectOptions value="{!SelectYear}"/> 
                                     </apex:selectList><label for="year" class="pl-1 pr-2">年</label><br class="d-block d-sm-none"/>
                                     
-                                    <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="birthMonth" value="{!applyh.Birthdate_Month__c}" >
+                                    <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="birthMonth" value="{!month}" >
                                         <apex:selectOptions value="{!SelectMonth}"/>
                                     </apex:selectList><label for="month" class="pl-1 pr-2">月</label><br class="d-block d-sm-none"/>
                                     
-                                    <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="birthDay" value="{!applyh.Birthdate_Day__c}">
+                                    <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="birthDay" value="{!day}">
                                         <apex:selectOptions value="{!SelectDay}"/>
                                     </apex:selectList><label for="day" class="pl-1 pr-2">日</label>
                                     
                                 </div>
                             </div>
                             <div class="row infoDiv required autofill">
-                                <apex:outputLabel value="資本金（又は出資金）" for="capitalStock" />
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Capital_Stock__c'].Label}" for="capitalStock" />
                                 <apex:inputField styleClass="form-control" value="{!apply15.Capital_Stock__c}" id="capitalStock" />
                             </div>
                             <div class="row infoDiv required autofill">
-                                <apex:outputLabel value="中小企業基本法上の業種" for="enterprisesIndustryType" />
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Enterprises_Industry_Type__c'].Label}" for="enterprisesIndustryType" />
                                 <apex:inputField styleClass="form-control" value="{!apply15.Enterprises_Industry_Type__c}" id="enterprisesIndustryType" />
                             </div>
                             <div class="row infoDiv required autofill">
-                                    <apex:outputLabel value="常時雇用する従業員数" for="employeeNumber" />
+                                    <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Employee_Number__c'].Label}" for="employeeNumber" />
                                 <apex:inputField styleClass="form-control" value="{!apply15.Employee_Number__c}" id="employeeNumber" />
                             </div>
                             <div class="row infoDiv required autofill">
@@ -675,15 +666,32 @@
                                 </div>
                                 <apex:inputField styleClass="form-control" value="{!apply15.Corporate_Number__c}" id="corporateNum" />
                             </div>
-                            <div class="row infoDiv required autofill">
-                                <apex:outputLabel value="日中連絡が取れる方（フリガナ）" for="personnelNameKana" />
-                                <apex:inputField styleClass="form-control" value="{!apply15.Personnel_NameKana__c}" id="personnelNameKana" />
-                            </div>
-                            <div class="row infoDiv required autofill">
-                                <apex:outputLabel value="日中連絡が取れる方（氏名）" for="personnelName" />
+                            <div class="row infoDiv autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Personnel_Name__c'].Label}" for="personnelName" />
                                 <apex:inputField styleClass="form-control" value="{!apply15.Personnel_Name__c}" id="personnelName" />
                             </div>
-                            
+                            <div class="row infoDiv autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Personnel_NameKana__c'].Label}" for="personnelNameKana" />
+                                <apex:inputField styleClass="form-control" value="{!apply15.Personnel_NameKana__c}" id="personnelNameKana" />
+                            </div>
+
+                            <div class="row infoDiv autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Personnel_Phone__c'].Label}" for="personnelPhone" />
+                                <apex:inputField styleClass="form-control" value="{!apply15.Personnel_Phone__c}" id="personnelPhone" />
+                            </div>
+                            <div class="row infoDiv required autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Payment_Amount_Calculation__c'].Label}" for="paymentAmountCalculation" />
+                                <apex:inputField styleClass="form-control" value="{!apply15.Payment_Amount_Calculation__c}" id="paymentAmountCalculation" />
+                            </div>
+
+                            <div align="left" class="row infoDiv autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Special_Application_Store__c'].Label}" for="specialApplicationStore"/>
+                                <apex:inputCheckbox styleClass="unvCheckBox" value="{!apply15.Special_Application_Store__c}" id="specialApplicationStore" onchange=""/>
+                            </div>
+                            <div align="left" class="row infoDiv autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Applicant_Status__c'].Label}" for="applicantStatus"/>
+                                <apex:inputCheckbox styleClass="unvCheckBox" value="{!apply15.Applicant_Status__c}" id="applicantStatus" onchange=""/>
+                            </div>
                         </div>
                         
                         <h3 class="slds-section__title">
@@ -696,6 +704,7 @@
                                 <!-- コンポーネントの表示用div -->
                                 <div class="col-12 pl-0 pr-0" id="lookup" />
                                 <apex:inputhidden value="{!apply15.Financial_Institution_Lookup__c}" id="FinancialHidden"/>
+                                <apex:inputhidden value="{!financialInstitutionName}" id="FinancialNameHidden"/>
                             </div>
                             <div class="row infoDiv required autofill">
                                 <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Finacial_Branch_Name__c'].Label}" for="branchName"/>
@@ -746,6 +755,7 @@
                                 <apex:inputField styleClass="form-control" value="{!apply15.Account_Holder_Input__c}" id="accountHolder" />
                                 
                             </div>
+
                         </div>
                         
                         <h3 class="slds-section__title">
@@ -765,7 +775,7 @@
                             <apex:inputHidden value="{!pageNum}" id="pageHidden" />
                             <apex:inputHidden value="{!maxPageNum}" id="maxPageHidden" />
                             <div class="row m-0 pt-3 justify-content-end">
-                                <apex:commandLink styleClass="btn btn-primary" value="新規店舗追加" action="{!toStoreDetail}" status="status"/>
+                                <apex:commandLink styleClass="btn btn-primary" value="新規店舗追加" onclick="changeDisable()" action="{!toStoreDetail}"/>
                                 <p style="color: #FFFFFB;font-size: 0.8rem">.</p>
                                 <apex:commandLink styleClass="btn btn-primary" value="選択店舗削除" action="{!deleteDisplayStore}" rerender="refreshOutPutPannel"/>
                             </div>
@@ -806,9 +816,9 @@
                                     </div>
                                 </div>
                                 <apex:repeat value="{!storeDisplayList}" var="store" id="storesRepeat">
-                                    <div class='row div-participant border-bottom-0'>
+                                    <div class='row div-participant border-bottom-0' style="{!(IF(store.Application_Store_Apply_Amount__c !=null, 'background-color:paleturquoise;', ''))}">
                                         <div class="fixedtext-1 infoDiv vertical-padding">
-                                            <apex:inputCheckbox style="width: auto;margin-right: 10px;" styleClass="unvCheckBox" value="{!store.Application_Store_Effort_DetailsA__c}" id="storeCheck"/>
+                                            <apex:inputCheckbox style="width: auto;margin-right: 10px;" styleClass="unvCheckBox" value="{!store.Correction_Flag__c}" id="storeCheck"/>
                                         </div>
                                         
                                         <div class="fixedtext-2 infoDiv vertical-padding">
@@ -817,14 +827,14 @@
                                         </div>
                                         <div class="fixedtext-3 infoDiv vertical-padding">
                                             <label class="d-md-none">{!$ObjectType.Store15__c.Fields.Application_Store_Name__c.Label}</label>
-                                            <apex:commandLink value="{!store.Application_Store_Name__c}" action="{!toStoreDetail}">
+                                            <apex:commandLink value="{!store.Application_Store_Name__c}" onclick="changeDisable()" action="{!toStoreDetail}">
                                                 <apex:param name="StoreIdx" value="{!store.StoreIndex__c}" assignTo="{!storeIdx}" />
                                             </apex:commandLink>
                                         </div>
                                         
                                         <div class="fixedtext-4 infoDiv vertical-padding">
                                             <label class="d-md-none">{!$ObjectType.Store15__c.Fields.Application_Store_Per_Number_Com__c.Label}</label>
-                                            <apex:outputText id="applicationStorePerNumber" value="{!store.Application_Store_Per_Number_Com__c}第{!store.Application_Store_Per_Number_Issue__c}号" />
+                                            <apex:outputText id="applicationStorePerNumber" value="{!store.Application_Store_Per_Number__c}" />
                                         </div>
                                         
                                         <div class="fixedNumber-1 infoDiv vertical-padding">
@@ -1063,6 +1073,10 @@
         
         $(function () {
             backToTop();
+            if($('input[id$="FinancialNameHidden"]').val()!=''&&$('input[id$="FinancialNameHidden"]').val()!= undefined){
+                $('div[id$="financialInstitution"]').text($('input[id$="FinancialNameHidden"]').val());
+            }
+            
             if($('input[id$="oldApplicationNo"]').val()!=''&&$('input[id$="oldApplicationNo"]').val()!= undefined){
                 if($('input[id$="ApplicationFlagPledge"]').prop('checked')){
                     $("#tbox").css("display","block");
@@ -1073,12 +1087,19 @@
                 if (ssd == '法人'){
                     $('div[id$="oldCorporateNumberDiv"]').show();
                     $('div[id$="oldBirthdayDiv"]').hide();
+                    $('input[id$="corporateNum"]').prop('disabled','disabled');
+                    $('input[id$="applicantName"]').closest('div').addClass('required');
+                    $('input[id$="applicantTitle"]').closest('div').addClass('required');
+                    $('input[id$="corporateNum"]').closest('div').addClass('required');
                 }
                 if (ssd == '個人事業主'){
                     $('div[id$="oldBirthdayDiv"]').show();
                     $('div[id$="oldCorporateNumberDiv"]').hide();
+                    $('input[id$="applicantName"]').closest('div').removeClass('required');
+                    $('input[id$="applicantTitle"]').closest('div').removeClass('required');
+                    $('input[id$="corporateNum"]').closest('div').removeClass('required');
                 }
-                
+                $('select[id$="companyScale"]').prop('disabled','disabled');
                 $('select[id$="applicantDivision"]').prop('disabled','disabled');
                 $('input[id$="applicantBusinessName"]').prop('disabled','disabled');
                 $('input[id$="applicantZip"]').prop('disabled','disabled');
@@ -1087,7 +1108,8 @@
                 $('input[id$="applicantTitle"]').prop('disabled','disabled');
                 $('input[id$="applicantName"]').prop('disabled','disabled');
                 $('input[id$="applicantPhone"]').prop('disabled','disabled');
-                $('input[id$="corporateNum"]').prop('disabled','disabled');
+                $('input[id$="applicantNameKana"]').prop('disabled','disabled');
+                
                 $('div[id$="financialInstitution"]').removeClass('d-none');
                 $('div[id$="lookup"]').addClass('d-none');
                 $('select[id$="accountType"]').prop('disabled','disabled');
@@ -1098,6 +1120,9 @@
                 $('select[id$="birthYear"]').prop('disabled','disabled');
                 $('select[id$="birthMonth"]').prop('disabled','disabled');
                 $('select[id$="birthDay"]').prop('disabled','disabled');
+                $('input[id$="capitalStock"]').prop('disabled','disabled');
+                $('select[id$="enterprisesIndustryType"]').prop('disabled','disabled');
+                $('input[id$="employeeNumber"]').prop('disabled','disabled');            
             }
         });
         
@@ -1125,12 +1150,14 @@
 			var rs = false; 
             if (!corporateDivision) {
                 var corporateDivisionLabel = $('label[for$="corporateDivision"]').text();
+                $('select[id$="corporateDivision"]').addClass('hasFieldError');
                 $('select[id$="corporateDivision"]').closest('.required').append('<div id="searchkw1" class="col-12 fieldErrorMsg">'+ corporateDivisionLabel +'を入力してください</div>');
                 rs = true;
             }
             
             if (!oldApplicationNo) {
                 var oldApplicationNoLabel = $('label[for$="oldApplicationNo"]').text();
+                $('input[id$="oldApplicationNo"]').addClass('hasFieldError');
                 $('input[id$="oldApplicationNo"]').closest('.required').append('<div id="searchkw2" class="col-12 fieldErrorMsg">'+ oldApplicationNoLabel +'を入力してください</div>');
                 rs = true;
             }
@@ -1138,12 +1165,16 @@
             if (corporateDivision == '法人'){
                 if (oldCorporateNumber == null || oldCorporateNumber == '') {
                     var oldCorporateNumberLabel = $('label[for$="oldCorporateNumber"]').text();
+                    $('input[id$="oldCorporateNumber"]').addClass('hasFieldError');
                     $('input[id$="oldCorporateNumber"]').closest('.required').append('<div id="searchkw3" class="col-12 fieldErrorMsg">'+ oldCorporateNumberLabel +'を入力してください</div>');
                     rs = true;
                 }
             }else{
                 if (!oldBirthDay||!oldBirthMonth||!oldBirthDay) {
                     var oldBirthdayLabel = $('label[for$="oldBirthday"]').text();
+                    $('select[id$="oldBirthYear"]').addClass('hasFieldError');
+                    $('select[id$="oldBirthMonth"]').addClass('hasFieldError');
+                    $('select[id$="oldBirthDay"]').addClass('hasFieldError');
                     $('select[id$="oldBirthYear"]').closest('.required').append('<div id="searchkw4" class="col-12 fieldErrorMsg">'+ oldBirthdayLabel +'を入力してください</div>');
                     rs = true;
                 }else{
@@ -1158,9 +1189,10 @@
             }
             
             sforce.connection.sessionId = '{!$Api.Session_ID}';
-            var response = sforce.apex.execute("ApplicationStage15ControllerTemp", "putHistoryInfo", {corporateDiv: corporateDivision,applicationNo: oldApplicationNo,corporateNumber: oldCorporateNumber,birthDate: birthDate});
+            var response = sforce.apex.execute("ApplicationStage15Controller", "putHistoryInfo", {corporateDiv: corporateDivision,applicationNo: oldApplicationNo,corporateNumber: oldCorporateNumber,birthDate: birthDate});
             var respObj = JSON.parse(response);
             if (respObj['applicantNo'] === undefined || respObj['applicantNo'] === '' ) {
+                $('select[id$="companyScale"]').val('').removeAttr('disabled');
                 $('select[id$="applicantDivision"]').val('').removeAttr('disabled');
                 $('input[id$="applicantZip"]').val('').removeAttr('disabled');
                 $("#srchAppAddrBtn").prop("disabled", false);
@@ -1169,6 +1201,7 @@
                 $('input[id$="applicantTitle"]').val('').removeAttr('disabled');
                 $('input[id$="applicantTitle"]').closest('div').removeClass('required');
                 $('input[id$="applicantName"]').val('').removeAttr('disabled');
+                $('input[id$="applicantNameKana"]').val('').removeAttr('disabled');
                 $('input[id$="applicantPhone"]').val('').removeAttr('disabled');
                 $('input[id$="corporateNum"]').val('').removeAttr('disabled');
                 $('div[id$="financialInstitution"]').val('');
@@ -1183,45 +1216,69 @@
                 $('select[id$="birthYear"]').val('').removeAttr('disabled');
                 $('select[id$="birthMonth"]').val('').removeAttr('disabled');
                 $('select[id$="birthDay"]').val('').removeAttr('disabled');
+                $('input[id$="personnelName"]').val('');
+                $('input[id$="personnelNameKana"]').val('');
+                $('input[id$="capitalStock"]').val('').removeAttr('disabled');
+                $('select[id$="enterprisesIndustryType"]').val('').removeAttr('disabled');
+                $('input[id$="employeeNumber"]').val('').removeAttr('disabled');
                 
                 $('input[id$="applicantName"]').closest('div').removeClass('required');
                 $('input[id$="corporateNum"]').closest('div').removeClass('required');
+                clearStoreHistoryAction();
                 return true;
             }
+            
+            $('select[id$="companyScale"]').val(respObj['enterprisesDiscrimination']).prop('disabled','disabled');
             $('select[id$="applicantDivision"]').val(respObj['applicantDivision']).prop('disabled','disabled');
             $('input[id$="applicantZip"]').val(respObj['applicantZip']).prop('disabled','disabled');
             $("#srchAppAddrBtn").prop("disabled", true);
             $('textarea[id$="applicantAddress"]').val(respObj['applicantAddress']).prop('disabled','disabled');
-            $('input[id$="applicantBusinessName"]').val(respObj['applicantBusinessName']).prop('disabled','disabled');
-            $('input[id$="applicantTitle"]').val(respObj['applicantTitle']).prop('disabled','disabled');
-            $('input[id$="applicantTitle"]').closest('div').removeClass('required');
             $('input[id$="applicantName"]').val(respObj['applicantName']).prop('disabled','disabled');
+            $('input[id$="applicantNameKana"]').val(respObj['approvalNameFurigana']).prop('disabled','disabled');
+            
+            $('input[id$="applicantTitle"]').val(respObj['applicantTitle']).prop('disabled','disabled');
             $('input[id$="applicantPhone"]').val(respObj['applicantPhone']).prop('disabled','disabled');
-            $('input[id$="corporateNum"]').val(respObj['corporateNum']).prop('disabled','disabled');
+            $('input[id$="branchName"]').val(respObj['branchName']).prop('disabled','disabled');
+            $('input[id$="branchCode"]').val(respObj['branchCode']).prop('disabled','disabled');
+            $('input[id$="accountNumber"]').val(respObj['accountNumber']).prop('disabled','disabled');
+            $('input[id$="applicantBusinessName"]').val(respObj['applicantBusinessName']).prop('disabled','disabled');
+            $('input[id$="corporateNum"]').val(respObj['corporateNum']);
+            $('input[id$="personnelName"]').val(respObj['personalNameKanji']);
+            $('input[id$="personnelNameKana"]').val(respObj['personalNameFurigana']);
+            $('input[id$="capitalStock"]').val(respObj['capitalStock']).prop('disabled','disabled');
+            $('select[id$="enterprisesIndustryType"]').val(respObj['enterprisesIndustryType']).prop('disabled','disabled');
+            $('input[id$="employeeNumber"]').val(respObj['employeeNumber']).prop('disabled','disabled');            
+            
             $('div[id$="financialInstitution"]').removeClass('d-none');
             auraMethodCall();
             $('div[id$="financialInstitution"]').text(respObj['financialInstitutionName']);
             $('div[id$="lookup"]').addClass('d-none');
+            $('input[id$="FinancialNameHidden"]').val(respObj['financialInstitutionName']);
             $('input[id$="FinancialHidden"]').val(respObj['financialInstitutionId']);
-            $('input[id$="branchName"]').val(respObj['branchName']).prop('disabled','disabled');
-            $('input[id$="branchCode"]').val(respObj['branchCode']).prop('disabled','disabled');
             $('select[id$="accountType"]').val(respObj['accountType']).prop('disabled','disabled');
-            $('input[id$="accountNumber"]').val(respObj['accountNumber']).prop('disabled','disabled');
             $('input[id$="accountHolder"]').val(respObj['accountHolder']).prop('disabled','disabled');
             $('select[id$="birthYear"]').val(respObj['birthYear']).prop('disabled','disabled');
             $('select[id$="birthMonth"]').val(respObj['birthMonth']).prop('disabled','disabled');
             $('select[id$="birthDay"]').val(respObj['birthDay']).prop('disabled','disabled');
 
             if($('select[id$="applicantDivision"]').val() == '法人'){
-                
+                $('input[id$="corporateNum"]').val(respObj['corporateNumber']).prop('disabled','disabled');
                 $('input[id$="applicantName"]').closest('div').addClass('required');
+                $('input[id$="applicantTitle"]').closest('div').addClass('required');
                 $('input[id$="corporateNum"]').closest('div').addClass('required');
             }else{
                 $('input[id$="applicantName"]').closest('div').removeClass('required');
+                $('input[id$="applicantTitle"]').closest('div').removeClass('required');
                 $('input[id$="corporateNum"]').closest('div').removeClass('required');
             }
             
             setStoreHistoryAction();
+        }
+        
+        function changeDisable(){
+            $('select[id$="birthYear"]').removeAttr('disabled');
+            $('select[id$="birthMonth"]').removeAttr('disabled');
+            $('select[id$="birthDay"]').removeAttr('disabled');
         }
         
         function inputCheck(){
@@ -1240,7 +1297,6 @@
             var checkPerDateNullSet = new Set();
             var checkPerNumber = true;
             var storeCount = '';
-            //var storeNum = 0;
             $('.required:not(.noneValidateDiv)').find(':input').not(':hidden').each(function(index, element){
                 var inputElement = $(element);
                 var inputValue = inputElement.val();
@@ -1323,15 +1379,16 @@
                     }
                 }
             });
-
-            //if(storeNum === 0){
-            //    errorMsgOnTop = errorMsgOnTop +  "営業時間短縮を行った店舗情報を入力してください<br/>";
-            //    checkResult = false;
-            //}
-            //if(storeNum !== Number(storeCount)){
-            //    errorMsgOnTop = errorMsgOnTop +  "「店舗数☆」と入力した申請店舗の数が一致するように入力してください<br/>";
-            //    checkResult = false;
-            //}
+            
+            if(!checkBirthday) {
+                if(!doCheckDate($('select[id$="birthYear"]').val(), $('select[id$="birthMonth"]').val(), $('select[id$="birthDay"]').val())) {
+                    var inputLabel = $('label[for$="applicantBirthday"]').text();
+                    errorMsgOnTop = errorMsgOnTop + inputLabel + "を正しく入力してください<br/>";
+                    $('#applicantBirthday').closest('.required').append('<div class="col-12 fieldErrorMsg">'+ inputLabel +'を正しく入力してください</div>'); 
+                    
+                    checkResult = false;
+                }
+            }
             
             $('.required.effortDetails').each(function(index, element){
                 var checkedCnt = 0;
@@ -1371,16 +1428,6 @@
             function addError(_element, inputLabel){
                 errorMsgOnTop = errorMsgOnTop + inputLabel + "を入力してください<br/>";
                 _element.closest('.required').append('<div class="col-12 fieldErrorMsg">'+ inputLabel +'を入力してください</div>');
-            }
-            
-            if(!checkBirthday) {
-                if(!doCheckDate($('select[id$="birthYear"]').val(), $('select[id$="birthMonth"]').val(), $('select[id$="birthDay"]').val())) {
-                    var inputLabel = $('label[for$="applicantBirthday"]').text();
-                    errorMsgOnTop = errorMsgOnTop + inputLabel + "を正しく入力してください<br/>";
-                    $('#applicantBirthday').closest('.required').append('<div class="col-12 fieldErrorMsg">'+ inputLabel +'を正しく入力してください</div>'); 
-                    
-                    checkResult = false;
-                }
             }
             
             if (!checkResult) {
@@ -1423,6 +1470,9 @@
         
         function isSimplechanged(_this) {
             $("select[id$='corporateDivision']").val('');
+            $('.hasFieldError').each(function(){
+                $(this).removeClass('hasFieldError');
+            });
             $('div[id$="searchkw1"]').remove();
             $('div[id$="searchkw2"]').remove();
             $('div[id$="searchkw3"]').remove();
@@ -1457,6 +1507,10 @@
         }
         
         function changeDivision(_this){
+            $('.hasFieldError').each(function(){
+                $(this).removeClass('hasFieldError');
+            });
+            
             var ssd = $(_this).val();
             $('div[id$="searchkw1"]').remove();
             $('div[id$="searchkw2"]').remove();
@@ -1487,36 +1541,113 @@
             $("select[id$='oldBirthDay']").val('');
         }
         
-        /**
-        * 郵便番号で住所マスタから住所を取得する
+          /**
+        * 郵便番号APIで住所検索
         */
-        function getAddressByPostCode(postcodeFieldId, addressFieldId) {
-            
-            let postcode = $('input[id$="' + postcodeFieldId + '"]').val();
-            if (postcode) {
-                // 半角数字7桁(ハイフン無し)の場合、住所を検索する
-                if (postcode.match(/[0-9]{7}/)) {
-                    Visualforce.remoting.Manager.invokeAction(
-                        '{!$RemoteAction.ApplicationStage15ControllerTemp.getAddress}',
-                        $('input[id$="' + postcodeFieldId + '"]').val(), 
-                        function(result, event){
-                            if (event.status) {
-                                if (!result) {
-                                    alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
-                                }
-                                $('textarea[id$="' + addressFieldId + '"]').val(result);
-                            } else {
-                                // 何もしない
-                            }
-                        }, 
-                        {escape: true}
-                    );
-                    // 半角数字7桁(ハイフン無し)以外の場合
-                } else {
-
+        function zipSearch(postcodeFieldId, addressFieldId) {
+            var url = 'https://map.yahooapis.jp/search/zip/V1/zipCodeSearch?';
+            let zip_code = $('input[id$="' + postcodeFieldId + '"]').val();
+            console.log(zip_code);
+            var param = {
+                appid: '{!$Label.YOLP_APPLICATION_ID}',
+                output: 'json',
+                query: zip_code,
+                results: 100 
+            };
+            $.ajax({
+                url: url,
+                data: param,
+                dataType: 'jsonp',
+                success: function (results) {
+                    dispResultAddress(results, addressFieldId);
+                    console.log(results);
+                },
+                error: function () {
                 }
+            });
+        }
+
+        function dispResultAddress(ydf, addressFieldId) {
+            $('textarea[id$="' + addressFieldId + '"]').val('');
+            let floors = ['０', '１', '２', '３', '４', '５', '６', '７', '８', '９'];
+            var isMatched = true;
+            if (ydf.ResultInfo.Count == 1 && ydf.Feature[0].Property.Address.startsWith('東京都')) {
+                var rAdrs = ydf.Feature[0].Property.Address
+                if (rAdrs.includes("（") && rAdrs.includes("丁目") && !(rAdrs.includes("～")) && !(rAdrs.includes("、"))) {
+                    rAdrs = rAdrs.replace("（", "");
+                    rAdrs = rAdrs.replace("）", "");
+                }
+                else if (rAdrs.includes("（") && rAdrs.includes("階")) {
+                    if (rAdrs.includes("不明")) {
+                        var deleteChar = rAdrs.indexOf('（');
+                        rAdrs = rAdrs.substring(0, deleteChar);
+                        console.log(deleteChar);
+                    }
+                    for (i = 0; i < floors.length; i++) {
+                        if (rAdrs.includes(floors[i] + '階')) {
+                            isMatched = false;
+                            break;
+                        }
+                        if (isMatched) {
+                            rAdrs = rAdrs.replace("（", "");
+                            rAdrs = rAdrs.replace("）", "");
+                        }
+                    }
+                }
+                else if (rAdrs.includes('（')) {
+                    var deleteChar = rAdrs.indexOf('（');
+                    rAdrs = rAdrs.substring(0, deleteChar);
+                    console.log(deleteChar);
+                }
+                $('textarea[id$="' + addressFieldId + '"]').val(rAdrs);
+            } else if (ydf.ResultInfo.Count > 1 && ydf.Feature[0].Property.Address.startsWith('東京都')) {
+                var rAdrs = '';
+                var isMatched = true;
+                for (i = 0; ydf.Feature[0].Property.Address.length; i++) {
+                    var iAdrs = ydf.Feature[0].Property.Address.slice(0, i + 1);
+                    for (x = 1; x < ydf.ResultInfo.Count; x++) {
+                        var xAdrs = ydf.Feature[x].Property.Address
+                        if (xAdrs.indexOf(iAdrs)) {
+                            isMatched = false;
+                            break;
+                        }
+                    }
+                    if (isMatched) {
+                        rAdrs = iAdrs;
+                    } else {
+                        break;
+                    }
+                }
+                if (rAdrs.includes("（") && rAdrs.includes("丁目") && !(rAdrs.includes("～")) && !(rAdrs.includes("、"))) {
+                    rAdrs = rAdrs.replace("（", "");
+                    rAdrs = rAdrs.replace("）", "");
+                }
+                else if (rAdrs.includes("（") && rAdrs.includes("階")) {
+                    if (rAdrs.includes("不明")) {
+                        var deleteChar = rAdrs.indexOf('（');
+                        rAdrs = rAdrs.substring(0, deleteChar);
+                        console.log(deleteChar);
+                    }
+                    for (i = 0; i < floors.length; i++) {
+                        if (rAdrs.includes(floors[i] + '階')) {
+                            isMatched = false;
+                            break;
+                        }
+                        if (isMatched) {
+                            rAdrs = rAdrs.replace("（", "");
+                            rAdrs = rAdrs.replace("）", "");
+                        }
+                    }
+                }
+                else if (rAdrs.includes('（')) {
+                    var deleteChar = rAdrs.indexOf('（');
+                    rAdrs = rAdrs.substring(0, deleteChar);
+                    console.log(deleteChar);
+                }
+                $('textarea[id$="' + addressFieldId + '"]').val(rAdrs);
+            } else {
+                alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
             }
-            
         }
         
         function doCheckDate(y, m, d) {

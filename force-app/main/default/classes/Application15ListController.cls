@@ -79,6 +79,9 @@ global with sharing class Application15ListController {
     //時短営業終了日
     public String CONST_SHORTER_BUSI_END_DATE      { get;set; }
     
+    // 営業許可書-許可番号文字列
+    public String perNumberSub      { get;set; }
+    
     public Integer pageNum { get;set; }
     public Integer maxPageNum { get;set; }
     
@@ -627,6 +630,31 @@ global with sharing class Application15ListController {
         }
     }
 
+    /**
+     * 店許可番号文字作成
+     */
+    public void determinePerNumber(){
+        String perNumCom=store.Application_Store_Per_Number_Com__c;
+        String perNumIssue=store.Application_Store_Per_Number_Issue__c;
+        
+        String adressType=store.Application_Store_Address_Type__c;
+        String pDependentField1='Application_Store_Per_Number_String__c';
+        String pDependentField2='Application_Store_Per_Number_String2__c';
+        String perNumberString;
+        if(String.isNotEmpty(perNumCom)&&String.isNotEmpty(perNumIssue)&&String.isNotEmpty(adressType)){
+            List<String> depentList1=Application15Utility.GetDependentFormat(adressType,pDependentField1);
+            List<String> depentList2=Application15Utility.GetDependentFormat(adressType,pDependentField2);
+            if(depentList2.size()>0 && String.isNotEmpty(perNumberSub)){
+                perNumberString = String.format(depentList1[0],  new List<String>{perNumCom,perNumIssue,perNumberSub});
+            }else{
+                perNumberString = String.format(depentList1[0],  new List<String>{perNumCom,perNumIssue,''});
+            }
+        }else{
+            perNumberString = '';
+        }
+        store.Application_Store_Per_Number__c=perNumberString;
+    }
+    
      /**
      * 拡張子によって、レビュータイプを決定
      */
@@ -854,6 +882,31 @@ global with sharing class Application15ListController {
         return options;
     }
 
+    /**
+     *　特別選択営業許可証文字オプションを作成
+     */
+    public List<SelectOption> getSelectPerNumberSub(){
+        List<SelectOption> options = new List<SelectOption>();
+        String adressType=store.Application_Store_Address_Type__c;
+        if(String.isEmpty(adressType)){
+            return options;
+        }
+        String pDependentField='Application_Store_Per_Number_String2__c';
+        List<String> depentList=Application15Utility.GetDependentFormat(adressType,pDependentField);
+        if(depentList.size() == 0){
+            return options;
+        }
+        if(adressType != '練馬区'){
+            options.add(new SelectOption('',''));
+        }
+        
+        for (String value:depentList) {
+            options.add(new SelectOption(value, value));
+        }
+        
+        return options;
+    }
+    
      /**
      * 店舗の時間短縮営業等実施期間の表示メッセージを設定
      */

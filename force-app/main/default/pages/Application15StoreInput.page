@@ -246,16 +246,38 @@
                                                 <label for="tsbStartDay" class="pl-1 pr-2">{!endDateLbl}まで（<apex:outputText value="{!store.Application_Store_Days__c}" id="tsbDaysDiff" />日間）</label>
                                             </div>
                                         </div>
-                                        
                                         <div class="row infoDiv required">
+                                            <apex:outputLabel value="店舗所在地区分" for="storeAddressType" />
+                                            <apex:inputField styleClass="form-control" value="{!store.Application_Store_Address_Type__c}" id="storeAddressType">
+                                                <apex:actionSupport event="onchange" action="{!determinePerNumber}"  rerender="perNumberStr,perNumberSub"/>
+                                            </apex:inputField>
+                                        </div>
+                                        <div class="row infoDiv required" id ="perNumberDiv">
                                             <apex:outputLabel value="許可番号（飲食店営業許可書の許可番号・許可年月日を記載してください。）" for="perNumber" />
                                             <div class="form-inline col-12 p-0" id="perNumber">
-                                                <apex:inputField styleClass="form-control" style="width:25%;" value="{!store.Application_Store_Per_Number_Com__c}" id="perNumberCom" />
-                                                
+                                                <apex:inputField styleClass="form-control" style="width:25%;" value="{!store.Application_Store_Per_Number_Com__c}" id="perNumberCom">
+                                                    <apex:actionSupport event="onchange" action="{!determinePerNumber}"  rerender="perNumberStr"/>
+                                                </apex:inputField>
                                                 <label for="perNumberIssue" class="pl-1 pr-2">第</label>
-                                                <apex:inputField styleClass="form-control" style="width:40%;" value="{!store.Application_Store_Per_Number_Issue__c}" id="perNumberIssue" />
+                                                <apex:inputField styleClass="form-control" style="width:40%;" value="{!store.Application_Store_Per_Number_Issue__c}" id="perNumberIssue">
+                                                    <apex:actionSupport event="onchange" action="{!determinePerNumber}"  rerender="perNumberStr"/>
+                                                </apex:inputField>
                                                 <label class="pl-1 pr-2">号</label>
+                                                <apex:outputPanel id="perNumberSub">
+                                                    <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="perNumberStr2" value="{!perNumberSub}" rendered="{!IF(store.Application_Store_Address_Type__c=='練馬区'||store.Application_Store_Address_Type__c=='八王子市'||store.Application_Store_Address_Type__c=='葛飾区',true,false)}">
+                                                        <apex:actionSupport event="onchange"  action="{!determinePerNumber}" reRender="perNumberStr"/>
+                                                        <apex:selectOptions value="{!SelectPerNumberSub}"/>
+                                                    </apex:selectList>
+                                                </apex:outputPanel>
                                             </div>
+                                        </div>
+                                        <div class="row infoDiv">
+                                            <apex:outputPanel id="perNumberStr">
+                                                <apex:outputLabel value="営業許可書番号:" for="perNumber" />
+                                                <div class="form-inline col-12 p-0">
+                                                    <div class="font-Green" style="font-size:xx-large;">{!store.Application_Store_Per_Number__c}</div>
+                                                </div>
+                                            </apex:outputPanel>
                                         </div>
                                         <div class="row infoDiv required">
                                             <apex:outputLabel value="許可年月日" for="perDate" />
@@ -278,10 +300,6 @@
                                         </div>
                                         
                                         <div class="row infoDiv required">
-                                            <apex:outputLabel value="店舗所在地区分" for="storeAddressType" />
-                                            <apex:inputField styleClass="form-control" value="{!store.Application_Store_Address_Type__c}" id="storeAddressType" />
-                                        </div>
-                                        <div class="row infoDiv required">
                                             <apex:outputLabel value="郵便番号" for="storePostCode" />
                                             <div class="w-100 slds-scope row">
                                                 <div class="w-30 postcode-padding"><apex:inputField styleClass="form-control" value="{!store.Application_Store_Postal_Code__c}" id="storePostCode"/></div>
@@ -300,10 +318,101 @@
                                             <apex:outputLabel value="店舗名称" for="storeName" />
                                             <apex:inputField styleClass="form-control" value="{!store.Application_Store_Name__c}" id="storeName"/>
                                         </div>
-                                        <div class="row infoDiv required">
+                                        <div class="row infoDiv">
                                             <apex:outputLabel value="店舗名称（フリガナ）" for="storeNameKana" />
                                             <apex:inputField styleClass="form-control" value="{!store.Application_Store_NameKana__c}" id="storeNameKana"/>
                                         </div>
+                                        <div class="row infoDiv required autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Application_Store_Phone__c'].Label}" for="storePhone" />
+                                            <apex:inputField styleClass="form-control" value="{!store.Application_Store_Phone__c}" id="storePhone" />
+                                        </div>
+                                        <div align="left" class="row infoDiv">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Special_Application_Store__c'].Label}" for="specialApplicationStore"/>
+                                            <apex:inputCheckbox styleClass="unvCheckBox" value="{!store.Special_Application_Store__c}" id="specialApplicationStore" onchange=""/>
+                                        </div>
+                                        <div align="left" class="row infoDiv required">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Payment_Amount_Calculation__c'].Label}" for="paymentAmountCalculation"/>
+                                            <apex:inputField styleClass="form-control" value="{!store.Payment_Amount_Calculation__c}" id="paymentAmountCalculation" onchange="changeAmount()" />
+                                        </div>
+                                        <div align="left" class="row infoDiv required">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Application_Store_Special_Kbn__c'].Label}" for="applicationStoreSpecialKbn"/>
+                                            <apex:inputField styleClass="form-control" value="{!store.Application_Store_Special_Kbn__c}" id="applicationStoreSpecialKbn" onchange="changeAmount()" />
+                                        </div>
+                                        <div class="row infoDiv required autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Amount_Sales__c'].Label}" for="amountSales" />
+                                            <apex:inputField styleClass="form-control" value="{!store.Amount_Sales__c}" id="amountSales" />
+                                        </div>
+                                        <div class="row infoDiv required autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Base_Year__c'].Label}" for="baseYear" />
+                                            <apex:inputField styleClass="form-control" value="{!store.Base_Year__c}" id="baseYear" />
+                                        </div>
+                                        <div class="row infoDiv required autofill d-none" id="baseMonthDiv">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Base_Month__c'].Label}" for="baseMonth" />
+                                            <apex:inputField styleClass="form-control" value="{!store.Base_Month__c}" id="baseMonth" />
+                                        </div>
+                                        <div class="row infoDiv required autofill d-none" id="storeNumbersDiv">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Store_Numbers__c'].Label}" for="storeNumbers" />
+                                            <apex:inputField styleClass="form-control" value="{!store.Store_Numbers__c}" id="storeNumbers" />
+                                        </div>
+                                        <div class="row infoDiv required autofill d-none" id="daysDiv">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Days__c'].Label}" for="days" />
+                                            <apex:inputField styleClass="form-control" value="{!store.Days__c}" id="days" />
+                                        </div>
+                                        <div class="row infoDiv required autofill d-none" id="dateOpeningDiv">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Date_Opening_Or_Merger__c'].Label}" for="dateOpeningOrMerger" />
+                                            <div class="form-inline col-12 p-0" id="dateOpeningOrMerger">
+                                                <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="openingYear" value="{!openingDate.customYear}">
+                                                    <apex:selectOptions value="{!selectWarekiYear}"/> 
+                                                </apex:selectList>
+                                                <label for="perYear" class="pl-1 pr-2">年</label>
+                                                <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="openingMonth" value="{!openingDate.customMonth}" >
+                                                    <apex:selectOptions value="{!selectMonth}"/>
+                                                </apex:selectList>
+                                                <label for="perMonth" class="pl-1 pr-2">月</label>
+                                                
+                                                <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="openingDay" value="{!openingDate.customDay}">
+                                                    <apex:selectOptions value="{!selectDay}"/>
+                                                </apex:selectList>
+                                                <label for="perDay" class="pl-1 pr-2">日</label>
+                                            </div>
+                                        </div>
+                                        <div class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Standard_Daily_Sales__c'].Label}" for="standardDailySales" />
+                                            <apex:inputField styleClass="form-control" value="{!store.Standard_Daily_Sales__c}" id="standardDailySales" />
+                                        </div>
+                                        <div class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['October_Daily_Sales__c'].Label}" for="octoberDailySales" />
+                                            <apex:inputField styleClass="form-control" value="{!store.October_Daily_Sales__c}" id="octoberDailySales" />
+                                        </div>
+    
+                                        <div align="left" class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Bussinesshours_and_Liqur_or_Karaokeoffer__c'].Label}" for="bussinesshoursAndLiqurOrKaraokeoffer"/>
+                                            <apex:inputField styleClass="form-control" value="{!store.Bussinesshours_and_Liqur_or_Karaokeoffer__c}" id="bussinesshoursAndLiqurOrKaraokeoffer" />
+                                        </div>
+                                        <div align="left" class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Sticker_Bulletin__c'].Label}" for="stickerBulletin"/>
+                                            <apex:inputCheckbox styleClass="unvCheckBox" value="{!store.Sticker_Bulletin__c}" id="stickerBulletin" onchange=""/>
+                                        </div>
+                                        <div align="left" class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Leader_Appointment__c'].Label}" for="leaderAppointment"/>
+                                            <apex:inputCheckbox styleClass="unvCheckBox" value="{!store.Leader_Appointment__c}" id="leaderAppointment" onchange=""/>
+                                        </div>
+                                        <div align="left" class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Karaoke_Offerstatus__c'].Label}" for="KaraokeOfferstatus"/>
+                                            <apex:inputCheckbox styleClass="unvCheckBox" value="{!store.Karaoke_Offerstatus__c}" id="KaraokeOfferstatus" onchange=""/>
+                                        </div>
+                                        <div align="left" class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Bussineshours_and_Liqurservingtime1__c'].Label}" for="bussineshoursAndLiqurservingtime1"/>
+                                            <apex:inputCheckbox styleClass="unvCheckBox" value="{!store.Bussineshours_and_Liqurservingtime1__c}" id="bussineshoursAndLiqurservingtime1" onchange=""/>
+                                        </div>
+                                        <div align="left" class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Bussineshours_and_Liqurservingtime2__c'].Label}" for="bussineshoursAndLiqurservingtime2"/>
+                                            <apex:inputCheckbox styleClass="unvCheckBox" value="{!store.Bussineshours_and_Liqurservingtime2__c}" id="bussineshoursAndLiqurservingtime2" onchange=""/>
+                                        </div>
+                                        <div align="left" class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Bussineshours_and_Liqurservingtime3__c'].Label}" for="bussineshoursAndLiqurservingtime3"/>
+                                            <apex:inputCheckbox styleClass="unvCheckBox" value="{!store.Bussineshours_and_Liqurservingtime3__c}" id="bussineshoursAndLiqurservingtime3" onchange=""/>
+                                        </div>                                      
                                         <div class="row infoDiv effortDetails required">
                                             <apex:outputLabel value="取組内容（※該当する項目にチェック（✔）を付けてください。）" />
                                             <div class="effortdtable">
@@ -319,7 +428,7 @@
                                 </div>
                             </section>
 
-                        <div class="row justify-content-right">
+                        <div class="row">
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -416,6 +525,73 @@
             }
         });
         
+        function changeAmount() {
+            var pay = $('select[id$="paymentAmountCalculation"]').val();
+            var kbn = $('select[id$="applicationStoreSpecialKbn"]').val();
+            $('div[id$="baseMonthDiv"]').removeClass('d-none');
+            $('div[id$="storeNumbersDiv"]').removeClass('d-none');
+            $('div[id$="daysDiv"]').removeClass('d-none');
+            $('div[id$="dateOpeningDiv"]').removeClass('d-none');
+            if(pay == '売上高方式'){
+                if(kbn == '1'){
+                    $('div[id$="storeNumbersDiv"]').addClass('d-none');
+                }else if(kbn == '2'){
+                    $('div[id$="baseMonthDiv"]').addClass('d-none');
+                    $('div[id$="storeNumbersDiv"]').addClass('d-none');
+                }else if(kbn == '3'){
+                    $('div[id$="baseMonthDiv"]').addClass('d-none');
+                    $('div[id$="storeNumbersDiv"]').addClass('d-none');
+                    $('div[id$="daysDiv"]').addClass('d-none');
+                    $('div[id$="dateOpeningDiv"]').addClass('d-none');
+                }else if(kbn == '4'){
+                    $('div[id$="baseMonthDiv"]').addClass('d-none');
+                    $('div[id$="storeNumbersDiv"]').addClass('d-none');
+                    $('div[id$="daysDiv"]').addClass('d-none');
+                    $('div[id$="dateOpeningDiv"]').addClass('d-none');
+                }else if(kbn == '5'){
+                    $('div[id$="baseMonthDiv"]').addClass('d-none');
+                    $('div[id$="storeNumbersDiv"]').addClass('d-none');
+                    $('div[id$="dateOpeningDiv"]').addClass('d-none');
+                }else if(kbn == '6'){
+                    $('div[id$="baseMonthDiv"]').addClass('d-none');
+                    $('div[id$="daysDiv"]').addClass('d-none');
+                    $('div[id$="dateOpeningDiv"]').addClass('d-none');
+                }else if(kbn == '7'){
+                    $('div[id$="baseMonthDiv"]').addClass('d-none');
+                    $('div[id$="dateOpeningDiv"]').addClass('d-none');
+                }
+            }else if(pay == '売上高減少額方式'){
+                if(kbn == '1'){
+                    $('div[id$="storeNumbersDiv"]').addClass('d-none');
+                    $('div[id$="dateOpeningDiv"]').addClass('d-none');
+                }else if(kbn == '2'){
+                    $('div[id$="baseMonthDiv"]').addClass('d-none');
+                    $('div[id$="storeNumbersDiv"]').addClass('d-none');
+                }else if(kbn == '3'){
+                    $('div[id$="baseMonthDiv"]').addClass('d-none');
+                    $('div[id$="storeNumbersDiv"]').addClass('d-none');
+                    $('div[id$="daysDiv"]').addClass('d-none');
+                    $('div[id$="dateOpeningDiv"]').addClass('d-none');
+                }else if(kbn == '4'){
+                    $('div[id$="baseMonthDiv"]').addClass('d-none');
+                    $('div[id$="storeNumbersDiv"]').addClass('d-none');
+                    $('div[id$="daysDiv"]').addClass('d-none');
+                    $('div[id$="dateOpeningDiv"]').addClass('d-none');
+                }else if(kbn == '5'){
+                    $('div[id$="baseMonthDiv"]').addClass('d-none');
+                    $('div[id$="storeNumbersDiv"]').addClass('d-none');
+                    $('div[id$="dateOpeningDiv"]').addClass('d-none');
+                }else if(kbn == '6'){
+                    $('div[id$="baseMonthDiv"]').addClass('d-none');
+                    $('div[id$="daysDiv"]').addClass('d-none');
+                    $('div[id$="dateOpeningDiv"]').addClass('d-none');
+                }else if(kbn == '7'){
+                    $('div[id$="baseMonthDiv"]').addClass('d-none');
+                    $('div[id$="dateOpeningDiv"]').addClass('d-none');
+                }
+            }
+        }
+        
         function calculateAmount(_this) {
             // 申請内訳の金額設定
             // 該当店舗の申請金額設定
@@ -476,6 +652,10 @@
                 $("#srchAppAddrBtn").prop("disabled", true);
                 $('textarea[id$="storeAddress"]').prop('disabled','disabled');
                 $('input[id$="storeName"]').prop('disabled','disabled');
+                $('input[id$="storeNameKana"]').prop('disabled','disabled');
+                $('input[id$="storePhone"]').prop('disabled','disabled');
+                $('div[id$="perNumberDiv"]').removeClass("required");
+                $('div[id$="perNumberDiv"]').addClass('d-none');
             }
         });
         
@@ -490,8 +670,11 @@
             var checkResult = true;
             var checkBirthday = true;
             var checkPerDate = true;
+            var checkOpenDate = true;
             var checkPerDateSet = new Set();
+            var checkOpenDateSet = new Set();
             var checkPerDateNullSet = new Set();
+            var checkOpenDateNullSet = new Set();
             var checkPerNumber = true;
             var storeCount = '';
             $('.required:not(.noneValidateDiv)').find(':input').not(':hidden').each(function(index, element){
@@ -518,9 +701,25 @@
                         } else {
                             return true;
                         }
+                    }
+                    // 開店又は合併等の年月日
+                    checkOpenDate = true;
+                    if(inputId.indexOf('openingYear') !== -1 || inputId.indexOf('openingMonth') !== -1 || inputId.indexOf('openingDay') !== -1) {
+                        inputElement.addClass('hasFieldError');
+                        if(inputId.includes('openingYear')){
+                            checkOpenDate = false;
+                            idx = parseInt(inputId.split(':')[3])+1;
+                            inputLabel = $('label[for$="dateOpeningOrMerger"]').text();
+                            checkOpenDateNullSet.add(idx);
+                        } else {
+                            return true;
+                        }
                     } 
                     // 許可番号
                     checkPerNumber = true;
+                    if(inputId.includes('perNumberStr2')){
+                        return true;
+                    }
                     if(inputId.indexOf('perNumberCom') !== -1 || inputId.indexOf('perNumberIssue') !== -1) {
                         inputElement.addClass('hasFieldError');
                         if(inputId.includes('perNumberCom')){
@@ -547,7 +746,7 @@
                     if (inputLabel.includes('郵便番号')) {
                         sectionIndex = inputElement.parent().parent().parent().parent().parent().parent().children().children(".card-header").children("span").eq(0).text();
                     }
-                    if (!checkPerDate || !checkPerNumber || (checkPerDate && checkPerNumber)) {
+                    if (!checkOpenDate ||!checkPerDate || !checkPerNumber||(checkOpenDate && checkPerDate && checkPerNumber)) {
                         inputElement.closest('.required').append('<div class="col-12 fieldErrorMsg">'+ inputLabel +'を入力してください</div>');
                     }
                     inputElement.addClass('hasFieldError');
@@ -555,6 +754,9 @@
                 } else {
                     if(inputId.indexOf('perYear') !== -1) {
                         checkPerDateSet.add(inputId.slice(20));
+                    }
+                    if(inputId.indexOf('openYear') !== -1) {
+                        checkOpenDateSet.add(inputId.slice(20));
                     }
                 }
             });
@@ -593,6 +795,24 @@
                     var perDay = parentDiv.find('select').eq(2).val();
                     
                     if(!doCheckDate(perYear, perMonth, perDay)) {
+                        console.log('parentDivId:' + parentDivId);
+                        var sectionLabel = storeIdx == '1' ? $(element).children('.card').children('.card-header').children('span').eq(0).text() :
+                        $(element).children('.card').children('a').children('.card-header').children('span').eq(0).text();
+                        var inputLabel = $('label[for$="' + parentDivId + '"]').text();
+                        $(parentDiv).closest('.required').append('<div class="col-12 fieldErrorMsg">'+ inputLabel +'を正しく入力してください</div>'); 
+                        
+                        checkResult = false;
+                    }
+                }
+                var parentDiv = $(element).find('div[id^="dateOpeningOrMerger"]');
+                var parentDivId = parentDiv.attr('id');
+                var storeIdx = parentDivId.slice(7);
+                if(checkPerDateSet.has(storeIdx) && !checkPerDateNullSet.has(storeIdx)){
+                    var openYear = parentDiv.find('select').eq(0).val();
+                    var openMonth = parentDiv.find('select').eq(1).val();
+                    var openDay = parentDiv.find('select').eq(2).val();
+                    
+                    if(!doCheckDate(openYear, openMonth, openDay)) {
                         console.log('parentDivId:' + parentDivId);
                         var sectionLabel = storeIdx == '1' ? $(element).children('.card').children('.card-header').children('span').eq(0).text() :
                         $(element).children('.card').children('a').children('.card-header').children('span').eq(0).text();
@@ -644,23 +864,28 @@
             var url = 'https://map.yahooapis.jp/search/zip/V1/zipCodeSearch?';
             let zip_code = $('input[id$="' + postcodeFieldId + '"]').val();
             console.log(zip_code);
-            var param = {
-                appid: '{!$Label.YOLP_APPLICATION_ID}',
-                output: 'json',
-                query: zip_code,
-                results: 100 
-            };
-            $.ajax({
-                url: url,
-                data: param,
-                dataType: 'jsonp',
-                success: function (results) {
-                    dispResultAddress(results, addressFieldId);
-                    console.log(results);
-                },
-                error: function () {
-                }
-            });
+            if (zip_code.match(/[0-9]{7}/)) {
+                var param = {
+                    appid: '{!$Label.YOLP_APPLICATION_ID}',
+                    output: 'json',
+                    query: zip_code,
+                    results: 100
+                };
+                $.ajax({
+                    url: url,
+                    data: param,
+                    dataType: 'jsonp',
+                    success: function (results) {
+                        dispResultAddress(results, addressFieldId);
+                        console.log(results);
+                    },
+                    error: function () {
+                    }
+                });
+            } else {
+                $('textarea[id$="' + addressFieldId + '"]').val('');
+                alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
+            }
         }
 
         function dispResultAddress(ydf, addressFieldId) {

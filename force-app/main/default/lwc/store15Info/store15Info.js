@@ -33,15 +33,15 @@ import FINISHED_PRICE_PAPER from '@salesforce/schema/Store15__c.FinishedPrice_Pa
 import FINALINCOME_TAX_RETURN_DOCUMENT from '@salesforce/schema/Store15__c.FinalincomeTaxReturnDocument__c';
 import AMOUNT_OF_SOLD_DOCUMENT from '@salesforce/schema/Store15__c.AmountOfSoldDocument__c';
 import CERTIFICATE_OF_INFECTION_PREVENTION from '@salesforce/schema/Store15__c.CertificateOfInfectionPrevention__c';
-import STORE_BUSINESS_PERMIT_AND_ADD_IS_SAME from '@salesforce/schema/Store15__c.Store_Business_Permit_And_Add_Is_Same__c';
 import STACKER from '@salesforce/schema/Store15__c.Stacker__c';
 import WRITTEN_OATH from '@salesforce/schema/Store15__c.WrittenOath__c';
 import METERINSPECTION_OR_RECEIPT from '@salesforce/schema/Store15__c.MeterinspectionOrReceipt__c';
-// import CONDITIONS_AND_SIGNATURE from '@salesforce/schema/Store15__c.ConditionsAndSignature__c';
 import OL_CORRESPONDING_APPLICANT from '@salesforce/schema/Store15__c.OLCorrespondingApplicant__c';
 import OL_CORRESPONDING_BRANCHNAME_AND_LOCATION from '@salesforce/schema/Store15__c.OLCorrespondingBranchnameAndLocation__c';
 import STORE_BUSINESS_PERMIT_INFO_IS_CORRECT from '@salesforce/schema/Store15__c.Store_Business_Permit_Info_Is_Correct__c';
 import BUSINESS_CONTENTS_NO_OMISSION from '@salesforce/schema/Store15__c.BusinessContents_NoOmission__c';
+import STORE_STATUS from '@salesforce/schema/Store15__c.StoreStatus__c';
+import CHANGE_STATUS from '@salesforce/schema/Store15__c.ChangeStatus__c';
 
 const fields = [STORE_SFID, NAME, INDEX, STORE_NAME, STORE_APPLY_AMOUNT, STORE_POSTAL_CODE, STORE_ADDRESS, STORE_ADDRESS_TYPE,
                 STORE_START_DATE, STORE_END_DATE, STORE_DAYS, STORE_PER_NUMBER, STORE_PER_DATE, STORE_EFFORT_DETAILSA];
@@ -52,7 +52,7 @@ export default class Store15Info extends LightningElement {
     // 申請に関連する店舗情報
     @track storeInfos = [];
     // 店舗数
-    storeCount;
+    @track storeCount;
     // 10ごとに店舗を情報を管理する配列
     @track storeIndexArray = [];
     // 店舗ボタンメニューで選択された値を格納
@@ -74,9 +74,9 @@ export default class Store15Info extends LightningElement {
     // 審査結果を管理する配列（検証用）
     listScreeningResult = [];
     // 審査結果に関わらず、審査が完了した申請数
-    endScreeningAppCount;
+    @track endScreeningAppCount;
     // 審査の進捗率を保管
-    progressRate = 0;
+    @track progressRate = 0;
     // セクションのアクティブ化
     activeSections = [ 'basicInfo', 'screeningInfo' ];
     // 審査が完了してるかを管理する配列
@@ -139,7 +139,6 @@ export default class Store15Info extends LightningElement {
         this.listScreeningResult.forEach(screeningResult => {
             this.isNotEndScreening.push(Object.values(screeningResult).includes(undefined));
         });
-        console.log(this.isNotEndScreening);
         const endScreeningApps = this.isNotEndScreening.filter(result => result == false );
         this.endScreeningAppCount = endScreeningApps.length;
         this.progressRate = Math.floor(this.endScreeningAppCount / this.storeCount * 1000) / 10;
@@ -157,24 +156,21 @@ export default class Store15Info extends LightningElement {
                 finalincomeTaxReturnDocument: storeInfo.FinalincomeTaxReturnDocument__c,
                 amountOfSoldDocument: storeInfo.AmountOfSoldDocument__c,
                 certificateOfInfectionPrevention: storeInfo.CertificateOfInfectionPrevention__c,
-                storeBusinessPermitAndAddIsSame: storeInfo.Store_Business_Permit_And_Add_Is_Same__c,
                 stacker: storeInfo.Stacker__c,
                 writtenOath: storeInfo.WrittenOath__c,
                 meterinspectionOrReceipt: storeInfo.MeterinspectionOrReceipt__c,
-                ConditionsAndSignature: storeInfo.ConditionsAndSignature__c,
                 OLCorrespondingApplicant: storeInfo.OLCorrespondingApplicant__c,
                 OLCorrespondingBranchnameAndLocation: storeInfo.OLCorrespondingBranchnameAndLocation__c,
                 StoreBusinessPermitInfoIsCorrect: storeInfo.Store_Business_Permit_Info_Is_Correct__c,
                 BusinessContentsNoOmission: storeInfo.BusinessContents_NoOmission__c
             });
         });
-        console.log(this.listScreeningResult);
     }
 
     setTabLabel() {
         this.showingStoreInfos.forEach(showingStoreInfo => {
-            console.log(this.listScreeningResult);
             const scResult = this.listScreeningResult.forEach(screeningResult => {
+                console.log(screeningResult);
                 if(screeningResult.id == showingStoreInfo.id) {
                     return screeningResult;
                 }
@@ -282,7 +278,6 @@ export default class Store15Info extends LightningElement {
                             label: this.storeInfos[i].StoreIndex__c
                         });
                     }
-                    console.log(this.showingStoreInfos);
                 }
                 resolve();
             })
@@ -300,7 +295,6 @@ export default class Store15Info extends LightningElement {
 
     updateStoreInfo() {
         this.changedRecords.forEach(changedRecord => {
-            console.log(changedRecord);
             const selector = 'lightning-accordion-section[data-name=\'screeningInfo\']';
             const childNodes = this.template.querySelector(selector).childNodes;
 
@@ -313,17 +307,15 @@ export default class Store15Info extends LightningElement {
             fields[FINALINCOME_TAX_RETURN_DOCUMENT.fieldApiName] = childNodes.item(4).value;
             fields[AMOUNT_OF_SOLD_DOCUMENT.fieldApiName] = childNodes.item(5).value;
             fields[CERTIFICATE_OF_INFECTION_PREVENTION.fieldApiName] = childNodes.item(6).value;
-            fields[STORE_BUSINESS_PERMIT_AND_ADD_IS_SAME.fieldApiName] = childNodes.item(7).value;
-            fields[STACKER.fieldApiName] = childNodes.item(8).value;
-            fields[WRITTEN_OATH.fieldApiName] = childNodes.item(9).value;
-            fields[METERINSPECTION_OR_RECEIPT.fieldApiName] = childNodes.item(10).value;
-            // fields[CONDITIONS_AND_SIGNATURE.fieldApiName] = childNodes.item(11).value;
-            fields[OL_CORRESPONDING_APPLICANT.fieldApiName] = childNodes.item(11).value;
-            fields[OL_CORRESPONDING_BRANCHNAME_AND_LOCATION.fieldApiName] = childNodes.item(12).value;
-            fields[STORE_BUSINESS_PERMIT_INFO_IS_CORRECT.fieldApiName] = childNodes.item(13).value;
-            fields[BUSINESS_CONTENTS_NO_OMISSION.fieldApiName] = childNodes.item(14).value;
-
-            console.log(fields);
+            fields[STACKER.fieldApiName] = childNodes.item(7).value;
+            fields[WRITTEN_OATH.fieldApiName] = childNodes.item(8).value;
+            fields[METERINSPECTION_OR_RECEIPT.fieldApiName] = childNodes.item(9).value;
+            fields[OL_CORRESPONDING_APPLICANT.fieldApiName] = childNodes.item(10).value;
+            fields[OL_CORRESPONDING_BRANCHNAME_AND_LOCATION.fieldApiName] = childNodes.item(11).value;
+            fields[STORE_BUSINESS_PERMIT_INFO_IS_CORRECT.fieldApiName] = childNodes.item(12).value;
+            fields[BUSINESS_CONTENTS_NO_OMISSION.fieldApiName] = childNodes.item(13).value;
+            fields[STORE_STATUS.fieldApiName] = childNodes.item(14).value;
+            fields[CHANGE_STATUS.fieldApiName] = childNodes.item(15).value;
 
             const recordInput = { fields };
 
@@ -348,6 +340,7 @@ export default class Store15Info extends LightningElement {
                         variant: 'error'
                     })
                 );
+                alert(error.fieldErrors);
                 console.log(error);
             });
         });

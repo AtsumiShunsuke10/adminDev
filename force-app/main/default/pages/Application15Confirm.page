@@ -178,7 +178,10 @@
                             <apex:outputLabel value="申請番号" for="applyNum" />
                             <apex:outputText styleClass="col-12 outlabelHeigth outlabelHeigth" value="{!application15Name}" id="ApplicationNum"/>
                         </div>
-                        
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Company_Scale__c'].Label}" for="companyScale"/>
+                            <apex:outputText styleClass="col-12 outlabelHeigth outlabelHeigth" value="{!apply15.Company_Scale__c}" id="companyScale"/>
+                        </div>
                         <div class="row infoDiv slds-form-element_readonly">
                             <apex:outputLabel value="対象者区分" for="applicantDivision" />
                             <apex:outputText styleClass="col-12 outlabelHeigth outlabelHeigth" value="{!apply15.Applicant_Division__c}" id="applicantDivision"/>
@@ -210,12 +213,27 @@
                             <apex:outputLabel value="代表者の氏名" for="applicantName" />
                             <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Applicant_Name__c}" id="applicantName" />
                         </div>
-                        
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Applicant_NameKana__c'].Label}" for="applicantNameKana" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Applicant_NameKana__c}" id="applicantNameKana" />
+                        </div>
                         <div class="row infoDiv slds-form-element_readonly">
                             <apex:outputLabel value="代表者又は申請者の生年月日" for="applicantBirthday" />
                             <apex:outputText styleClass="col-12 outlabelHeigth outlabelHeigth" value="{0, date, yyyy/MM/dd}" id="applicantBirthday" >
                                 <apex:param value="{!apply15.Applicant_Birthday__c}"></apex:param>
                             </apex:outputText>
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Capital_Stock__c'].Label}" for="capitalStock" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Capital_Stock__c}" id="capitalStock" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Enterprises_Industry_Type__c'].Label}" for="enterprisesIndustryType" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Enterprises_Industry_Type__c}" id="enterprisesIndustryType" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Employee_Number__c'].Label}" for="employeeNumber" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Employee_Number__c}" id="employeeNumber" />
                         </div>
                         <div class="row infoDiv">
                             <apex:outputLabel value="電話番号" for="applicantPhone" />
@@ -225,7 +243,35 @@
                             <apex:outputLabel value="法人番号" for="corporateNum" />
                             <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Corporate_Number__c}" id="corporateNum" />
                         </div>
-                        
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Personnel_Name__c'].Label}" for="personnelName" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Personnel_Name__c}" id="personnelName" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Personnel_NameKana__c'].Label}" for="personnelNameKana" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Personnel_NameKana__c}" id="personnelNameKana" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Personnel_Phone__c'].Label}" for="personnelPhone" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Personnel_Phone__c}" id="personnelPhone" />
+                        </div>
+                        <div class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Payment_Amount_Calculation__c'].Label}" for="paymentAmountCalculation" />
+                            <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Payment_Amount_Calculation__c}" id="paymentAmountCalculation" />
+                        </div>
+
+                        <div align="left" class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Special_Application_Store__c'].Label}" for="specialApplicationStore"/>
+                            <div class="effortdtable_c">
+                                <img class="imgCheckbox" src="/img/checkbox_{!IF(apply15.Special_Application_Store__c, '', 'un')}checked.gif" />
+                            </div>
+                        </div>
+                        <div align="left" class="row infoDiv">
+                            <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Applicant_Status__c'].Label}" for="applicantStatus"/>
+                            <div class="effortdtable_c">
+                                <img class="imgCheckbox" src="/img/checkbox_{!IF(apply15.Applicant_Status__c, '', 'un')}checked.gif" />
+                            </div>
+                        </div>
                     </div>
                     
                     <h3 class="slds-section__title">
@@ -259,90 +305,90 @@
                             <apex:outputText styleClass="col-12 outlabelHeigth" value="{!apply15.Account_Holder__c}" id="accountHolder" />
                         </div>
                     </div>
-                    
                     <h3 class="slds-section__title">
                         <span>営業時間短縮を行った店舗の情報</span>
                     </h3>
-                    <div class="card-body fixedtext-1">
-                        <div class="row d-md-flex d-none headdiv headerRow">
-                            <div class="border-right fixedtext-2 vertical-padding">
-                                <span class="center">
-                                    No
-                                </span>
+                    <apex:outputPanel id="refreshOutPutPannel">
+                        <div class="card-body fixedtext-1">
+                            <div class="row d-md-flex d-none headdiv headerRow">
+                                <div class="border-right fixedtext-2 vertical-padding">
+                                    <span class="center">
+                                        No
+                                    </span>
+                                </div>
+                                <div class="border-right fixedtext-3 vertical-padding">
+                                    <span class="center">
+                                        店舗名称
+                                    </span>
+                                </div>
+                                <div class="border-right fixedtext-4 vertical-padding">
+                                    <span class="center">
+                                        営業許可番号
+                                    </span>
+                                </div>
+                                <div class="border-right fixedNumber-1 vertical-padding">
+                                    <span class="center">
+                                        申請金額
+                                    </span>
+                                </div>
                             </div>
-                            <div class="border-right fixedtext-3 vertical-padding">
-                                <span class="center">
-                                    店舗名称
-                                </span>
-                            </div>
-                            <div class="border-right fixedtext-4 vertical-padding">
-                                <span class="center">
-                                    営業許可番号
-                                </span>
-                            </div>
-                            <div class="border-right fixedNumber-1 vertical-padding">
-                                <span class="center">
-                                    申請金額
-                                </span>
+                            <apex:repeat value="{!storeDisplayList}" var="store" id="storesRepeat">
+                                <div class='row div-participant border-bottom-0'>
+                                    <div class="fixedtext-2 infoDiv vertical-padding">
+                                        <label class="d-md-none">{!$ObjectType.Store15__c.Fields.StoreIndex__c.Label}</label>
+                                        <apex:outputText id="StoreIndex" value="{!store.StoreIndex__c}" />
+                                    </div>
+                                    <div class="fixedtext-3 infoDiv vertical-padding">
+                                        <label class="d-md-none">{!$ObjectType.Store15__c.Fields.Application_Store_Name__c.Label}</label>
+                                        <apex:outputField value="{!store.Application_Store_Name__c}" />
+                                    </div>
+                                    
+                                    <div class="fixedtext-4 infoDiv vertical-padding">
+                                        <label class="d-md-none">{!$ObjectType.Store15__c.Fields.Application_Store_Per_Number_Com__c.Label}</label>
+                                        <apex:outputText id="applicationStorePerNumber" value="{!store.Application_Store_Per_Number_Com__c}第{!store.Application_Store_Per_Number_Issue__c}号" />
+                                    </div>
+                                    
+                                    <div class="fixedNumber-1 infoDiv vertical-padding">
+                                        <label class="d-md-none">{!$ObjectType.Store15__c.Fields.Application_Store_Apply_Amount__c.Label}</label>
+                                        <apex:outputField id="applicationforparentAmount__c" value="{!store.Application_For_Parent_Amount__c}" />
+                                    </div>
+                                </div>
+                            </apex:repeat>
+                            <div class="row m-0 pt-3 justify-content-center">
+                                <apex:commandLink styleClass="btn btn-primary btn-xs" action="{!goFirst}" value="最初" rerender="refreshOutPutPannel"/>
+                                <p style="color: #FFFFFB;font-size: 0.8rem">.</p>
+                                <apex:commandLink styleClass="btn btn-primary btn-xs" action="{!previous}" value="前へ" rerender="refreshOutPutPannel"/>
+                                <div class="infoDiv">
+                                    <span>ページ</span>
+                                    <apex:outputLabel value="{!pageNum}" />
+                                    <span>/</span>
+                                    <apex:outputLabel value="{!maxPageNum}" />
+                                </div>
+                                <apex:commandLink styleClass="btn btn-primary btn-xs" action="{!next}" value="次へ" rerender="refreshOutPutPannel"/>
+                                <p style="color: #FFFFFB;font-size: 0.8rem">.</p>
+                                <apex:commandLink styleClass="btn btn-primary btn-xs" action="{!goLast}" value="最後" rerender="refreshOutPutPannel"/>
                             </div>
                         </div>
-                        <apex:repeat value="{!storeDisplayList}" var="store" id="storesRepeat">
-                            <div class='row div-participant border-bottom-0'>
-                                <div class="fixedtext-2 infoDiv vertical-padding">
-                                    <label class="d-md-none">{!$ObjectType.Store15__c.Fields.StoreIndex__c.Label}</label>
-                                    <apex:outputText id="StoreIndex" value="{!store.StoreIndex__c}" />
-                                </div>
-                                <div class="fixedtext-3 infoDiv vertical-padding">
-                                    <label class="d-md-none">{!$ObjectType.Store15__c.Fields.Application_Store_Name__c.Label}</label>
-                                    <apex:outputField value="{!store.Application_Store_Name__c}" />
-                                </div>
-                                
-                                <div class="fixedtext-4 infoDiv vertical-padding">
-                                    <label class="d-md-none">{!$ObjectType.Store15__c.Fields.Application_Store_Per_Number_Com__c.Label}</label>
-                                    <apex:outputText id="applicationStorePerNumber" value="{!store.Application_Store_Per_Number_Com__c}第{!store.Application_Store_Per_Number_Issue__c}号" />
-                                </div>
-                                
-                                <div class="fixedNumber-1 infoDiv vertical-padding">
-                                    <label class="d-md-none">{!$ObjectType.Store15__c.Fields.Application_Store_Apply_Amount__c.Label}</label>
-                                    <apex:outputField id="applicationforparentAmount__c" value="{!store.Application_For_Parent_Amount__c}" />
-                                </div>
+                        <div class="card-body pt-0">
+                            <div class="row infoDiv">
+                                <table class="table mb-0">
+                                    <thead>
+                                        <tr>
+                                            <td style="width: 30%;min-width: 5.5rem;">
+                                                申請金額
+                                            </td>
+                                            <td>
+                                                <u>*<span>&emsp;&emsp;</span>
+                                                    <apex:outputField value="{! apply15.Application_Amount__c }" id="apply13" />
+                                                    &nbsp;円
+                                                </u>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
-                        </apex:repeat>
-                        <div class="row m-0 pt-3 justify-content-center">
-                            <apex:commandLink styleClass="btn btn-primary btn-xs" action="{!goFirst}" value="最初" rerender="refreshOutPutPannel"/>
-                            <p style="color: #FFFFFB;font-size: 0.8rem">.</p>
-                            <apex:commandLink styleClass="btn btn-primary btn-xs" action="{!previous}" value="前へ" rerender="refreshOutPutPannel"/>
-                            <div class="infoDiv">
-                                <span>ページ</span>
-                                <apex:outputLabel value="{!pageNum}" />
-                                <span>/</span>
-                                <apex:outputLabel value="{!maxPageNum}" />
-                            </div>
-                            <apex:commandLink styleClass="btn btn-primary btn-xs" action="{!next}" value="次へ" rerender="refreshOutPutPannel"/>
-                            <p style="color: #FFFFFB;font-size: 0.8rem">.</p>
-                            <apex:commandLink styleClass="btn btn-primary btn-xs" action="{!goLast}" value="最後" rerender="refreshOutPutPannel"/>
-                        </div>
-                    </div>
-                    <div class="card-body pt-0">
-                        <div class="row infoDiv">
-                            <table class="table mb-0">
-                                <thead>
-                                    <tr>
-                                        <td style="width: 30%;min-width: 5.5rem;">
-                                            申請金額
-                                        </td>
-                                        <td>
-                                            <u>*<span>&emsp;&emsp;</span>
-                                                <apex:outputField value="{! apply15.Application_Amount__c }" id="apply13" />
-                                                &nbsp;円
-                                            </u>
-                                        </td>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    </div> 
-                    
+                        </div> 
+                    </apex:outputPanel>
                 </div>
                 
                 <div class="card-header">

@@ -184,23 +184,18 @@
                                     <apex:outputText styleClass="col-12 outlabelHeigth" value="{!storeTsbStartDate.tsbDisplayMsg}" id="tsbDisplayMsg" />
                                 </div>
                                 <div class="row infoDiv">
+                                    <apex:outputLabel value="店舗所在地区分" for="storeAddressType" />
+                                    <apex:outputText styleClass="col-12 outlabelHeigth" value="{!store.Application_Store_Address_Type__c}" id="storeAddressType" />
+                                </div>
+                                <div class="row infoDiv">
                                     <apex:outputLabel value="許可番号" for="perNumber" />
-                                    <div class="form-inline col-12 p-0" id="perNumber">
-                                        <apex:outputText styleClass="outlabelHeigth" style="width:25%;" value="{!store.Application_Store_Per_Number_Com__c}" id="perNumberCom" />
-                                        
-                                        <label for="perNumberIssue" class="pl-1 pr-2 pt-2">第</label>
-                                        <apex:outputText styleClass="outlabelHeigth" style="width:40%;" value="{!store.Application_Store_Per_Number_Issue__c}" id="perNumberIssue" />
-                                        <label class="pl-1 pr-2 pt-2">号</label>
-                                    </div>
+                                    <apex:outputText styleClass="col-12 outlabelHeigth" value="{!store.Application_Store_Per_Number__c}" id="perNumber" />
                                 </div>
                                 <div class="row infoDiv">
                                     <apex:outputLabel value="許可年月日" for="perDate" />
                                     <apex:outputText styleClass="col-12 outlabelHeigth" value="{!store.Application_Store_Per_Date_Jp__c}" id="perDate" />
                                 </div>
-                                <div class="row infoDiv">
-                                    <apex:outputLabel value="店舗所在地区分" for="storeAddressType" />
-                                    <apex:outputText styleClass="col-12 outlabelHeigth" value="{!store.Application_Store_Address_Type__c}" id="storeAddressType" />
-                                </div>
+
                                 <div class="row infoDiv">
                                     <apex:outputLabel value="郵便番号" for="storePostCode" />
                                     <apex:outputText styleClass="col-12 outlabelHeigth" value="{!store.Application_Store_Postal_Code__c}" id="storePostCode" />
@@ -212,6 +207,58 @@
                                 <div class="row infoDiv">
                                     <apex:outputLabel value="店舗名称" for="storeName" />
                                     <apex:outputText styleClass="col-12 outlabelHeigth" value="{!store.Application_Store_Name__c}" id="storeName" />
+                                </div>
+                                <div class="row infoDiv required">
+                                    <apex:outputLabel value="店舗名称（フリガナ）" for="storeName{!store.StoreIndex__c}" />
+                                    <span class="col-12 outlabelHeigth">
+                                        <apex:outputField value="{! store.Application_Store_NameKana__c }" id="storeNameKana" />
+                                    </span>
+                                </div>
+                                <div class="row infoDiv required">
+                                    <apex:outputLabel value="電話番号" for="storeName{!store.StoreIndex__c}" />
+                                    <span class="col-12 outlabelHeigth">
+                                        <apex:outputField value="{! store.Application_Store_Phone__c }" id="storePhone" />
+                                    </span>
+                                </div>
+                                <div align="left" class="row infoDiv">
+                                    <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Bussinesshours_and_Liqur_or_Karaokeoffer__c'].Label}" for="bussinesshoursAndLiqurOrKaraokeoffer"/>
+                                    <apex:outputText styleClass="col-12 outlabelHeigth" value="{!store.Bussinesshours_and_Liqur_or_Karaokeoffer__c}" id="bussinesshoursAndLiqurOrKaraokeoffer" />
+                                </div>
+                                <div align="left" class="row infoDiv">
+                                    <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Sticker_Bulletin__c'].Label}" for="stickerBulletin"/>
+                                    <div class="effortdtable_c">
+                                        <img class="imgCheckbox" src="/img/checkbox_{!IF(store.Sticker_Bulletin__c, '', 'un')}checked.gif" />
+                                    </div>
+                                </div>
+                                <div align="left" class="row infoDiv">
+                                    <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Leader_Appointment__c'].Label}" for="leaderAppointment"/>
+                                    <div class="effortdtable_c">
+                                        <img class="imgCheckbox" src="/img/checkbox_{!IF(store.Leader_Appointment__c, '', 'un')}checked.gif" />
+                                    </div>
+                                </div>
+                                <div align="left" class="row infoDiv">
+                                    <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Karaoke_Offerstatus__c'].Label}" for="KaraokeOfferstatus"/>
+                                    <div class="effortdtable_c">
+                                        <img class="imgCheckbox" src="/img/checkbox_{!IF(store.Karaoke_Offerstatus__c, '', 'un')}checked.gif" />
+                                    </div>
+                                </div>
+                                <div align="left" class="row infoDiv">
+                                    <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Bussineshours_and_Liqurservingtime1__c'].Label}" for="bussineshoursAndLiqurservingtime1"/>
+                                    <div class="effortdtable_c">
+                                        <img class="imgCheckbox" src="/img/checkbox_{!IF(store.Bussineshours_and_Liqurservingtime2__c, '', 'un')}checked.gif" />
+                                    </div>
+                                </div>
+                                <div align="left" class="row infoDiv">
+                                    <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Bussineshours_and_Liqurservingtime2__c'].Label}" for="bussineshoursAndLiqurservingtime2"/>
+                                    <div class="effortdtable_c">
+                                        <img class="imgCheckbox" src="/img/checkbox_{!IF(store.Bussineshours_and_Liqurservingtime2__c, '', 'un')}checked.gif" />
+                                    </div>
+                                </div>
+                                <div align="left" class="row infoDiv">
+                                    <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Bussineshours_and_Liqurservingtime3__c'].Label}" for="bussineshoursAndLiqurservingtime3"/>
+                                    <div class="effortdtable_c">
+                                        <img class="imgCheckbox" src="/img/checkbox_{!IF(store.Bussineshours_and_Liqurservingtime3__c, '', 'un')}checked.gif" />
+                                    </div>
                                 </div>
                                 <div class="row infoDiv effortDetails">
                                     <apex:outputLabel value="取組内容" />

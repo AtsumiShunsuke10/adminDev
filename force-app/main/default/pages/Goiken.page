@@ -59,7 +59,7 @@
         background: #f6f6f6;
         margin-top: 20px;
         padding: 40px;
-        margin-bottom: 30px;
+        /*margin-bottom: 30px;*/
     }
     .ikenMoji {
         color: #6781a0;
@@ -104,17 +104,34 @@
         color: #f8a201;              /* 選択された星以降をすべて黄色にする */
     }
     .btn-group{
-    	margin-top:2%;
-    	display: flex;
+        /*margin-top:2%;*/
+        display: flex;
         justify-content: center;
+        position: relative;
+        right: 0;
+        left: 0;
+    }
+    .btn{
+        margin-top:2%;
+        display:flex;
+        justify-content: center;
+        position: absolute;
+        right: 0;
+        left: 0;
+    }
+    .box {
+    padding: 0.5em 1em;
+    margin: 2em 0;
+    border: none;
+    color:#f6f6f6;
     }
 </style>
 <body>
     <section id = "section">
     <div class="inner">
-    <form target="" action="https://d5h000003kbkoeay--dev.my.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8" method="POST">
+    <form target="_parent" action="https://d5h000003kbkoeay--dev.my.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8" method="POST">
         <input type="hidden" id="orgid" name="orgid" value="00D0l0000002nFr" />
-        <input type="hidden" name="retURL" value="force.com/s/goikencomplete" />
+        <input type="hidden" name="retURL" value="https://dev-trans-cosmos-digital.cs58.force.com/s/goikencomplete" />
         
             <div class = 'title'>サイト改善のご提案</div>
                 <div class="subjectbox">
@@ -137,6 +154,7 @@
                         <option value="やや分かりやすい">やや分かりやすい</option>
                         <option value="分かりやすい">分かりやすい</option>
                     </select></div>
+                    <div class="box">
                     <div class="stars">
                     <span>
                     <input type="hidden" name="list1" value="rate0" id="0" onchange="setValue1('なし')" class="mienai"/><label for="0"></label>
@@ -147,6 +165,8 @@
                     <input type="radio" name="list1" value="rate5" id="5" onchange="setValue1('分かりづらい')"/><label for="5">★</label>
                     </span>
                     </div>
+                    </div>
+                    
                     
                     <div>申請しやすさ:
                     <select  id="00N0l0000095wHW" name="00N0l0000095wHW" title="申請しやすさ" class="mienai">
@@ -189,14 +209,14 @@
                     </div>
 
                     <br><input type="hidden"  id="external" name="external" value="1" /></br>
-                    <br><input type="submit" id="submit" name="submit" value="内容を送信する" style="visibility:collapse" /></br>
+                    <div class="btn"><input type="submit" id="submit" name="submit" value="内容を送信する" style="visibility:collapse" /></div>
                 </div>
             </form>
-        <div class="btn-group">
-            <button type="button1" id="button1" name="button1" onclick="func1()">確認画面へ進む</button>
-            <button type="button2" id="button2" name="button2" onclick="func2()" style="visibility:collapse">修正する</button>
+            <div class="btn-group">
+                <button type="button1" id="button1" name="button1" onclick="func1()">確認画面へ進む</button>
+                <button type="button2" id="button2" name="button2" onclick="func2()" style="visibility:collapse">修正する</button>
+            </div>
         </div>
-    </div>
     </section>
     <script>
         function setValue1(val){
@@ -227,10 +247,10 @@
                 document.getElementById("button2").style.visibility = 'visible';
                 document.getElementById("submit").style.visibility = 'visible';
                 document.getElementById("subject").setAttribute("readOnly", true);
-            	document.getElementById("00N0l0000095wEm").setAttribute("readOnly", true);
-            	document.getElementById("00N0l0000095wG9").setAttribute("readOnly", true);
-            	document.getElementById("00N0l0000095wHW").setAttribute("readOnly", true);
-            	document.getElementById("00N0l0000095wHg").setAttribute("readOnly", true);
+                document.getElementById("00N0l0000095wEm").setAttribute("readOnly", true);
+                document.getElementById("00N0l0000095wG9").setAttribute("readOnly", true);
+                document.getElementById("00N0l0000095wHW").setAttribute("readOnly", true);
+                document.getElementById("00N0l0000095wHg").setAttribute("readOnly", true);
                 document.getElementById("1").disabled = true;
                 document.getElementById("2").disabled = true;
                 document.getElementById("3").disabled = true;
@@ -272,9 +292,6 @@
             document.getElementById("third").disabled = false;
             document.getElementById("forth").disabled = false;
             document.getElementById("fifth").disabled = false;
-        }
-        function func3(){
-            document.getElementById("subject").disabled=true;
         }
     </script>
 </body>

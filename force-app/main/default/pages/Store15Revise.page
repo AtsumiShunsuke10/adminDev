@@ -394,16 +394,36 @@
                                                 <label for="tsbStartDay" class="pl-1 pr-2">{!endDateLbl}まで（<apex:outputText value="{!store.Application_Store_Days__c}" id="tsbDaysDiff" />日間）</label>
                                             </div>
                                         </div>
-                                        
                                         <div class="row infoDiv required">
+                                            <apex:outputLabel value="店舗所在地区分" for="storeAddressType" />
+                                            <apex:inputField styleClass="form-control" value="{!store.Application_Store_Address_Type__c}" id="storeAddressType" />
+                                        </div>
+                                        <div class="row infoDiv required" id ="perNumberDiv">
                                             <apex:outputLabel value="許可番号（飲食店営業許可書の許可番号・許可年月日を記載してください。）" for="perNumber" />
                                             <div class="form-inline col-12 p-0" id="perNumber">
-                                                <apex:inputField styleClass="form-control" style="width:25%;" value="{!store.Application_Store_Per_Number_Com__c}" id="perNumberCom" />
-                                                
+                                                <apex:inputField styleClass="form-control" style="width:25%;" value="{!store.Application_Store_Per_Number_Com__c}" id="perNumberCom">
+                                                    <apex:actionSupport event="onchange" action="{!determinePerNumber}"  rerender="perNumberStr"/>
+                                                </apex:inputField>
                                                 <label for="perNumberIssue" class="pl-1 pr-2">第</label>
-                                                <apex:inputField styleClass="form-control" style="width:40%;" value="{!store.Application_Store_Per_Number_Issue__c}" id="perNumberIssue" />
+                                                <apex:inputField styleClass="form-control" style="width:40%;" value="{!store.Application_Store_Per_Number_Issue__c}" id="perNumberIssue">
+                                                    <apex:actionSupport event="onchange" action="{!determinePerNumber}"  rerender="perNumberStr"/>
+                                                </apex:inputField>
                                                 <label class="pl-1 pr-2">号</label>
+                                                <apex:outputPanel id="perNumberSub">
+                                                    <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="perNumberStr2" value="{!perNumberSub}" rendered="{!IF(store.Application_Store_Address_Type__c=='練馬区'||store.Application_Store_Address_Type__c=='八王子市'||store.Application_Store_Address_Type__c=='葛飾区',true,false)}">
+                                                        <apex:actionSupport event="onchange"  action="{!determinePerNumber}" reRender="perNumberStr"/>
+                                                        <apex:selectOptions value="{!SelectPerNumberSub}"/>
+                                                    </apex:selectList>
+                                                </apex:outputPanel>
                                             </div>
+                                        </div>
+                                        <div class="row infoDiv">
+                                            <apex:outputPanel id="perNumberStr">
+                                                <apex:outputLabel value="営業許可書番号:" for="perNumber" />
+                                                <div class="form-inline col-12 p-0">
+                                                    <div class="font-Green" style="font-size:xx-large;">{!store.Application_Store_Per_Number__c}</div>
+                                                </div>
+                                            </apex:outputPanel>
                                         </div>
                                         
                                         <div class="row infoDiv validDateCheck required">
@@ -427,16 +447,11 @@
                                         </div>
                                         
                                         <div class="row infoDiv required">
-                                            <apex:outputLabel value="店舗所在地区分" for="storeAddressType" />
-                                            <apex:inputField styleClass="form-control" value="{!store.Application_Store_Address_Type__c}" id="storeAddressType" />
-                                        </div>
-                                        
-                                        <div class="row infoDiv required">
                                             <apex:outputLabel value="郵便番号" for="storePostCode" />
                                             <div class="w-100 ml-0 slds-scope row">
                                                 <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!store.Application_Store_Postal_Code__c}" id="storePostCode"/></div>
                                                 <div>
-                                                    <button type="button" id="srchOffAddrBtn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('storePostCode', 'storeAddress')">
+                                                    <button type="button" id="srchOffAddrBtn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipSearch('storePostCode', 'storeAddress')">
                                                         <apex:outputText value="住所を検索" />
                                                     </button>
                                                 </div>
@@ -450,6 +465,42 @@
                                             <apex:outputLabel value="店舗名称" for="storeName" />
                                             <apex:inputField styleClass="form-control" value="{!store.Application_Store_Name__c}" id="storeName" />
                                         </div>
+                                        <div class="row infoDiv">
+                                            <apex:outputLabel value="店舗名称（フリガナ）" for="storeNameKana" />
+                                            <apex:inputField styleClass="form-control" value="{!store.Application_Store_NameKana__c}" id="storeNameKana"/>
+                                        </div>
+                                        <div class="row infoDiv required autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Application_Store_Phone__c'].Label}" for="storePhone" />
+                                            <apex:inputField styleClass="form-control" value="{!store.Application_Store_Phone__c}" id="storePhone" />
+                                        </div>
+                                        <div align="left" class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Bussinesshours_and_Liqur_or_Karaokeoffer__c'].Label}" for="bussinesshoursAndLiqurOrKaraokeoffer"/>
+                                            <apex:inputField styleClass="form-control" value="{!store.Bussinesshours_and_Liqur_or_Karaokeoffer__c}" id="bussinesshoursAndLiqurOrKaraokeoffer" />
+                                        </div>
+                                        <div align="left" class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Sticker_Bulletin__c'].Label}" for="stickerBulletin"/>
+                                            <apex:inputCheckbox styleClass="unvCheckBox" value="{!store.Sticker_Bulletin__c}" id="stickerBulletin" onchange=""/>
+                                        </div>
+                                        <div align="left" class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Leader_Appointment__c'].Label}" for="leaderAppointment"/>
+                                            <apex:inputCheckbox styleClass="unvCheckBox" value="{!store.Leader_Appointment__c}" id="leaderAppointment" onchange=""/>
+                                        </div>
+                                        <div align="left" class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Karaoke_Offerstatus__c'].Label}" for="KaraokeOfferstatus"/>
+                                            <apex:inputCheckbox styleClass="unvCheckBox" value="{!store.Karaoke_Offerstatus__c}" id="KaraokeOfferstatus" onchange=""/>
+                                        </div>
+                                        <div align="left" class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Bussineshours_and_Liqurservingtime1__c'].Label}" for="bussineshoursAndLiqurservingtime1"/>
+                                            <apex:inputCheckbox styleClass="unvCheckBox" value="{!store.Bussineshours_and_Liqurservingtime1__c}" id="bussineshoursAndLiqurservingtime1" onchange=""/>
+                                        </div>
+                                        <div align="left" class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Bussineshours_and_Liqurservingtime2__c'].Label}" for="bussineshoursAndLiqurservingtime2"/>
+                                            <apex:inputCheckbox styleClass="unvCheckBox" value="{!store.Bussineshours_and_Liqurservingtime2__c}" id="bussineshoursAndLiqurservingtime2" onchange=""/>
+                                        </div>
+                                        <div align="left" class="row infoDiv autofill">
+                                            <apex:outputLabel value="{!$ObjectType.Store15__c.Fields['Bussineshours_and_Liqurservingtime3__c'].Label}" for="bussineshoursAndLiqurservingtime3"/>
+                                            <apex:inputCheckbox styleClass="unvCheckBox" value="{!store.Bussineshours_and_Liqurservingtime3__c}" id="bussineshoursAndLiqurservingtime3" onchange=""/>
+                                        </div>  
                                         <div class="row infoDiv effortDetails required">
                                             <apex:outputLabel value="取組内容（※該当する項目にチェック（✔）を付けてください。）" />
                                             <div class="effortdtable">
@@ -854,36 +905,118 @@
             };
         })(jQuery);
         
-        /**
-        * 郵便番号で住所マスタから住所を取得する
+          /**
+        * 郵便番号APIで住所検索
         */
-        function getAddressByPostCode(postcodeFieldId, addressFieldId) {
-            
-            let postcode = $('input[id$="' + postcodeFieldId + '"]').val();
-            if (postcode) {
-                // 半角数字7桁(ハイフン無し)の場合、住所を検索する
-                if (postcode.match(/[0-9]{7}/)) {
-                    Visualforce.remoting.Manager.invokeAction(
-                        '{!$RemoteAction.Application15ListController.getAddress}',
-                        $('input[id$="' + postcodeFieldId + '"]').val(), 
-                        function(result, event){
-                            if (event.status) {
-                                if (!result) {
-                                    alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
-                                }
-                                $('textarea[id$="' + addressFieldId + '"]').val(result);
-                            } else {
-                                // 何もしない
-                            }
-                        }, 
-                        {escape: true}
-                    );
-                    // 半角数字7桁(ハイフン無し)以外の場合
-                } else {
-                    alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
-                }
+        function zipSearch(postcodeFieldId, addressFieldId) {
+            var url = 'https://map.yahooapis.jp/search/zip/V1/zipCodeSearch?';
+            let zip_code = $('input[id$="' + postcodeFieldId + '"]').val();
+            console.log(zip_code);
+            if (zip_code.match(/[0-9]{7}/)) {
+                var param = {
+                    appid: '{!$Label.YOLP_APPLICATION_ID}',
+                    output: 'json',
+                    query: zip_code,
+                    results: 100
+                };
+                $.ajax({
+                    url: url,
+                    data: param,
+                    dataType: 'jsonp',
+                    success: function (results) {
+                        dispResultAddress(results, addressFieldId);
+                        console.log(results);
+                    },
+                    error: function () {
+                    }
+                });
+            } else {
+                $('textarea[id$="' + addressFieldId + '"]').val('');
+                alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
             }
-            
+        }
+
+        function dispResultAddress(ydf, addressFieldId) {
+            $('textarea[id$="' + addressFieldId + '"]').val('');
+            let floors = ['０', '１', '２', '３', '４', '５', '６', '７', '８', '９'];
+            var isMatched = true;
+            if (ydf.ResultInfo.Count == 1 && ydf.Feature[0].Property.Address.startsWith('東京都')) {
+                var rAdrs = ydf.Feature[0].Property.Address
+                if (rAdrs.includes("（") && rAdrs.includes("丁目") && !(rAdrs.includes("～")) && !(rAdrs.includes("、"))) {
+                    rAdrs = rAdrs.replace("（", "");
+                    rAdrs = rAdrs.replace("）", "");
+                }
+                else if (rAdrs.includes("（") && rAdrs.includes("階")) {
+                    if (rAdrs.includes("不明")) {
+                        var deleteChar = rAdrs.indexOf('（');
+                        rAdrs = rAdrs.substring(0, deleteChar);
+                        console.log(deleteChar);
+                    }
+                    for (i = 0; i < floors.length; i++) {
+                        if (rAdrs.includes(floors[i] + '階')) {
+                            isMatched = false;
+                            break;
+                        }
+                        if (isMatched) {
+                            rAdrs = rAdrs.replace("（", "");
+                            rAdrs = rAdrs.replace("）", "");
+                        }
+                    }
+                }
+                else if (rAdrs.includes('（')) {
+                    var deleteChar = rAdrs.indexOf('（');
+                    rAdrs = rAdrs.substring(0, deleteChar);
+                    console.log(deleteChar);
+                }
+                $('textarea[id$="' + addressFieldId + '"]').val(rAdrs);
+            } else if (ydf.ResultInfo.Count > 1 && ydf.Feature[0].Property.Address.startsWith('東京都')) {
+                var rAdrs = '';
+                var isMatched = true;
+                for (i = 0; ydf.Feature[0].Property.Address.length; i++) {
+                    var iAdrs = ydf.Feature[0].Property.Address.slice(0, i + 1);
+                    for (x = 1; x < ydf.ResultInfo.Count; x++) {
+                        var xAdrs = ydf.Feature[x].Property.Address
+                        if (xAdrs.indexOf(iAdrs)) {
+                            isMatched = false;
+                            break;
+                        }
+                    }
+                    if (isMatched) {
+                        rAdrs = iAdrs;
+                    } else {
+                        break;
+                    }
+                }
+                if (rAdrs.includes("（") && rAdrs.includes("丁目") && !(rAdrs.includes("～")) && !(rAdrs.includes("、"))) {
+                    rAdrs = rAdrs.replace("（", "");
+                    rAdrs = rAdrs.replace("）", "");
+                }
+                else if (rAdrs.includes("（") && rAdrs.includes("階")) {
+                    if (rAdrs.includes("不明")) {
+                        var deleteChar = rAdrs.indexOf('（');
+                        rAdrs = rAdrs.substring(0, deleteChar);
+                        console.log(deleteChar);
+                    }
+                    for (i = 0; i < floors.length; i++) {
+                        if (rAdrs.includes(floors[i] + '階')) {
+                            isMatched = false;
+                            break;
+                        }
+                        if (isMatched) {
+                            rAdrs = rAdrs.replace("（", "");
+                            rAdrs = rAdrs.replace("）", "");
+                        }
+                    }
+                }
+                else if (rAdrs.includes('（')) {
+                    var deleteChar = rAdrs.indexOf('（');
+                    rAdrs = rAdrs.substring(0, deleteChar);
+                    console.log(deleteChar);
+                }
+                $('textarea[id$="' + addressFieldId + '"]').val(rAdrs);
+            } else {
+                alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
+            }
         }
         
         function doCheckDate(y, m, d) {

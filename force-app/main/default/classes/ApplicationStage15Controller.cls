@@ -39,10 +39,13 @@ global with sharing class ApplicationStage15Controller{
     // 申請番号
     public String application15Name { get;set; }
     
-    public String JSONString   { get;set; }
+    public String JSONString        { get;set; }
 
     // 営業許可書-許可年月日
     public CustomDate storePerDate  { get;set; }
+    // 営業許可書-許可番号文字列
+    public String perNumberSub      { get;set; }
+
     // 時短営業開始日
     public CustomDate storeTsbStartDate  { get;set; }
     //時短営業終了日
@@ -63,8 +66,7 @@ global with sharing class ApplicationStage15Controller{
     
     public Integer pageNum { get;set; }
     public Integer maxPageNum { get;set; }
-    public Boolean displayPopup {get;set;}
-    public Boolean checkAllStore   { get;set; }    
+    @testVisible
     private Id conId;
     
     public ApplicationStage15Controller(){
@@ -77,7 +79,6 @@ global with sharing class ApplicationStage15Controller{
         pageNum = 1;
         maxPageNum = 1;
         storeIdx = 0;
-
         //時短営業終了日
         CONST_SHORTER_BUSI_END_DATE = Application15Utility.fmtDate(Application15Const.CONST_APP15_SHORTER_BUSI_END_DATE, Application15Const.CONST_DATE_FMT);
 
@@ -177,7 +178,6 @@ global with sharing class ApplicationStage15Controller{
                                                                     new List<String>{String.valueOf(store.Application_Store_Start_Date__c),
                                                                         String.valueOf(store.Application_Store_End_Date__c),
                                                                         String.valueOf(store.Application_Store_Days__c)});
-
         if(idx == - 1){
             storesList.add(store);
             pageNum = maxPageNum;
@@ -190,6 +190,29 @@ global with sharing class ApplicationStage15Controller{
             }
         }
     }
+    
+    public PageReference completeFromStore() {
+        calculateAmount();
+        Integer maxNum = Integer.valueOf(System.Label.STORE_LIST_PAGE_NUM);
+        
+        if(getRemainder(storesList.size(),maxNum) == 0){
+            maxPageNum=storesList.size()/maxNum;
+        }else{
+            maxPageNum=storesList.size()/maxNum+1;
+        }
+        
+        storeDisplayList = (List<Store15__c>)Application15Utility.getPageRecordList(storesList,pageNum);
+        PageReference pr =  new PageReference(page.Application15Input.getUrl());
+        pr.getParameters().put('backflag','true');
+        pr.setRedirect(false);
+        return pr;
+    }
+    
+    private Integer getRemainder(Integer dividend,Integer divider) {
+        Decimal resultDecimal = Decimal.valueOf(dividend) / divider;
+        Integer resultDown = Integer.valueOf(resultDecimal.round(System.RoundingMode.DOWN));
+        return dividend - resultDown * divider;
+    } 
     
     public List<SelectOption> getSelectYear(){
         List<SelectOption> options = new List<SelectOption>();
@@ -234,6 +257,28 @@ global with sharing class ApplicationStage15Controller{
         return Application15Utility.getSelectTsbDate(sDate,eDate);
     }
     
+    public List<SelectOption> getSelectPerNumberSub(){
+        List<SelectOption> options = new List<SelectOption>();
+        String adressType=store.Application_Store_Address_Type__c;
+        if(String.isEmpty(adressType)){
+            return options;
+        }
+        String pDependentField='Application_Store_Per_Number_String2__c';
+        List<String> depentList=Application15Utility.GetDependentFormat(adressType,pDependentField);
+        if(depentList.size() == 0){
+            return options;
+        }
+        if(adressType != '練馬区'){
+            options.add(new SelectOption('',''));
+        }
+        
+        for (String value:depentList) {
+            options.add(new SelectOption(value, value));
+        }
+        
+        return options;
+    }
+    
     public void calculateAmount(){
         Integer amount = 0;
         for(Store15__c s:storesList){
@@ -263,30 +308,9 @@ global with sharing class ApplicationStage15Controller{
         }
         return options;
     }
-
-    public List<SelectOption> getSelectApplication() {
-        
-        List<SelectOption> options = new List<SelectOption>();
-        options.add(new SelectOption('','--なし--'));
-        options.add(new SelectOption(Application15Const.CONST_APP_SELECT_LIST_VALUE1, Application15Const.CONST_APP_SELECT_LIST_LABEL1));
-        options.add(new SelectOption(Application15Const.CONST_APP_SELECT_LIST_VALUE2, Application15Const.CONST_APP_SELECT_LIST_LABEL2));
-        return options;
-        
-    }
     
     public PageReference goBackFromStore() {
         storeIdx = 0;
-        PageReference pr =  new PageReference(page.Application15Input.getUrl());
-        pr.getParameters().put('backflag','true');
-        pr.setRedirect(false);
-        return pr;
-    }
-    
-    public PageReference completeFromStore() {
-        calculateAmount();
-        Integer maxNum = Integer.valueOf(System.Label.STORE_LIST_PAGE_NUM);
-        maxPageNum=storesList.size()/maxNum+1;
-        storeDisplayList = (List<Store15__c>)Application15Utility.getPageRecordList(storesList,pageNum);
         PageReference pr =  new PageReference(page.Application15Input.getUrl());
         pr.getParameters().put('backflag','true');
         pr.setRedirect(false);
@@ -308,12 +332,18 @@ global with sharing class ApplicationStage15Controller{
     }
     
     public PageReference toConfirm(){
+        if(String.isNotEmpty(apply15.Financial_Institution_Lookup__c)){
+            financialInstitutionName = [SELECT name from C_FinancialInstitutiokanji__c where id =:apply15.Financial_Institution_Lookup__c].name;
+        }
         PageReference pr =  new PageReference(page.Application15Confirm.getUrl());
         pr.setRedirect(false);
         return pr;
     }
     
     public PageReference toStoreDetail(){
+        if(String.isNotEmpty(apply15.Financial_Institution_Lookup__c)){
+            financialInstitutionName = [SELECT name from C_FinancialInstitutiokanji__c where id =:apply15.Financial_Institution_Lookup__c].name;
+        }
         PageReference pr =  new PageReference(page.Application15StoreInput.getUrl());
         pr.setRedirect(false);
         return pr;
@@ -347,7 +377,6 @@ global with sharing class ApplicationStage15Controller{
         }else if( store.StoreIndex__c == null){
             store.StoreIndex__c = storesList[storesList.size()-1].StoreIndex__c +1;
         }
-        
         Database.upsertResult ur = Database.upsert(store, false);
         if (!ur.isSuccess()) {
             for (Database.Error err : ur.getErrors()) {
@@ -377,18 +406,16 @@ global with sharing class ApplicationStage15Controller{
             }
         }
         
-        // 代表者又は申請者の生年月日
-        Date birthday = Date.valueOf(year+'-'+month+'-'+day);
-        apply15.Applicant_Birthday__c = birthday;
         // ステータス
         apply15.Status__c = Application15Const.CONST_APP15_STATUS_NOT_PROPOSED;
-        //※項目変更未反映、改修の可能性がある
-		//企業規模
-		apply15.Company_Scale__c = '中小事業者';
        	//東京都用申請タイプ
 		apply15.Tokyo_Application_Type__c = Application15Const.CONST_APP15_TOKYO_TYPE_WEB;
         //レーコドタイプ
         apply15.RecordTypeId = [SELECT id from RecordType where SobjectType ='Application15__c' and DeveloperName ='RecordType_readwrite'].Id;
+        // 代表者又は申請者の生年月日
+        Date birthday = Date.valueOf(year+'-'+month+'-'+day);
+        apply15.Applicant_Birthday__c = birthday;
+
         //1ユーザが複数の申請できない
         List<String> fieldsList = new List<String>();
         fieldsList.add('Id');
@@ -400,8 +427,8 @@ global with sharing class ApplicationStage15Controller{
             condition = ' Applicant_Business_Name__c = \''+apply15.Applicant_Business_Name__c+'\''
                 +' AND Applicant_Birthday__c =' +dt.format('yyyy-MM-dd');
         }
+        condition += ' AND Status__c != \''+Application15Const.CONST_APP15_STATUS_NOT_PROPOSED+'\'';
         String query = Application15Utility.makeSoql(fieldsList, 'Application15__c', condition, '', '', '');
-        System.debug('***************query*******************'+query);
         List<Application15__c> appList  = Database.query(query);
         if(appList.size() != 0){
             JSONString = JSONString + '</br>'+System.Label.APPLICATION_CANT_APPLY_FOR_MORE_THAN_ONE+'<br/>'; 
@@ -648,6 +675,33 @@ global with sharing class ApplicationStage15Controller{
         }
     }
     
+    // 許可番号文字作成
+    public void determinePerNumber(){
+        String perNumCom=store.Application_Store_Per_Number_Com__c;
+        String perNumIssue=store.Application_Store_Per_Number_Issue__c;
+        
+        String adressType=store.Application_Store_Address_Type__c;
+        String pDependentField1='Application_Store_Per_Number_String__c';
+        String pDependentField2='Application_Store_Per_Number_String2__c';
+        String perNumberString;
+        if(String.isNotEmpty(perNumCom)&&String.isNotEmpty(perNumIssue)&&String.isNotEmpty(adressType)){
+            List<String> depentList1=Application15Utility.GetDependentFormat(adressType,pDependentField1);
+            List<String> depentList2=Application15Utility.GetDependentFormat(adressType,pDependentField2);
+            if(depentList2.size()>0 && String.isNotEmpty(perNumberSub)){
+                perNumberString = String.format(depentList1[0],  new List<String>{perNumCom,perNumIssue,perNumberSub});
+            }else{
+                if(String.isEmpty(perNumberSub) && adressType == '練馬区'){
+                    perNumberString = String.format(depentList1[0],  new List<String>{perNumCom,perNumIssue,'練'});
+                }else{
+                    perNumberString = String.format(depentList1[0],  new List<String>{perNumCom,perNumIssue,''});
+                }
+            }
+        }else{
+            perNumberString = '';
+        }
+        store.Application_Store_Per_Number__c=perNumberString;
+    }
+    
     /**
      * 郵便番号で住所を取得
      *
@@ -682,36 +736,89 @@ global with sharing class ApplicationStage15Controller{
         slist = Database.query(query);
         if (slist.size() > 0) {
             Sobject sobj = slist[0];
+            //申請番号
             infoMap.put('applicantNo',sobj.get('Application_No__c'));
-            //infoMap.put('userId',sobj.get('UserId__c'));
-            infoMap.put('email',sobj.get('Email__c'));
-            //infoMap.put('firstNameKana',sobj.get('FirstNameKana__c'));//
-            //infoMap.put('firstName',sobj.get('FirstName__c'));//
-            //infoMap.put('lastName',sobj.get('LastName__c'));//
-            //infoMap.put('lastNameKana',sobj.get('LastNameKana__c'));//
-            infoMap.put('accountHolder',sobj.get('Account_Holder__c'));
-            //infoMap.put('applicantAddress',sobj.get('Applicant_Address__c'));//
-            infoMap.put('applicantBusinessName',sobj.get('Applicant_Business_Name__c'));
+            //企業規模
+            infoMap.put('enterprisesDiscrimination',sobj.get('Enterprises_Discrimination__c'));
+            //申請者の種別
             infoMap.put('applicantDivision',sobj.get('Applicant_Division__c'));
+            String address;
+            if(sobj.get('Applicant_Division__c')=='法人'){
+                //法人番号
+                infoMap.put('corporateNumber',sobj.get('Corporate_Number__c'));
+                //法人郵便番号
+                infoMap.put('applicantZip',sobj.get('Corporate_Postal_Code__c'));
+                //法人都道府県
+                address = (String)sobj.get('Corporate_Prefectures__c')
+                    //法人市区町村
+                    +(String)sobj.get('Corporate_Municipalities__c')
+                    //法人市区町村
+                    +(String)sobj.get('Corporate_Town_Name__c')
+                    //法人建物名
+                    +(String)sobj.get('Corporate_Building_Name__c');
+                
+            }else{
+                //個人事業主 郵便番号
+                infoMap.put('applicantZip',sobj.get('Self_Employment_Postal_Code__c'));
+                //個人事業主 都道府県
+                address = (String)sobj.get('Self_Employment_Prefectures__c')
+                    //個人事業主 市区町村
+                    +(String)sobj.get('Self_Employment_Municipalities__c')
+                    //個人事業主 町名字名番地
+                    +(String)sobj.get('Self_Employment_Town_Name__c')
+                    //個人事業主 建物名
+                    +(String)sobj.get('Self_Employment_Building_Name__c');
+            }
+            
+            //所在地又は住所
+            infoMap.put('applicantAddress',address.replaceAll('null',' '));
+            //代表者の氏名
             infoMap.put('applicantName',sobj.get('Applicant_Name__c'));
-            infoMap.put('applicantPhone',sobj.get('Applicant_Phone__c'));
-            //infoMap.put('applicantZip',sobj.get('Applicant_Postal_Code__c'));//
+            //代表者の役職
             infoMap.put('applicantTitle',sobj.get('Applicant_Title__c'));
+            //電話番号
+            infoMap.put('applicantPhone',sobj.get('Applicant_Phone__c'));
+            //本・支店名
+            infoMap.put('branchName',sobj.get('Finacial_Branch_Name__c')); 
+            //支店コード
+            infoMap.put('branchCode',sobj.get('Finacial_Branch_Code__c'));
+            //口座番号
+            infoMap.put('accountNumber',sobj.get('Finacial_Account_Number__c'));
+            //申請事業者名
+            infoMap.put('applicantBusinessName',sobj.get('Applicant_Business_Name__c'));
+
+            //日中連絡が取れる方氏名
+            infoMap.put('personalNameKanji',sobj.get('PersonalNameKanji__c'));
+            //日中連絡が取れる方氏名（フリガナ）
+            infoMap.put('personalNameFurigana',sobj.get('PersonalNameFurigana__c'));
+            //資本金（又は出資金）
+            infoMap.put('capitalStock',String.valueOf(sobj.get('Capital_Stock__c')));
+            //中小企業基本法上の業種
+            infoMap.put('enterprisesIndustryType',sobj.get('Enterprises_Industry_Type__c'));
+            //常時雇用する従業員数
+            infoMap.put('employeeNumber',String.valueOf(sobj.get('Employee_Number__c')));
+
+            //大企業と中小企業を判別
+            infoMap.put('enterprisesDiscrimination',sobj.get('Enterprises_Discrimination__c'));
+            //口座種目
+            infoMap.put('accountType',sobj.get('Finacial_Account_Type__c'));
+            //金融情報
+            infoMap.put('financialInstitutionName',sobj.get('FinancialName__c'));
+            infoMap.put('financialInstitutionId',sobj.get('Financial_Institution_Lookup__c'));
+            
+            //口座名義人
+            infoMap.put('accountHolder',sobj.get('Account_Holder__c'));
+            //申請事業者名（フリガナ）
+            infoMap.put('approvalNameFurigana',sobj.get('ApprovalNameFurigana__c'));
+            //個人事業主 生年月日
             if(sobj.get('Birthdate__c')!=null){
                 Date birth = Date.valueOf(sobj.get('Birthdate__c'));
                 infoMap.put('birthYear',String.valueOf(birth.year()));
                 infoMap.put('birthMonth',String.valueOf(birth.month()));
                 infoMap.put('birthDay',String.valueOf(birth.day()));
-
             }
-
-            infoMap.put('corporateNum',sobj.get('Corporate_Number__c'));
-            infoMap.put('accountNumber',sobj.get('Finacial_Account_Number__c'));
-            infoMap.put('accountType',sobj.get('Finacial_Account_Type__c'));
-            infoMap.put('branchCode',sobj.get('Finacial_Branch_Code__c'));
-            infoMap.put('branchName',sobj.get('Finacial_Branch_Name__c'));
-            infoMap.put('financialInstitutionName',sobj.get('FinancialName__c'));
-            infoMap.put('financialInstitutionId',sobj.get('Financial_Institution_Lookup__c'));
+        }else{
+            infoMap.put('ERRORMSG','No History');
         }
         return JSON.serialize( infoMap );
     }
@@ -728,7 +835,6 @@ global with sharing class ApplicationStage15Controller{
             String condition='Application_No__c = \''+ ApplicationNo +'\'';
             List<String> fieldsList = Application15Utility.getAllColumnsList('StoreHistory__c');
             String query = Application15Utility.makeSoql(fieldsList, 'StoreHistory__c', condition, '', '', '');
-            System.debug('*********************query************************'+query);
             hList = Database.query(query);
             storeDisplayList = new List<Store15__c>();
             storesList = new List<Store15__c>();
@@ -740,20 +846,38 @@ global with sharing class ApplicationStage15Controller{
                 s.Application_Store_Postal_Code__c=h.Zip_Code__c;
                 s.Application_Store_Address__c=h.Address__c;
                 s.Application_Store_Per_Date__c=h.Business_Permit_Date__c;
-                //※フォマード未指定、改修の可能性がある
-                s.Application_Store_Per_Number_Com__c=h.Store_Per_Number_Com__c;
-                s.Application_Store_Per_Number_Issue__c=h.Store_Per_Number_Issue__c;
+                //営業許可証番号
+                s.Application_Store_Per_Number__c=h.BusinessPermitNumber__c;
+                //電話番号
+                s.Application_Store_Phone__c=h.PhoneNumber__c;
+                //フリガナ
+                s.Application_Store_NameKana__c=h.Store_Kana__c;
                 s.Application_Store_Kbn__c=h.Store_Category__c;
                 s.Application_Store_Address_Type__c=h.Store_Address_Type__c;
                 s.StoreIndex__c=++index;
                 storesList.add(s);
             }
             Integer maxNum = Integer.valueOf(System.Label.STORE_LIST_PAGE_NUM);
-            maxPageNum=storesList.size()/maxNum+1;
+            
+            if(getRemainder(storesList.size(),maxNum) == 0){
+                maxPageNum=storesList.size()/maxNum;
+            }else{
+                maxPageNum=storesList.size()/maxNum+1;
+            }
+            
             storeDisplayList = (List<Store15__c>)Application15Utility.getPageRecordList(storesList,pageNum);
         }catch (Exception e) {
             System.debug('*********'+e.getMessage()+'*********');
         }
+    }
+    
+    public void clearStoreHistory() {
+        applyh = new ApplicationHistory__c();
+        pageNum = 1;
+        maxPageNum = 1;
+        storeIdx = 0;
+        storeDisplayList = new List<Store15__c>();
+        storesList = new List<Store15__c>();
     }
     
     public void previous() {
@@ -805,6 +929,10 @@ global with sharing class ApplicationStage15Controller{
                 maxPageNum=divider+1;
             }
 
+            if(maxPageNum == 0){
+                maxPageNum = 1;
+            }
+            
             if(maxPageNum < pageNum){
                 pageNum = pageNum -1;
             }

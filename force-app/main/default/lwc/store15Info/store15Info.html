@@ -18,20 +18,21 @@
                         <lightning-record-edit-form object-api-name="Store15__c" record-id={showingStoreInfo.id} data-id={showingStoreInfo.id}>
                             <lightning-accordion active-section-name={activeSections} allow-multiple-sections-open>
                                 <lightning-accordion-section name="basicInfo" label="基本情報">
-                                    <lightning-input-field field-name="Application_Store_NameKana__c"></lightning-input-field>
-                                    <lightning-input-field field-name="Application_Store_Name__c"></lightning-input-field>
-                                    <lightning-input-field field-name="Application_Store_Phone__c"></lightning-input-field>
-                                    <lightning-input-field field-name="Application_Store_Postal_Code__c"></lightning-input-field>
-                                    <lightning-input-field field-name="Application_Store_Address__c"></lightning-input-field>
-                                    <lightning-input-field field-name="Application_Store_Per_Number__c"></lightning-input-field>
-                                    <lightning-input-field field-name="Bussinesshours_and_Liqur_or_Karaokeoffer__c"></lightning-input-field>
-                                    <lightning-input-field field-name="Sticker_Bulletin__c"></lightning-input-field>
-                                    <lightning-input-field field-name="Leader_Appointment__c"></lightning-input-field>
-                                    <lightning-input-field field-name="Karaoke_Offerstatus__c"></lightning-input-field>
-                                    <lightning-input-field field-name="Bussineshours_and_Liqurservingtime1__c"></lightning-input-field>
-                                    <lightning-input-field field-name="Bussineshours_and_Liqurservingtime2__c"></lightning-input-field>
-                                    <lightning-input-field field-name="Bussineshours_and_Liqurservingtime3__c"></lightning-input-field>
-                                    <lightning-input-field field-name="Application_Store_Apply_Amount__c"></lightning-input-field>
+                                    <lightning-output-field field-name="Application_Store_NameKana__c"></lightning-output-field>
+                                    <lightning-output-field field-name="Application_Store_Name__c"></lightning-output-field>
+                                    <lightning-output-field field-name="Application_Store_Phone__c"></lightning-output-field>
+                                    <lightning-output-field field-name="Application_Store_Postal_Code__c"></lightning-output-field>
+                                    <lightning-output-field field-name="Application_Store_Address__c"></lightning-output-field>
+                                    <lightning-output-field field-name="Application_Store_Per_Number__c"></lightning-output-field>
+                                    <lightning-output-field field-name="Bussinesshours_and_Liqur_or_Karaokeoffer__c"></lightning-output-field>
+                                    <lightning-output-field field-name="Sticker_Bulletin__c"></lightning-output-field>
+                                    <lightning-output-field field-name="Leader_Appointment__c"></lightning-output-field>
+                                    <lightning-output-field field-name="Karaoke_Offerstatus__c"></lightning-output-field>
+                                    <lightning-output-field field-name="Bussineshours_and_Liqurservingtime1__c"></lightning-output-field>
+                                    <lightning-output-field field-name="Bussineshours_and_Liqurservingtime2__c"></lightning-output-field>
+                                    <lightning-output-field field-name="Bussineshours_and_Liqurservingtime3__c"></lightning-output-field>
+                                    <lightning-output-field field-name="Application_Store_Apply_Amount__c"></lightning-output-field>
+                                    <lightning-output-field field-name="ResultEnsureApplicationStorePerNumber__c"></lightning-output-field>
                                 </lightning-accordion-section>
                                 <lightning-accordion-section name="screeningInfo" label="審査情報" data-name="screeningInfo">
                                     <lightning-input-field field-name="Store_Business_Permit_Document__c" onchange={handleOnChangeField}></lightning-input-field>
@@ -41,15 +42,15 @@
                                     <lightning-input-field field-name="FinalincomeTaxReturnDocument__c" onchange={handleOnChangeField}></lightning-input-field>
                                     <lightning-input-field field-name="AmountOfSoldDocument__c" onchange={handleOnChangeField}></lightning-input-field>
                                     <lightning-input-field field-name="CertificateOfInfectionPrevention__c" onchange={handleOnChangeField}></lightning-input-field>
-                                    <lightning-input-field field-name="Store_Business_Permit_And_Add_Is_Same__c	" onchange={handleOnChangeField}></lightning-input-field>
                                     <lightning-input-field field-name="Stacker__c" onchange={handleOnChangeField}></lightning-input-field>
                                     <lightning-input-field field-name="WrittenOath__c" onchange={handleOnChangeField}></lightning-input-field>
                                     <lightning-input-field field-name="MeterinspectionOrReceipt__c" onchange={handleOnChangeField}></lightning-input-field>
-                                    <!-- <lightning-input-field field-name="ConditionsAndSignature__c" onchange={handleOnChangeField}></lightning-input-field> -->
                                     <lightning-input-field field-name="OLCorrespondingApplicant__c" onchange={handleOnChangeField}></lightning-input-field>
                                     <lightning-input-field field-name="OLCorrespondingBranchnameAndLocation__c" onchange={handleOnChangeField}></lightning-input-field>
                                     <lightning-input-field field-name="Store_Business_Permit_Info_Is_Correct__c" onchange={handleOnChangeField}></lightning-input-field>
                                     <lightning-input-field field-name="BusinessContents_NoOmission__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="StoreStatus__c" onchange={handleOnChangeField}></lightning-input-field>
+                                    <lightning-input-field field-name="ChangeStatus__c" onchange={handleOnChangeField}></lightning-input-field>
                                 </lightning-accordion-section>
                             </lightning-accordion>
                         </lightning-record-edit-form>

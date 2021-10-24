@@ -7,24 +7,6 @@
  *  作成日         : 2021/10/01
  *******************************************************************************/
 public class Store15Handler {
-    /** 先行支払い処理用の各期申請の名称とAPI参照名のマップ */
-    private static Map<String, String> ALL_APP_API_NAME_MAP {
-        get {
-            if (ALL_APP_API_NAME_MAP == null) {
-                ALL_APP_API_NAME_MAP = new Map<String, String>();
-                String[] allAppNames = System.Label.APPLICATION_ALL_PRE_PAY_APP_NAME.split(',');
-                String[] allAppApiNames = System.Label.APPLICATION_ALL_PRE_PAY_APP_API_NAME.split(',');
-                if (allAppNames.size() == allAppApiNames.size()) {
-                    for (Integer idx = 0; idx < allAppNames.size(); idx++) {
-                        ALL_APP_API_NAME_MAP.put(allAppNames.get(idx), allAppApiNames.get(idx));
-                    }
-                }
-            }
-            return ALL_APP_API_NAME_MAP;
-        }
-        set;
-    }
-    
     //二次起動防止
     public static boolean firstRun = true;
     
@@ -35,6 +17,7 @@ public class Store15Handler {
      */
     public static void doBeforeInsert(List<Store15__c> newStoreList) {
         calculateSumAmount(newStoreList);
+        ensureApplicationStorePerNumber(newStoreList);
     }
     
     /**
@@ -44,6 +27,7 @@ public class Store15Handler {
      */
     public static void doBeforeUpdate(List<Store15__c> newStoreList) {
         calculateSumAmount(newStoreList);
+        ensureApplicationStorePerNumber(newStoreList);
         for(Store15__c s:newStoreList){
             //店舗修正条件が満たされた場合、店舗の修正フラグがtrueに変更
             if(s.Store_Appearance_Document__c == Application15Const.CONST_APP15_SCR_RET_4_RESUB 
@@ -66,8 +50,6 @@ public class Store15Handler {
      * @param List<Store15__c> store 店舗レコードリスト
      */
     public static void doAfterInsert(List<Store15__c> newStoreList, Map<Id, Store15__c> oldStoreMap) {
-        // 先行支払い対象チェック
-        checkPrePayInfo(newStoreList,oldStoreMap,true);
     }
     
     /**
@@ -78,8 +60,6 @@ public class Store15Handler {
     public static void doAfterUpdate(List<Store15__c> newStoreList, Map<Id, Store15__c> oldStoreMap) {
         //親申請レコードリフレッシュ
         reUpdateApplication(newStoreList);
-        // 先行支払い対象チェック
-        checkPrePayInfo(newStoreList,oldStoreMap,false);
     }
     
     /**
@@ -141,153 +121,37 @@ public class Store15Handler {
             System.debug(e.getMessage());
         }
     }
-    
     /**
-     * 先行支払い対象チェック
+     * 申請（感染症拡大防止協力金：第15弾）: 営業許可番号の検証
      * 
-     * @param List<Store15__c> newStoreList 新店舗レコードリスト
-     * @param Map<Id, Store15__c> oldStoreMap 店舗レコードoldMap
-     * @param boolean isInsert 新規作成フラグ
+     * @param List<Store15__c> store 店舗レコードリスト
      */
-    private static void checkPrePayInfo(List<Store15__c> newStoreList, Map<Id, Store15__c> oldStoreMap, boolean isInsert) {
+    private static void ensureApplicationStorePerNumber(List<Store15__c> storeList) {
+        List<BusinessPermit__c> businessPermit = [SELECT BusinessPermitNo__c, ExpaireCheckStart__c, ExpaireCheckEnd__c FROM BusinessPermit__c];
+        Map<String, BusinessPermit__c> businessPermitMap = new Map<String, BusinessPermit__c>();
+        
+        for(BusinessPermit__c b : businessPermit) {
+            businessPermitMap.put(b.BusinessPermitNo__c, b);
+        }
 
-        Map<String, String> prePayMap = new Map<String, String>();          // 先行支払い対象チェックMap
-        Map<Id, Store15__c> targetStoreMap = new Map<Id, Store15__c>();         // 先行支払い対象Map
-        Map<Id, Store15__c> correctionStoreMap = new Map<Id, Store15__c>();         // 修正店舗対象Map
-        // 先行支払い対象をフィルターする
-        for (Store15__c s : newStoreList) {
-            // ステータスが審査待ちに変わる場合
-            // 電子申請の場合 、または紙申請、かつ早期給付申請の有無がTrueの場合
-            if ((!isInsert && s.Status__c == Application15Const.CONST_APP15_STATUS_EXAMINATION && s.Status__c != oldStoreMap.get(s.Id).Status__c) ||
-                (isInsert && s.Status__c == Application15Const.CONST_APP15_STATUS_EXAMINATION) 
-               ) {
-                   // 申請金額がnull以外の場合
-                   if (s.get('Application_Store_Apply_Amount__c') != null &&
-                       (s.Report_Flg__c == Application15Const.CONST_APP15_REP_FLG_ELECTRONIC ||
-                        (s.Report_Flg__c == Application15Const.CONST_APP15_REP_FLG_PAPER && ((Boolean)s.get('Store_Application_Early_Benefit__c')) == true)
-                       )) {
-                           // キー：店舗飲食店営業許可書-許可番号　＋　店舗飲食店営業許可書-許可年月日（和暦）、バリュー：申請（第16期）のId + '-' + 店舗の連番
-                           String key = Application15Utility.nullToString((String)s.get('Application_Store_Per_Number__c')) + 
-                               Application15Utility.nullToString((String)s.get('Application_Store_Per_Date_Jp__c'));
-                           if (String.isBlank(key)) continue; 
-                           prePayMap.put(key, s.Id);
-                           targetStoreMap.put(s.Id, s);
-                       }
-               }
-        }
-        System.debug('isInsert::::::'+isInsert);
-        // 処理対象が存在しない場合、処理終了
-        if (prePayMap.size() == 0) return;
 
-        // 先行支払い対象店舗を検索する
-        List<PrePayStore__c> prePayStoreList = [Select Id, Permission_Number_And_Date__c, Application_Id__c, Application_Data__c, FinancialInstitution_Name__c,
-                                                       FinancialInstitutionCD__c, Finacial_Branch_Name__c, Finacial_Branch_Code__c,
-                                                       Finacial_Account_Number__c, Account_Holder__c, Finacial_Account_Type__c
-                                                From PrePayStore__c
-                                                Where Permission_Number_And_Date__c In : prePayMap.keySet() And IsDisabled__c = false];
-        Map<String, PrePayStore__c> prePayStoreMap = new Map<String, PrePayStore__c>();                          // 先行支払い対象店舗Map
-        Map<String, List<String>> appIdListPerAppMap = new Map<String, List<String>>();                          // 各期の申請IDのMap
-        for (PrePayStore__c store : prePayStoreList) {
-            
-            prePayStoreMap.put(store.Permission_Number_And_Date__c, store);
-            
-            if (String.isBlank(store.Application_Data__c)) continue; 
-            // 申請データ（期）がappIdListPerAppMapのketSetに存在しない場合
-            if (!appIdListPerAppMap.containsKey(store.Application_Data__c)) {
-                appIdListPerAppMap.put(store.Application_Data__c, new List<String>());
-            }
-            appIdListPerAppMap.get(store.Application_Data__c).add(store.Application_Id__c);
-            
-        }
-        
-        List<Id> allAppIdList = new List<Id>();
-        // 関連の各期申請のIDを検索する
-        for(String appData : appIdListPerAppMap.keySet()) {
-            List<String> appIdList = appIdListPerAppMap.get(appData);
-            allAppIdList.addAll((new Map<Id, sObject>(Database.query('Select Id From ' + ALL_APP_API_NAME_MAP.get(appData) +' Where Id In :appIdList'))).keySet());
-        }
-        
-        Map<Id, Store15__c> updateMap = new Map<Id, Store15__c>();
-        // 先行支払い対象チェックMapのKeySetをループする
-        for (String key : prePayMap.keySet()) {
-        
-            Id appId = null;
-            String appIdNo = null;
-            boolean doubleCheck = false;
-            Store15__c updateStore = null;
-            
-            // 申請ID-連番を取得
-            appId = Id.valueOf(prePayMap.get(key));
-            
-            Store15__c s = targetStoreMap.get(appId);
-            if (!updateMap.containsKey(appId)) {
-                updateMap.put(appId, new Store15__c(Id = appId));
-            }
-            updateStore = updateMap.get(appId);
-            // 営業許可番号＋許可年月日　にて店舗特定し先払い確認
-            if (prePayStoreMap.containsKey(key)) {
-                
-                updateStore.put('PerPay_Store_Basic_Check__c', true);
-                updateStore.put('PrePayStore__c', prePayStoreMap.get(key).Id);
-                Decimal subPayment  = 0;
-                if(s.Application_Store_Apply_Amount__c !=null){
-                    subPayment = s.Application_Store_Apply_Amount__c - Integer.valueOf(System.Label.ADVANCE_SUB_PAYMENT);
-                    /*if(subPayment<0){
-                        subPayment  = 0;
-                    }*/
+        for(Store15__c s : storeList) {
+            BusinessPermit__c b = businessPermitMap.get(s.Application_Store_Per_Number__c);
+
+            String resultMessage = System.Label.APPLICATION_STORE_PER_NUMBER_OK;
+            if(b != null) {
+                Integer cnt = [SELECT COUNT() FROM Store15__c WHERE Application_Store_Per_Number__c = :b.BusinessPermitNo__c];
+                if(cnt > 1) {
+                    resultMessage = System.Label.APPLICATION_STORE_PER_NUMBER_DUPLICATE;
+                } else if(b.ExpaireCheckStart__c.equals(System.Label.APPLICATION_STORE_PER_NUMBER_EXPIRED) || 
+                            b.ExpaireCheckEnd__c.equals(System.Label.APPLICATION_STORE_PER_NUMBER_EXPIRED)) {
+                    resultMessage = System.Label.APPLICATION_STORE_PER_NUMBER_EXPIRED;
                 }
-                
-                updateStore.put('Store_Total_Advance_Sub_Payment__c', subPayment);
-                
             } else {
-            
-                updateStore.put('PerPay_Store_Basic_Check__c', false);
-                
+                resultMessage = System.Label.APPLICATION_STORE_PER_NUMBER_NOT_FOUND;
             }
-            // 基本チェックがfalseの場合
-            if (updateStore.get('PerPay_Store_Basic_Check__c') != true) {
 
-                updateStore.put('PerPay_Store_Double_Check__c', false);
-            
-            // 基本チェックがtrueの場合
-            } else {
-                // 振込先口座が先払い先として存在しているか
-                PrePayStore__c store = prePayStoreMap.get(key);
-                if (store.FinancialInstitution_Name__c == s.FinancialName__c &&                     // 金融機関名
-                    store.FinancialInstitutionCD__c    == s.Financial_Institution_Code__c &&        // 金融機関コード
-                    store.Finacial_Branch_Name__c      == s.Finacial_Branch_Name__c &&              // 支店名
-                    store.Finacial_Branch_Code__c      == s.Finacial_Branch_Code__c &&              // 支店コード
-                    store.Finacial_Account_Number__c   == s.Finacial_Account_Number__c &&           // 口座番号
-                    store.Account_Holder__c            == s.Account_Holder__c &&                    // 口座名義ｶﾅ（半角）
-                    store.Finacial_Account_Type__c     == s.Finacial_Account_Type__c) {             // 預金種別
-                    
-                    doubleCheck = true;
-                    
-                }
- 
-                // 電子申請者の場合は同一申請IDが先払い先として存在しているか
-                if (doubleCheck == true && s.Report_Flg__c == Application15Const.CONST_APP15_REP_FLG_ELECTRONIC) {
-                    if (String.isNotBlank(store.Application_Id__c) && allAppIdList.contains(Id.valueOf(store.Application_Id__c))) {
-                        doubleCheck = true;
-                    } else {
-                        doubleCheck = false;
-                    }
-                }
-                // ダブルチェックフラグがTrueの場合
-                if (doubleCheck) {
-                
-                    updateStore.put('PerPay_Store_Double_Check__c', true);
-                    
-                } else {
-                    
-                    updateStore.put('PerPay_Store_Double_Check__c', false);
-                    
-                }
-            }
+            s.ResultEnsureApplicationStorePerNumber__c = resultMessage;
         }
-        
-        firstRun = false;
-        update updateMap.values();
-
     }
 }

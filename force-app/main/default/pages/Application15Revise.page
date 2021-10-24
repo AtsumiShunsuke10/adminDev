@@ -364,16 +364,13 @@
                             <span>申請情報</span>
                         </h3>
                         <div class="card-body" style="padding-top: 0">
-                            <!-- div class="row infoDiv" style="border-bottom: 0.5px solid #A4A4A4;">
-                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['ApplicationFlag__c'].Label}" for="ApplicationFlag" />
-                                <div class="col-12 outlabelHeigth">
-                                    <img class="imgCheckbox" src="/img/checkbox_{!IF(apply15.ApplicationFlag__c, '', 'un')}checked.gif" />
-                                </div>
-                            </div -->
                             <div class="row infoDiv" style="border-bottom: 0.5px solid #A4A4A4;">
-                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Name'].Label}" for="applyNum" style="width:100%"
-                                />
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Name'].Label}" for="applyNum" style="width:100%"/>
                                 <apex:outputText value="{!apply15.Name}" styleClass="col-12 col-md-5 outlabelHeigth" />
+                            </div>
+                            <div class="row infoDiv required autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Company_Scale__c'].Label}" for="companyScale"/>
+                                <apex:inputField styleClass="form-control" value="{!apply15.Company_Scale__c}" id="companyScale"/>
                             </div>
                             <div class="row infoDiv required autofill">
                                 <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Applicant_Division__c'].Label}（法人番号なしの団体は個人事業主を選択してください。）" for="applicantDivision" />
@@ -396,7 +393,7 @@
                                 </div>
                                 <div class="form-inline w-100">
                                     <apex:inputField styleClass="form-control mr-3" style="max-width: 12.75rem" value="{!apply15.Applicant_Postal_Code__c}" id="applicantZip"/>
-                                    <button type="button" id="srchAppAddrBtn" class="btn btn-danger text-white" style="font-size: 1rem" onclick="getAddressByPostCode('applicantZip', 'applicantAddress')">
+                                    <button type="button" id="srchAppAddrBtn" class="btn btn-danger text-white" style="font-size: 1rem" onclick="zipSearch('applicantZip', 'applicantAddress')">
                                         <apex:outputText value="住所を検索" />
                                     </button>
                                 </div>
@@ -452,6 +449,10 @@
                                 </div>
                                 <apex:inputField styleClass="form-control" value="{!apply15.Applicant_Name__c}" id="applicantName" />
                             </div>
+                            <div class="row infoDiv autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Applicant_NameKana__c'].Label}" for="applicantNameKana" />
+                                <apex:inputField styleClass="form-control" value="{!apply15.Applicant_NameKana__c}" id="applicantNameKana" />
+                            </div>
                             <div class="row infoDiv required">
                                 <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Applicant_Birthday__c'].Label}" for="applicantBirthday" />
                                 <div class="slds-scope">
@@ -502,6 +503,19 @@
                                     </div>
                                 </div>
                                 <apex:inputField styleClass="form-control" value="{!apply15.Corporate_Number__c}" id="corporateNum" />
+                            </div>
+                            <div class="row infoDiv autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Personnel_Name__c'].Label}" for="personnelName" />
+                                <apex:inputField styleClass="form-control" value="{!apply15.Personnel_Name__c}" id="personnelName" />
+                            </div>
+                            <div class="row infoDiv autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Personnel_NameKana__c'].Label}" for="personnelNameKana" />
+                                <apex:inputField styleClass="form-control" value="{!apply15.Personnel_NameKana__c}" id="personnelNameKana" />
+                            </div>
+                            
+                            <div class="row infoDiv autofill">
+                                <apex:outputLabel value="{!$ObjectType.Application15__c.Fields['Personnel_Phone__c'].Label}" for="personnelPhone" />
+                                <apex:inputField styleClass="form-control" value="{!apply15.Personnel_Phone__c}" id="personnelPhone" />
                             </div>
                         </div>
                     </apex:outputPanel>
@@ -993,35 +1007,117 @@
         })(jQuery);
 
         /**
-        * 郵便番号で住所マスタから住所を取得する
+        * 郵便番号APIで住所検索
         */
-        function getAddressByPostCode(postcodeFieldId, addressFieldId) {
-            
-            let postcode = $('input[id$="' + postcodeFieldId + '"]').val();
-            if (postcode) {
-                // 半角数字7桁(ハイフン無し)の場合、住所を検索する
-                if (postcode.match(/[0-9]{7}/)) {
-                    Visualforce.remoting.Manager.invokeAction(
-                        '{!$RemoteAction.Application15ListController.getAddress}',
-                        $('input[id$="' + postcodeFieldId + '"]').val(), 
-                        function(result, event){
-                            if (event.status) {
-                                if (!result) {
-                                    alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
-                                }
-                                $('textarea[id$="' + addressFieldId + '"]').val(result);
-                            } else {
-                                // 何もしない
-                            }
-                        }, 
-                        {escape: true}
-                    );
-                // 半角数字7桁(ハイフン無し)以外の場合
-                } else {
-                    alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
-                }
+        function zipSearch(postcodeFieldId, addressFieldId) {
+            var url = 'https://map.yahooapis.jp/search/zip/V1/zipCodeSearch?';
+            let zip_code = $('input[id$="' + postcodeFieldId + '"]').val();
+            console.log(zip_code);
+            if (zip_code.match(/[0-9]{7}/)) {
+                var param = {
+                    appid: '{!$Label.YOLP_APPLICATION_ID}',
+                    output: 'json',
+                    query: zip_code,
+                    results: 100
+                };
+                $.ajax({
+                    url: url,
+                    data: param,
+                    dataType: 'jsonp',
+                    success: function (results) {
+                        dispResultAddress(results, addressFieldId);
+                        console.log(results);
+                    },
+                    error: function () {
+                    }
+                });
+            } else {
+                $('textarea[id$="' + addressFieldId + '"]').val('');
+                alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
             }
+        }
 
+        function dispResultAddress(ydf, addressFieldId) {
+            $('textarea[id$="' + addressFieldId + '"]').val('');
+            let floors = ['０', '１', '２', '３', '４', '５', '６', '７', '８', '９'];
+            var isMatched = true;
+            if (ydf.ResultInfo.Count == 1 && ydf.Feature[0].Property.Address.startsWith('東京都')) {
+                var rAdrs = ydf.Feature[0].Property.Address
+                if (rAdrs.includes("（") && rAdrs.includes("丁目") && !(rAdrs.includes("～")) && !(rAdrs.includes("、"))) {
+                    rAdrs = rAdrs.replace("（", "");
+                    rAdrs = rAdrs.replace("）", "");
+                }
+                else if (rAdrs.includes("（") && rAdrs.includes("階")) {
+                    if (rAdrs.includes("不明")) {
+                        var deleteChar = rAdrs.indexOf('（');
+                        rAdrs = rAdrs.substring(0, deleteChar);
+                        console.log(deleteChar);
+                    }
+                    for (i = 0; i < floors.length; i++) {
+                        if (rAdrs.includes(floors[i] + '階')) {
+                            isMatched = false;
+                            break;
+                        }
+                        if (isMatched) {
+                            rAdrs = rAdrs.replace("（", "");
+                            rAdrs = rAdrs.replace("）", "");
+                        }
+                    }
+                }
+                else if (rAdrs.includes('（')) {
+                    var deleteChar = rAdrs.indexOf('（');
+                    rAdrs = rAdrs.substring(0, deleteChar);
+                    console.log(deleteChar);
+                }
+                $('textarea[id$="' + addressFieldId + '"]').val(rAdrs);
+            } else if (ydf.ResultInfo.Count > 1 && ydf.Feature[0].Property.Address.startsWith('東京都')) {
+                var rAdrs = '';
+                var isMatched = true;
+                for (i = 0; ydf.Feature[0].Property.Address.length; i++) {
+                    var iAdrs = ydf.Feature[0].Property.Address.slice(0, i + 1);
+                    for (x = 1; x < ydf.ResultInfo.Count; x++) {
+                        var xAdrs = ydf.Feature[x].Property.Address
+                        if (xAdrs.indexOf(iAdrs)) {
+                            isMatched = false;
+                            break;
+                        }
+                    }
+                    if (isMatched) {
+                        rAdrs = iAdrs;
+                    } else {
+                        break;
+                    }
+                }
+                if (rAdrs.includes("（") && rAdrs.includes("丁目") && !(rAdrs.includes("～")) && !(rAdrs.includes("、"))) {
+                    rAdrs = rAdrs.replace("（", "");
+                    rAdrs = rAdrs.replace("）", "");
+                }
+                else if (rAdrs.includes("（") && rAdrs.includes("階")) {
+                    if (rAdrs.includes("不明")) {
+                        var deleteChar = rAdrs.indexOf('（');
+                        rAdrs = rAdrs.substring(0, deleteChar);
+                        console.log(deleteChar);
+                    }
+                    for (i = 0; i < floors.length; i++) {
+                        if (rAdrs.includes(floors[i] + '階')) {
+                            isMatched = false;
+                            break;
+                        }
+                        if (isMatched) {
+                            rAdrs = rAdrs.replace("（", "");
+                            rAdrs = rAdrs.replace("）", "");
+                        }
+                    }
+                }
+                else if (rAdrs.includes('（')) {
+                    var deleteChar = rAdrs.indexOf('（');
+                    rAdrs = rAdrs.substring(0, deleteChar);
+                    console.log(deleteChar);
+                }
+                $('textarea[id$="' + addressFieldId + '"]').val(rAdrs);
+            } else {
+                alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
+            }
         }
 
         function doCheckDate(y, m, d) {

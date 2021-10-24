@@ -575,73 +575,6 @@ public without sharing class Application15Utility {
     }
     
     /**
-     * 申請（第2弾）のレコードを取得する
-     * 
-     * @param Id app2Id 申請（第2弾）のレコードId
-     * @return Application2__c 申請（第2弾）のレコード
-     */
-    public static Application2__c getApplication2Info(Id app2Id) {
-        
-        Application2__c app2 = null;
-        List<Application2__c> app2List = [SELECT Applicant_Division__c
-                                                , Applicant_Business_Name__c
-                                                , Applicant_Postal_Code__c
-                                                , Applicant_Address__c
-                                                , Applicant_Title__c
-                                                , Applicant_Name__c
-                                                , Applicant_Phone__c
-                                                , Corporate_Number__c
-                                                // , Industry__c
-                                                // , Other_Industry__c
-                                                , Financial_Institution_Lookup__r.Name
-                                                , Financial_Institution_Lookup__c
-                                                , Finacial_Account_Type__c
-                                                , Finacial_Branch_Name__c
-                                                , Finacial_Branch_Code__c
-                                                , Account_Holder__c
-                                                , Finacial_Account_Number__c
-                                                //, Monthly_Average_Sales__c
-                                            FROM Application2__c
-                                            WHERE id= :app2Id];
-        if (app2List.size() > 0)  app2 = app2List[0];
-
-        return app2;
-    }
-
-    /**
-     * 申請（第1弾）のレコードを取得する
-     * 
-     * @param Id appId 申請（第1弾）のレコードId
-     * @return Application__c 申請（第1弾）のレコード
-     */
-    public static Application__c getApplicationInfo(Id appId) {
-        
-        Application__c app = null;
-        List<Application__c> appList = [SELECT Applicant_Division__c
-                                                , Applicant_Business_Name__c
-                                                , Applicant_Postal_Code__c
-                                                , Applicant_Address__c
-                                                , Applicant_Title__c
-                                                , Applicant_Name__c
-                                                , Applicant_Phone__c
-                                                , Corporate_Number__c
-                                                //, Industry__c
-                                                //, Other_Industry__c
-                                                , Financial_Institution_Lookup__r.Name
-                                                , Financial_Institution_Lookup__c
-                                                , Finacial_Account_Type__c
-                                                , Finacial_Branch_Name__c
-                                                , Finacial_Branch_Code__c
-                                                , Account_Holder__c
-                                                , Finacial_Account_Number__c
-                                            FROM Application__c
-                                            WHERE id= :appId];
-        if (appList.size() > 0)  app = appList[0];
-
-        return app;
-    }
-
-    /**
      * リスト分割
      * 
      * @param List<SObject> list データリスト
@@ -668,4 +601,156 @@ public without sharing class Application15Utility {
         }
         return rList;
     }
+    
+    /**
+     * 関連値取得
+     * 
+     * @param key 親値
+     * @return String 関連値
+     */
+    public static List<String> GetDependentFormat(String key,String pDependentFieldName){
+        String pObjName='Store15__c'; 
+        String pControllingFieldName='Application_Store_Address_Type__c'; 
+        
+        Map<String,List<TPicklistEntry>> objResults = new Map<String,List<TPicklistEntry>>();
+        List<String> rsList = new List<String>();
+        Map<String,Schema.SObjectType> objGlobalMap = Schema.getGlobalDescribe();
+        if (!objGlobalMap.containsKey(pObjName))
+            return rsList;
+        
+        Schema.SObjectType pType = objGlobalMap.get(pObjName);
+        Map<String, Schema.SObjectField> objFieldMap = pType.getDescribe().fields.getMap();
+        
+        if (!objFieldMap.containsKey(pControllingFieldName) || !objFieldMap.containsKey(pDependentFieldName))
+            return rsList;     
+        
+        List<Schema.PicklistEntry> ctrl_ple = objFieldMap.get(pControllingFieldName).getDescribe().getPicklistValues();
+        
+        List<Schema.PicklistEntry> dep_ple = objFieldMap.get(pDependentFieldName).getDescribe().getPicklistValues();
+        
+        DependentValidFor dvf=new DependentValidFor();
+        
+        
+        for(Integer pControllingIndex=0; pControllingIndex<ctrl_ple.size(); pControllingIndex++){          
+            
+            Schema.PicklistEntry ctrl_entry = ctrl_ple[pControllingIndex];
+            
+            String pControllingLabel = ctrl_entry.getLabel();
+            
+            objResults.put(pControllingLabel,new List<TPicklistEntry>());
+        }
+        
+        for(Integer pDependentIndex=0; pDependentIndex<dep_ple.size(); pDependentIndex++){          
+            
+            Schema.PicklistEntry dep_entry = dep_ple[pDependentIndex];
+            
+            String pEntryStructure = JSON.serialize(dep_entry);                
+            TPicklistEntry objDepPLE = (TPicklistEntry)JSON.deserialize(pEntryStructure, TPicklistEntry.class);
+            
+            if (objDepPLE.validFor==null || objDepPLE.validFor==''){
+                continue;
+            }
+            for(Integer idx : dvf.getControlIndexes(objDepPLE.validFor)){
+                String pControllingValue = ctrl_ple[idx].getValue();
+                objResults.get(pControllingValue).add(objDepPLE);
+            }
+        }
+        
+        for(TPicklistEntry e:objResults.get(key)){
+            rsList.add(e.value);
+        }
+        return rsList;
+    }
+    
+    public class TPicklistEntry{
+        public string active {get;set;}
+        public string defaultValue {get;set;}
+        public string label {get;set;}
+        public string value {get;set;}
+        public string validFor {get;set;}
+        public TPicklistEntry(){
+        }
+    }
+    private class DependentValidFor {
+        private Map<String,Set<Integer>> mapValidForIndexes=new Map<String,Set<Integer>>();
+        public Set<Integer> getControlIndexes(String validFor){
+            if(mapValidForIndexes.containsKey(validFor))
+                return mapValidForIndexes.get(validFor);
+            String hex=EncodingUtil.convertToHex(EncodingUtil.base64Decode(validFor));
+            Set<Integer> result=new Set<Integer>();
+            for(Integer i=0; i<hex.length(); i++){
+                String b=hex.substring(i, i+1);
+                Integer off=i*4;
+                switch on b {   //0123(index)
+                    when '0'{   //0000
+                    }
+                    when '1'{   //0001
+                        result.add(off+3);
+                    }
+                    when '2'{   //0010
+                        result.add(off+2);
+                    }
+                    when '3'{   //0011
+                        result.add(off+2);
+                        result.add(off+3);
+                    }
+                    when '4'{   //0100
+                        result.add(off+1);
+                    }
+                    when '5'{   //0101
+                        result.add(off+1);
+                        result.add(off+3);
+                    }
+                    when '6'{   //0110
+                        result.add(off+1);
+                        result.add(off+2);
+                    }
+                    when '7'{   //0111
+                        result.add(off+1);
+                        result.add(off+2);
+                        result.add(off+3);
+                    }
+                    when '8'{   //1000
+                        result.add(off+0);
+                    }
+                    when '9'{   //1001
+                        result.add(off+0);
+                        result.add(off+3);
+                    }
+                    when 'a'{   //1010
+                        result.add(off+0);
+                        result.add(off+2);
+                    }
+                    when 'b'{   //1011
+                        result.add(off+0);
+                        result.add(off+2);
+                        result.add(off+3);
+                    }
+                    when 'c'{   //1100
+                        result.add(off+0);
+                        result.add(off+1);
+                    }
+                    when 'd'{   //1101
+                        result.add(off+0);
+                        result.add(off+1);
+                        result.add(off+3);
+                    }
+                    when 'e'{   //1110
+                        result.add(off+0);
+                        result.add(off+1);
+                        result.add(off+2);
+                    }
+                    when 'f'{   //1111
+                        result.add(off+0);
+                        result.add(off+1);
+                        result.add(off+2);
+                        result.add(off+3);
+                    }
+                }
+            }
+            mapValidForIndexes.put(validFor,result);
+            return result;
+        }
+    }
+ 
 }
